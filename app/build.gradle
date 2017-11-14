@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -35,6 +39,14 @@ dependencies {
 
     implementation "android.arch.persistence.room:runtime:1.0.0"
     kapt "android.arch.persistence.room:compiler:1.0.0"
-
     implementation "android.arch.lifecycle:extensions:1.0.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+
+    // Retrofit and matching converters
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    // Http logging
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 }

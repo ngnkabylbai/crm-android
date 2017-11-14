@@ -2,10 +2,11 @@ package kz.mycrm.android.ui.splash
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import kz.mycrm.android.database.entity.Token
+import kz.mycrm.android.database.entity.Division
 import kz.mycrm.android.database.entity.User
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.repository.UserRepository
+import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
 /**
@@ -14,9 +15,8 @@ import kz.mycrm.android.util.Resource
 class SplashViewModel : ViewModel() {
 
     private var userResource: LiveData<Resource<User>>? = null
-    private val userRepository: UserRepository = UserRepository()
-    private var userToken: Token? = null
-    private val tokenRepository: TokenRepository = TokenRepository()
+    private val userRepository: UserRepository = UserRepository(AppExecutors)
+    private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
 
     init {
 
@@ -24,5 +24,9 @@ class SplashViewModel : ViewModel() {
 
     fun checkForToken(): LiveData<Boolean> {
         return tokenRepository.hasToken()
+    }
+
+    fun loadUserDivisions(): LiveData<Resource<Division>>? {
+        return userRepository.getUserDivision()
     }
 }
