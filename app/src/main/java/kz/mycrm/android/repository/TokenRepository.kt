@@ -62,9 +62,9 @@ class TokenRepository {
         //        paramObject.put("username", login)
         //        paramObject.put("password", password)
 
-                val paramObject = "{'username': '+7 701 381 71 15',  'password': 'password'}"
+                val paramObject = "{\"username\": \"+7 701 381 71 15\",  \"password\": \"password\"}"
 
-                return ApiUtils.getTokenService().requestToken(paramObject)
+                return ApiUtils.getTokenService().requestToken(login, password)
             }
         }.asLiveData()
     }

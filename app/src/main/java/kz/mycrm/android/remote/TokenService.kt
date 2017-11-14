@@ -5,9 +5,7 @@ import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.database.entity.Token
 import kz.mycrm.android.util.Resource
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -15,6 +13,7 @@ import retrofit2.http.POST
 interface TokenService {
 
     @POST("user/login")
-    fun requestToken(@Body body: String): LiveData<ApiResponse<Token>>
+    @FormUrlEncoded
+    fun requestToken(@Field("username") login:String, @Field("password")password:String): LiveData<ApiResponse<Token>>
 
 }
