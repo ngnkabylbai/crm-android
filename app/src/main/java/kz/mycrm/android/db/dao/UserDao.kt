@@ -1,7 +1,7 @@
-package kz.mycrm.android.database.dao
+package kz.mycrm.android.db.dao
 
 import android.arch.persistence.room.*
-import kz.mycrm.android.database.entity.User
+import kz.mycrm.android.db.entity.User
 
 /**
  * Created by NKabylbay on 11/11/2017.

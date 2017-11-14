@@ -1,10 +1,10 @@
-package kz.mycrm.android.database
+package kz.mycrm.android.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import kz.mycrm.android.database.dao.TokenDao
-import kz.mycrm.android.database.entity.Token
-import kz.mycrm.android.database.entity.User
+import kz.mycrm.android.db.dao.TokenDao
+import kz.mycrm.android.db.entity.Token
+import kz.mycrm.android.db.entity.User
 
 /**
  * Created by NKabylbay on 11/11/2017.

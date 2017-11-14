@@ -2,8 +2,9 @@ package kz.mycrm.android.ui.splash
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import kz.mycrm.android.database.entity.Division
-import kz.mycrm.android.database.entity.User
+import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.db.entity.Token
+import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.repository.UserRepository
 import kz.mycrm.android.util.AppExecutors

@@ -2,7 +2,7 @@ package kz.mycrm.android.application
 
 import android.app.Application
 import android.arch.persistence.room.Room
-import kz.mycrm.android.database.AppDatabase
+import kz.mycrm.android.db.AppDatabase
 
 /**
  * Created by NKabylbay on 11/11/2017.

@@ -2,9 +2,7 @@ package kz.mycrm.android.remote
 
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.database.entity.Token
-import kz.mycrm.android.util.Resource
-import retrofit2.Call
+import kz.mycrm.android.db.entity.Token
 import retrofit2.http.*
 
 /**

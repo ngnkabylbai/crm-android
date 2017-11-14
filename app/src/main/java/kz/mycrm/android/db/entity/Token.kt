@@ -1,4 +1,4 @@
-package kz.mycrm.android.database.entity
+package kz.mycrm.android.db.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
@@ -17,4 +17,8 @@ class Token {
     @PrimaryKey
     @ColumnInfo(name = "token")
     lateinit var token: String
+
+    override fun toString(): String {
+        return token
+    }
 }

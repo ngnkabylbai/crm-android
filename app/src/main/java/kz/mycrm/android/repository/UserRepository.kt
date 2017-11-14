@@ -2,13 +2,10 @@ package kz.mycrm.android.repository
 
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.database.entity.Division
-import kz.mycrm.android.database.entity.Token
-import kz.mycrm.android.database.entity.User
-import kz.mycrm.android.util.ApiUtils
+import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
-import javax.security.auth.callback.Callback
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -21,20 +18,12 @@ class UserRepository {
         this.appExecutors = appExecutors
     }
 
-
-
-
     fun getUserData(): LiveData<Resource<User>>? {
-
         return null
     }
 
     fun getUserDivision(): LiveData<Resource<Division>>? {
         return object : NetworkBoundResource<Division, Division>(appExecutors) {
-            override fun processResponse(response: ApiResponse<Division>?): Division {
-                return super.processResponse(response)
-            }
-
             override fun saveCallResult(item: Division) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
