@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MyCRM</string>
+
+    <!-- Login activity -->
+    <string name="hint_login">Телефон</string>
+    <string name="hint_password">Пароль</string>
+    <string name="action_create_new_account">Создать новый аккаунт</string>
+    <string name="action_login">Войти</string>
+    <string name="action_forgot_password">Забыли пароль?</string>
 </resources>
