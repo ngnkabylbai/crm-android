@@ -2,6 +2,7 @@ package kz.mycrm.android.ui.division
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,20 +14,38 @@ import kz.mycrm.android.db.entity.Division
 /**
  * Created by lab on 11/18/17.
  */
-class DivisionAdapter(divisions : ArrayList<Division>, context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>(divisions, context) {
+class DivisionAdapter(divisions : ArrayList<Division>, context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
 
-    lateinit var divisions : ArrayList<Division>
+    var divisions :ArrayList<Division>
+    var context :Context
+
+    init {
+        this.divisions = divisions
+        this.context = context
+    }
+
+    lateinit var view :View
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        holder!!.bind()
+
+        holder!!.city.setText(divisions[position].cityName)
+        holder!!.title.setText(divisions[position].name)
+        holder!!.address.setText(divisions[position].address)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        view = LayoutInflater.from(parent!!.context).inflate(R.layout.division_item, parent, false)
+
+        var vh :ViewHolder = ViewHolder(view)
+
+        return vh
     }
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return divisions.size
     }
 
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {

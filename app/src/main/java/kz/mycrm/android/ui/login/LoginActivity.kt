@@ -15,6 +15,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
@@ -59,7 +60,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                             if(token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
                                 progress.visibility = View.GONE
-//                                requestDivisions(token.data!!.getValue(), null)
+                                startActivity(mainIntent())
+                                finish()
                             } else if(token?.status == Status.ERROR) { // error, show error message
 
                             }
@@ -68,14 +70,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
             R.id.createAccount -> Logger.debug("Create acc clicked")
         }
-    }
-
-    private fun requestDivisions(token: String, expand: String?) {
-        Logger.debug("Requesting division lists...")
-        viewModel.requestUserDivisions(token, expand)
-                .observe(this, Observer {divisions ->
-//                TODO:
-        })
     }
 }
 

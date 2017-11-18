@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import kz.mycrm.android.R
 import kz.mycrm.android.application.MycrmApp
 import kz.mycrm.android.ui.login.loginIntent
+import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 
 class SplashActivity : AppCompatActivity() {
@@ -20,13 +21,13 @@ class SplashActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.checkForToken().observe(this, Observer { token ->
             if(token != null) {
-//                TODO: Direct to mainActivity
                 Logger.debug("Token found from db: Rec count:" + MycrmApp.database.TokenDao().getCount()+" data: " + token.token)
+                startActivity(mainIntent())
             } else {
                 Logger.debug("Token wasn't found. Directing to login activity...")
                 startActivity(loginIntent())
-                finish()
             }
+            finish()
         })
     }
 }
