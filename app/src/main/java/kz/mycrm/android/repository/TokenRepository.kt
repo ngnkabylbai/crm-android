@@ -16,20 +16,17 @@ import kz.mycrm.android.util.Resource
  */
 class TokenRepository(private var appExecutors: AppExecutors) {
 
-    fun hasToken(): LiveData<Boolean> {
-        val value = MutableLiveData<Boolean>()
-        value.value = getToken().value != null
-        return value
-    }
-
     fun getToken(): LiveData<Token> {
-        return MycrmApp.database?.TokenDao()?.getToken() ?: MutableLiveData<Token>()
+        return MycrmApp.database.TokenDao().getToken()
     }
 
     fun requestToken(login: String, password: String): LiveData<Resource<Token>> {
         return object : NetworkBoundResource<Token, Token>(appExecutors) {
             override fun saveCallResult(item: Token) {
-                insertToken(item)
+                if((getCount() == 0))
+                    insertToken(item)
+                else
+                    updateToken(item)
             }
 
             override fun shouldFetch(data: Token?): Boolean {
@@ -46,8 +43,15 @@ class TokenRepository(private var appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
-//   TODO: cant get this data
     fun insertToken(token: Token) {
-        MycrmApp.database?.TokenDao()?.insertToken(token)
+        MycrmApp.database.TokenDao().insertToken(token)
+    }
+
+    fun updateToken(token: Token) {
+        MycrmApp.database.TokenDao().updateToken(token)
+    }
+
+    fun getCount() : Int {
+        return MycrmApp.database.TokenDao().getCount()
     }
 }
