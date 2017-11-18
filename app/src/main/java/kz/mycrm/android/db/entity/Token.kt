@@ -9,16 +9,14 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-@Entity
+@Entity(tableName = "token")
 class Token {
+
+    @PrimaryKey
+    var id: Int = 1
 
     @SerializedName("token")
     @Expose
-    @PrimaryKey
     @ColumnInfo(name = "token_data")
     lateinit var token: String
-
-    fun getValue(): String {
-        return token
-    }
 }

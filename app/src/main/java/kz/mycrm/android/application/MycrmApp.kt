@@ -2,6 +2,7 @@ package kz.mycrm.android.application
 
 import android.app.Application
 import android.arch.persistence.room.Room
+import com.facebook.stetho.Stetho
 import kz.mycrm.android.db.AppDatabase
 
 /**
@@ -10,11 +11,20 @@ import kz.mycrm.android.db.AppDatabase
 class MycrmApp : Application() {
 
     companion object {
-        var database: AppDatabase? = null
+        lateinit var database: AppDatabase
     }
 
     override fun onCreate() {
         super.onCreate()
-        database = Room.databaseBuilder(this, AppDatabase::class.java, "MycrmDatabase").build()
+        database = Room.databaseBuilder(this, AppDatabase::class.java, "MycrmDatabase")
+                .allowMainThreadQueries() // TODO: remove after debug
+                .build()
+
+        Stetho.newInitializerBuilder(this)
+                .enableDumpapp(
+                        Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(
+                        Stetho.defaultInspectorModulesProvider(this))
+                .build()
     }
 }

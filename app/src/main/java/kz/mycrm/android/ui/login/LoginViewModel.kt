@@ -18,10 +18,6 @@ class LoginViewModel : ViewModel() {
     private var tokenRepository = TokenRepository(AppExecutors)
     private var userRepositoty = UserRepository(AppExecutors)
 
-    fun hastToken(): LiveData<Boolean> {
-        return tokenRepository.hasToken()
-    }
-
     fun requestToken(login: String, password: String): LiveData<Resource<Token>> {
         return tokenRepository.requestToken(login, password)
     }

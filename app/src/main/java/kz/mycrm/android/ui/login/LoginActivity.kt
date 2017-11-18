@@ -10,12 +10,12 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
-import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
 /**
@@ -43,8 +43,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-        requestDivisions("T5texf3FvexQXDSCEsI9uhIhiGTcljkt_1510810898", null)
-
+        login.setText("+7 701 381 71 15")
+        password.setText("password")
     }
 
 //    TODO: handle null values
@@ -59,24 +59,23 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                             if(token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
                                 progress.visibility = View.GONE
-                                requestDivisions(token.data!!.getValue(), null)
+//                                requestDivisions(token.data!!.getValue(), null)
                             } else if(token?.status == Status.ERROR) { // error, show error message
 
                             }
                         })
             }
-            R.id.forgotPassword -> Log.d("MyCRM", "Forgot pass clicked")
-            R.id.createAccount -> Log.d("MyCRM", "Create acc clicked")
+            R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
+            R.id.createAccount -> Logger.debug("Create acc clicked")
         }
     }
 
     private fun requestDivisions(token: String, expand: String?) {
-        Log.d("MyCRM", "Requesting division lists...")
+        Logger.debug("Requesting division lists...")
         viewModel.requestUserDivisions(token, expand)
                 .observe(this, Observer {divisions ->
-                    Log.d("MyCRM", "Disivion request:" + divisions.toString())
+//                TODO:
         })
     }
 }
-
 

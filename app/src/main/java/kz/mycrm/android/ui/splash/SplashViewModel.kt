@@ -23,8 +23,8 @@ class SplashViewModel : ViewModel() {
 
     }
 
-    fun checkForToken(): LiveData<Boolean> {
-        return tokenRepository.hasToken()
+    fun checkForToken(): LiveData<Token> {
+        return tokenRepository.getToken()
     }
 
     fun getToken(): LiveData<Token> {

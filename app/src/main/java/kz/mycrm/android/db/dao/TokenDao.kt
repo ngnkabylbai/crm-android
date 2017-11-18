@@ -9,15 +9,15 @@ import kz.mycrm.android.db.entity.Token
  */
 @Dao
 interface TokenDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertToken(token: Token)
 
     @Update
     fun updateToken(token: Token)
 
-    @Delete
-    fun deleteToken(token: Token)
-// TODO: Bug with no data
-    @Query("SELECT token_data FROM token limit 1")
+    @Query("SELECT * FROM token LIMIT 1")
     fun getToken(): LiveData<Token>
+
+    @Query("SELECT COUNT(*) FROM token")
+    fun getCount() : Int
 }
