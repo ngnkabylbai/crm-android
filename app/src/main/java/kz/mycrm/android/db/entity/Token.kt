@@ -15,10 +15,10 @@ class Token {
     @SerializedName("token")
     @Expose
     @PrimaryKey
-    @ColumnInfo(name = "token")
+    @ColumnInfo(name = "token_data")
     lateinit var token: String
 
-    override fun toString(): String {
+    fun getValue(): String {
         return token
     }
 }

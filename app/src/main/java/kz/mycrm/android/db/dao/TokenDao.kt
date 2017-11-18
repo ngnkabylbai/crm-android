@@ -18,6 +18,6 @@ interface TokenDao {
     @Delete
     fun deleteToken(token: Token)
 // TODO: Bug with no data
-    @Query("SELECT * FROM token limit 1")
+    @Query("SELECT token_data FROM token limit 1")
     fun getToken(): LiveData<Token>
 }

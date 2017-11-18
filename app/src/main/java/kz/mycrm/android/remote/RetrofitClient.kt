@@ -1,11 +1,10 @@
 package kz.mycrm.android.remote
 
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kz.mycrm.android.util.LiveDataCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import kz.mycrm.android.util.LiveDataCallAdapter
-import kz.mycrm.android.util.LiveDataCallAdapterFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -13,13 +12,19 @@ import kz.mycrm.android.util.LiveDataCallAdapterFactory
 object RetrofitClient {
 
     var retrofit: Retrofit? = null
-    var httpClient = OkHttpClient.Builder()
+    lateinit var httpClient: OkHttpClient.Builder
+
+    init {
+
+    }
 
     fun getClient(baseUrl: String): Retrofit {
+
+        httpClient = OkHttpClient.Builder()
         val logger = HttpLoggingInterceptor()
+        logger.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(logger)
 
-        logger.level = HttpLoggingInterceptor.Level.BODY
 
         if(retrofit == null)
             retrofit = Retrofit.Builder()

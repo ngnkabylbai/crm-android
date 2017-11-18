@@ -27,7 +27,11 @@ class SplashViewModel : ViewModel() {
         return tokenRepository.hasToken()
     }
 
-    fun loadUserDivisions(): LiveData<Resource<Division>>? {
-        return userRepository.getUserDivision()
+    fun getToken(): LiveData<Token> {
+        return tokenRepository.getToken()
+    }
+
+    fun loadUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
+        return userRepository.getUserDivisions(accessToken, expand)
     }
 }

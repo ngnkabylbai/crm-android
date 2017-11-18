@@ -20,7 +20,9 @@ class SplashActivity : AppCompatActivity() {
         viewModel.checkForToken().observe(this, Observer { hasToken ->
             if(hasToken!!) {
 //                TODO: Direct to mainActivity
+                Log.d("MyCRM", "Token found from db:" + viewModel.getToken().value)
             } else {
+                Log.d("MyCRM", "Token does not found:")
                 startActivity(loginIntent())
                 finish()
             }
