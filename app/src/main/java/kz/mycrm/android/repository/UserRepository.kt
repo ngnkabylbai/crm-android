@@ -1,9 +1,11 @@
 package kz.mycrm.android.repository
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.User
+import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -22,22 +24,22 @@ class UserRepository {
         return null
     }
 
-    fun getUserDivision(): LiveData<Resource<Division>>? {
-        return object : NetworkBoundResource<Division, Division>(appExecutors) {
-            override fun saveCallResult(item: Division) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun getUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
+        return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
+            override fun saveCallResult(item: List<Division>) {
+
             }
 
-            override fun shouldFetch(data: Division?): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun shouldFetch(data: List<Division>?): Boolean {
+                return true
             }
 
-            override fun loadFromDb(): LiveData<Division> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun loadFromDb(): LiveData<List<Division>> {
+                return MutableLiveData<List<Division>>()
             }
 
-            override fun createCall(): LiveData<ApiResponse<Division>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun createCall(): LiveData<ApiResponse<List<Division>>> {
+                return ApiUtils.getUserService().requestDivisions(accessToken, expand)
             }
         }.asLiveData()
     }

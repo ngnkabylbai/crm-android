@@ -43,6 +43,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        requestDivisions("T5texf3FvexQXDSCEsI9uhIhiGTcljkt_1510810898", null)
+
     }
 
 //    TODO: handle null values
@@ -57,6 +59,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                             if(token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
                                 progress.visibility = View.GONE
+                                requestDivisions(token.data!!.getValue(), null)
                             } else if(token?.status == Status.ERROR) { // error, show error message
 
                             }
@@ -67,15 +70,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-// TODO: complete
-//        viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-//        viewModel.requestUserDivisions("T5texf3FvexQXDSCEsI9uhIhiGTcljkt_1510810898", null)
-//                .observe(this, Observer {divisions ->
-//                    if(divisions?.status == Status.SUCCESS) {
-//                        for(d: Division in divisions.data!!) {
-//                            Log.d("MyCRM", d.toString())
-//                        }
-//                    }
-//                })
-
+    private fun requestDivisions(token: String, expand: String?) {
+        Log.d("MyCRM", "Requesting division lists...")
+        viewModel.requestUserDivisions(token, expand)
+                .observe(this, Observer {divisions ->
+                    Log.d("MyCRM", "Disivion request:" + divisions.toString())
+        })
+    }
 }
+
+

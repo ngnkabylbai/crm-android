@@ -104,4 +104,10 @@ class Division {
 
     @ColumnInfo(name = "user_id")
     var userId: Int = 0
+
+    override fun toString(): String {
+        return "Division(id=$id, companyId=$companyId, workingStart=$workingStart, cityName=$cityName, phone=$phone, status=$status, categoryId=$categoryId, url=$url, cityId=$cityId, address=$address, description=$description, name=$name, longitude=$longitude, rating=$rating, latitude=$latitude, workingFinish=$workingFinish, key=$key, userId=$userId)"
+    }
+
+
 }

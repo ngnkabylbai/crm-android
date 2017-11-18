@@ -2,6 +2,7 @@ package kz.mycrm.android.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.application.MycrmApp
 import kz.mycrm.android.db.entity.Token
@@ -28,8 +29,7 @@ class TokenRepository(private var appExecutors: AppExecutors) {
     fun requestToken(login: String, password: String): LiveData<Resource<Token>> {
         return object : NetworkBoundResource<Token, Token>(appExecutors) {
             override fun saveCallResult(item: Token) {
-//                TODO: cant get this datacls
-                MycrmApp.database?.TokenDao()?.insertToken(item)
+                insertToken(item)
             }
 
             override fun shouldFetch(data: Token?): Boolean {
@@ -44,5 +44,10 @@ class TokenRepository(private var appExecutors: AppExecutors) {
                 return ApiUtils.getTokenService().requestToken(login, password)
             }
         }.asLiveData()
+    }
+
+//   TODO: cant get this data
+    fun insertToken(token: Token) {
+        MycrmApp.database?.TokenDao()?.insertToken(token)
     }
 }

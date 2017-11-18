@@ -2,6 +2,7 @@ package kz.mycrm.android.util
 
 import kz.mycrm.android.remote.RetrofitClient
 import kz.mycrm.android.remote.TokenService
+import kz.mycrm.android.remote.UserService
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -12,5 +13,9 @@ object ApiUtils {
 
     fun getTokenService() : TokenService {
         return RetrofitClient.getClient(baseTokenUrl).create(TokenService::class.java)
+    }
+
+    fun getUserService(): UserService {
+        return RetrofitClient.getClient(baseTokenUrl).create(UserService::class.java)
     }
 }
