@@ -7,4 +7,7 @@
     <string name="action_create_new_account">Создать новый аккаунт</string>
     <string name="action_login">Войти</string>
     <string name="action_forgot_password">Забыли пароль?</string>
+
+    <!--Division activity-->
+    <string name="division_title">Выберите филиал</string>
 </resources>
