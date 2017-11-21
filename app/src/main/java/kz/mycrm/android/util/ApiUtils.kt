@@ -9,13 +9,14 @@ import kz.mycrm.android.remote.UserService
  */
 object ApiUtils {
 
-    private val baseTokenUrl: String = "https://private-anon-55d088c7b0-apimycrm.apiary-proxy.com/v2/"
+//    private val baseUrl: String = "https://private-anon-55d088c7b0-apimycrm.apiary-proxy.com/v2/"
+    private val baseUrl: String = "http://test.api.mycrm.kz/v2/"
 
     fun getTokenService() : TokenService {
-        return RetrofitClient.getClient(baseTokenUrl).create(TokenService::class.java)
+        return RetrofitClient.getClient(baseUrl).create(TokenService::class.java)
     }
 
     fun getUserService(): UserService {
-        return RetrofitClient.getClient(baseTokenUrl).create(UserService::class.java)
+        return RetrofitClient.getClient(baseUrl).create(UserService::class.java)
     }
 }

@@ -25,6 +25,7 @@ import android.support.annotation.WorkerThread;
 
 import kz.mycrm.android.api.ApiResponse;
 import kz.mycrm.android.util.AppExecutors;
+import kz.mycrm.android.util.Logger;
 import kz.mycrm.android.util.Objects;
 import kz.mycrm.android.util.Resource;
 
@@ -43,10 +44,12 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     NetworkBoundResource(AppExecutors appExecutors) {
+        Logger.INSTANCE.debug("NBR");
         this.appExecutors = appExecutors;
         result.setValue(Resource.Companion.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
+            Logger.INSTANCE.debug("NBR1");
             result.removeSource(dbSource);
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource);

@@ -2,6 +2,7 @@ package kz.mycrm.android.ui.division
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +15,15 @@ import kz.mycrm.android.db.entity.Division
 /**
  * Created by lab on 11/18/17.
  */
-class DivisionAdapter(divisions : ArrayList<Division>, context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
+class DivisionAdapter(divisions : List<Division>, context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
 
-    var divisions :ArrayList<Division>
+    var divisions :List<Division>
     var context :Context
 
     init {
         this.divisions = divisions
         this.context = context
+        Log.d("Tag", "Adapter Created")
     }
 
     lateinit var view :View

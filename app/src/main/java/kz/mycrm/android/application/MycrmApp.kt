@@ -18,13 +18,12 @@ class MycrmApp : Application() {
         super.onCreate()
         database = Room.databaseBuilder(this, AppDatabase::class.java, "MycrmDatabase")
                 .allowMainThreadQueries() // TODO: remove after debug
+                .fallbackToDestructiveMigration()
                 .build()
 
         Stetho.newInitializerBuilder(this)
-                .enableDumpapp(
-                        Stetho.defaultDumperPluginsProvider(this))
-                .enableWebKitInspector(
-                        Stetho.defaultInspectorModulesProvider(this))
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                 .build()
     }
 }
