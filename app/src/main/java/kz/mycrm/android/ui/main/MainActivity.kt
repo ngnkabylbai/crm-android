@@ -21,6 +21,7 @@ import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.ui.division.DivisionFragment
 import kz.mycrm.android.ui.login.LoginActivity
 import kz.mycrm.android.ui.login.LoginViewModel
+import kz.mycrm.android.ui.main.journal.JournalFragment
 import kz.mycrm.android.util.Logger
 
 
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    private lateinit var journalFragment: JournalFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,15 +46,15 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        bottomBar.setOnTabSelectListener(object :OnTabSelectListener{
+        journalFragment = JournalFragment()
 
-            override fun onTabSelected(tabId: Int) {
-                var fragment :Fragment = setFragment(tabId)
-                var fragmentTransaction :FragmentTransaction = supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.fragment, fragment)
-                fragmentTransaction.commit()
-            }
-        })
+        bottomBar.setOnTabSelectListener { tabId ->
+            val fragmentTransaction :FragmentTransaction = supportFragmentManager.beginTransaction()
+
+            val fragment :Fragment = setFragment(tabId)
+            fragmentTransaction.replace(R.id.fragment, fragment)
+            fragmentTransaction.commit()
+        }
     }
 
 //    private fun requestDivisions(token: String, expand: String?) {
@@ -64,13 +66,14 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     private fun setFragment(tabId :Int) :Fragment {
-
-        var fragment = DivisionFragment()
-        return fragment
-//        when(tabId){
-//
-//
-//        }
+        return when(tabId) {
+                    1 -> {
+                        journalFragment
+                    }
+                    else -> {
+                        DivisionFragment()
+                    }
+                }
     }
 
 
