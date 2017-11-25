@@ -30,10 +30,11 @@ class UserRepository {
     fun getUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
             override fun saveCallResult(item: List<Division>) {
-                if((getCount() == 0))
+                if ((getCount() == 0)){
                     insertDivision(item)
-                else
+                } else{
                     updateDivision(item)
+                }
             }
 
             override fun shouldFetch(data: List<Division>?): Boolean {
@@ -41,7 +42,6 @@ class UserRepository {
             }
 
             override fun loadFromDb(): LiveData<List<Division>> {
-                Logger.debug("save call" + getCount())
                 return getDivisions()
             }
 

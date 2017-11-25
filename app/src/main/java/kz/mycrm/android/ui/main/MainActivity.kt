@@ -7,14 +7,16 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.roughike.bottombar.BottomBar
-import com.roughike.bottombar.OnTabSelectListener
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kz.mycrm.android.R
 import kz.mycrm.android.application.MycrmApp
 import kz.mycrm.android.db.entity.Token
@@ -30,10 +32,15 @@ fun Context.mainIntent(): Intent {
 
 class MainActivity : AppCompatActivity() {
 
-    @BindView(R.id.btmBar)
-    lateinit var bottomBar :BottomBar
+    @BindView(R.id.bottom_navigation)
+    lateinit var bottomBar :AHBottomNavigation
 
     private lateinit var viewModel: MainViewModel
+
+    lateinit var items: List<AHBottomNavigationItem>
+
+    lateinit var fragment :Fragment
+    lateinit var fragmentTransaction:FragmentTransaction
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,30 +49,39 @@ class MainActivity : AppCompatActivity() {
 
         ButterKnife.bind(this)
 
+        items = arrayListOf<AHBottomNavigationItem>(AHBottomNavigationItem(resources.getString(R.string.navigation_bar_calendar), R.drawable.calendar_menu),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_client), R.drawable.clients_menu),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_notification), R.drawable.notifications_menu),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_menu), R.drawable.menu)
+        )
+
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        bottomBar.setOnTabSelectListener(object :OnTabSelectListener{
+        bottomBar.addItems(items)
+        bottomBar.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE)
+        bottomBar.setColoredModeColors(Color.GRAY, Color.DKGRAY)
+        disableNavigationItems()
 
-            override fun onTabSelected(tabId: Int) {
-                var fragment :Fragment = setFragment(tabId)
-                var fragmentTransaction :FragmentTransaction = supportFragmentManager.beginTransaction()
+        fragment = DivisionFragment()
+        fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment, fragment)
+        fragmentTransaction.commit()
+
+        bottomBar.setOnTabSelectedListener(object : AHBottomNavigation.OnTabSelectedListener {
+
+            override fun onTabSelected(tabId: Int, wasSelected: Boolean):Boolean {
+                fragment = setFragment(tabId)
+                fragmentTransaction = supportFragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.fragment, fragment)
                 fragmentTransaction.commit()
+                return true
             }
         })
     }
 
-//    private fun requestDivisions(token: String, expand: String?) {
-//        Logger.debug("Requesting division lists...")
-//        viewModel.requestUserDivisions(token, expand)
-//                .observe(this, Observer {divisions ->
-//                    //                TODO:
-//                })
-//    }
-
     private fun setFragment(tabId :Int) :Fragment {
 
-        var fragment = DivisionFragment()
+        fragment = DivisionFragment()
         return fragment
 //        when(tabId){
 //
@@ -73,5 +89,9 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-
+    private fun disableNavigationItems() {
+        for (i in items.indices - 2 - 3) {
+            bottomBar.disableItemAtPosition(i)
+        }
+    }
 }

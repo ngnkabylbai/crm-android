@@ -2,66 +2,57 @@ package kz.mycrm.android.ui.division
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.ui.main.MainActivity
+import kz.mycrm.android.util.Logger
 
 /**
- * Created by lab on 11/18/17.
+ * Created by lab on 11/25/17.
  */
-class DivisionAdapter(divisions : List<Division>, context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
 
-    var divisions :List<Division>
-    var context :Context
+class DivisionAdapter(internal var divisions: List<Division>, internal var context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
 
-    init {
-        this.divisions = divisions
-        this.context = context
-        Log.d("Tag", "Adapter Created")
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.division_item, parent, false)
+
+        return ViewHolder(view)
     }
 
-    lateinit var view :View
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-
-        holder!!.bind()
-
-        holder!!.city.setText(divisions[position].cityName)
-        holder!!.title.setText(divisions[position].name)
-        holder!!.address.setText(divisions[position].address)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-
-        view = LayoutInflater.from(parent!!.context).inflate(R.layout.division_item, parent, false)
-
-        var vh :ViewHolder = ViewHolder(view)
-
-        return vh
+        holder.address.text = divisions[position].address
+        holder.city.text = divisions[position].cityName
+        holder.title.text = divisions[position].name
     }
 
     override fun getItemCount(): Int {
         return divisions.size
     }
 
-    class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        @BindView(R.id.item_city)
-        lateinit var city : TextView
-        @BindView(R.id.item_title)
-        lateinit var title : TextView
-        @BindView(R.id.item_address)
-        lateinit var address : TextView
+        internal var address: TextView
+        internal var title: TextView
+        internal var city: TextView
 
-        fun bind(){
-            ButterKnife.bind(itemView)
+        init {
+            address = itemView.findViewById<View>(R.id.item_address) as TextView
+            title = itemView.findViewById<View>(R.id.item_title) as TextView
+            city = itemView.findViewById<View>(R.id.item_city) as TextView
+            itemView.setOnClickListener(this)
         }
 
+        override fun onClick(p0: View?) {
+            Toast.makeText(itemView.context, "Goes to Fragment and set enable nav_item", Toast.LENGTH_SHORT).show()
+        }
     }
 }

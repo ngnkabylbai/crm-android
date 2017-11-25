@@ -8,6 +8,12 @@
     <string name="action_login">Войти</string>
     <string name="action_forgot_password">Забыли пароль?</string>
 
+    <!--Main activity-->
+    <!--Bottom navigation bar-->
+    <string name="navigation_bar_calendar">cal</string>
+    <string name="navigation_bar_client">user</string>
+    <string name="navigation_bar_notification">not</string>
+    <string name="navigation_bar_menu">Меню</string>
     <!--Division activity-->
     <string name="division_title">Выберите филиал</string>
 </resources>

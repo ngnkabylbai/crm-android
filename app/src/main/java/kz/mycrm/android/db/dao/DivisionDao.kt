@@ -14,8 +14,11 @@ interface DivisionDao {
     @Query("SELECT * FROM division")
     fun getDivisions(): LiveData<List<Division>>
 
-    @Query("SELECT COUNT(*) FROM token")
+    @Query("SELECT COUNT(*) FROM division")
     fun getCount() : Int
+
+    @Query("SELECT name FROM division")
+    fun getItem() : Int
 
     @Insert
     fun insertDivision (division: List<Division>)

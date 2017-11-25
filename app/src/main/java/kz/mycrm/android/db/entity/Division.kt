@@ -11,9 +11,7 @@ import com.google.gson.annotations.SerializedName
  * Created by NKabylbay on 11/11/2017.
  */
 
-@Entity(foreignKeys = arrayOf(ForeignKey(onDelete = ForeignKey.CASCADE,
-        entity = User::class, parentColumns = arrayOf("user_id"),
-        childColumns = arrayOf("user_id"))))
+@Entity
 class Division {
 
     @PrimaryKey
@@ -102,11 +100,8 @@ class Division {
     @Expose
     var key: String? = null
 
-    @ColumnInfo(name = "user_id")
-    var userId: Int = 0
-
     override fun toString(): String {
-        return "Division(id=$id, companyId=$companyId, workingStart=$workingStart, cityName=$cityName, phone=$phone, status=$status, categoryId=$categoryId, url=$url, cityId=$cityId, address=$address, description=$description, name=$name, longitude=$longitude, rating=$rating, latitude=$latitude, workingFinish=$workingFinish, key=$key, userId=$userId)"
+        return "Division(id=$id, companyId=$companyId, workingStart=$workingStart, cityName=$cityName, phone=$phone, status=$status, categoryId=$categoryId, url=$url, cityId=$cityId, address=$address, description=$description, name=$name, longitude=$longitude, rating=$rating, latitude=$latitude, workingFinish=$workingFinish, key=$key)"
     }
 
 

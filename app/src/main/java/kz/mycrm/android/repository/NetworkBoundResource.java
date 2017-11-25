@@ -44,12 +44,10 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     NetworkBoundResource(AppExecutors appExecutors) {
-        Logger.INSTANCE.debug("NBR");
         this.appExecutors = appExecutors;
         result.setValue(Resource.Companion.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
-            Logger.INSTANCE.debug("NBR1");
             result.removeSource(dbSource);
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource);
