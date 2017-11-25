@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import kz.mycrm.android.R
 
+
 /**
  * Created by Nurbek Kabylbay on 24.11.2017.
  */
@@ -21,12 +22,11 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private lateinit var mDashedSeparatorPaint: Paint
 
     // Attributes and default values
-    private var mTextMarginTop = 100
-    private var mViewPaddingTop = 0
-    private var mViewPaddingRight = 0
-    private var mBackgroundColor = Color.rgb(225, 218, 255)
-    private var mSeparatorColor = Color.rgb(204, 198, 226)
-    private var mNormalTimeColor = Color.rgb(204, 198, 226)
+    private var mTextMarginTop = 100f
+    private var mViewPaddingLeft = 0f
+    private var mBackgroundColor = Color.rgb(225, 230, 239)
+    private var mSeparatorColor = Color.rgb(115, 115, 115)
+    private var mNormalTimeColor = Color.rgb(115, 115, 115)
     private var mAccentTimeColor = Color.rgb(106, 105, 110)
     private var mNormalTimeSize = 14
     private var mAccentTimeSize = 18
@@ -39,15 +39,14 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var mWidthDiff = 0
 
     // Global variables used as View's height and width
-    private var mScreenWidth = 0
-    private var mScreenHeight = 0
+    private var mScreenWidth = 0f
+    private var mScreenHeight = 0f
 
     init {
 
         val displayMetrics = DisplayMetrics()
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
-        mScreenWidth = displayMetrics.widthPixels
-
+        mScreenWidth = displayMetrics.widthPixels.toFloat()
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.JournalView, 0 , 0)
         try {
@@ -55,14 +54,11 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             mAccentTimeColor = a.getColor(R.styleable.JournalView_accentTimeColor, mAccentTimeColor)
             mNormalTimeColor = a.getColor(R.styleable.JournalView_normalTimeColor, mNormalTimeColor)
             mSeparatorColor = a.getColor(R.styleable.JournalView_separatorColor, mSeparatorColor)
-            mViewPaddingTop = a.getDimensionPixelSize(R.styleable.JournalView_viewPaddingTop, mViewPaddingTop)
-            mViewPaddingRight = a.getDimensionPixelSize(R.styleable.JournalView_viewPaddingRight, mViewPaddingRight)
             mNormalTimeSize = a.getDimensionPixelSize(R.styleable.JournalView_normalTimeSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mNormalTimeSize.toFloat(), context.resources.displayMetrics).toInt())
             mAccentTimeSize = a.getDimensionPixelSize(R.styleable.JournalView_accentTimeSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mAccentTimeSize.toFloat(), context.resources.displayMetrics).toInt())
         } finally {
             a.recycle()
         }
-
         viewInit()
     }
 
@@ -77,8 +73,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mDashedSeparatorPaint = Paint()
         mDashedSeparatorPaint.color = mSeparatorColor
         mDashedSeparatorPaint.style = Paint.Style.STROKE
-        mDashedSeparatorPaint.strokeWidth = 1f // TODO: add default value
-
+        mDashedSeparatorPaint.strokeWidth = 2f
+        mDashedSeparatorPaint.pathEffect = DashPathEffect(floatArrayOf(5f, 10f), 0f)
 
         // Time accented
         mAccentTimePaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -87,10 +83,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mAccentTimePaint.textSize = mAccentTimeSize.toFloat()
         mAccentTimePaint.getTextBounds("09:00", 0, "09:00".length, accentRect)
 
-        mTextMarginTop = accentRect.height()*2
-        mViewPaddingRight = mTextMarginTop/2
-        mViewPaddingTop = mTextMarginTop/2
-
+        mTextMarginTop = accentRect.height()*2.toFloat()
+        mViewPaddingLeft = mTextMarginTop/2
 
         // Time normal
         mNormalTimePaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -98,19 +92,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mNormalTimePaint.textSize = mNormalTimeSize.toFloat()
         mNormalTimePaint.getTextBounds("09:00", 0, "09:00".length, normalRect)
 
+        // Difference between normal and accented text
         mHeightDiff = (accentRect.height() - normalRect.height())/2
         mWidthDiff = accentRect.width() - normalRect.width()
     }
 
-//  mTimeTextHeight => textMarginTop
-//  for records height = minutes%5 *(textMarginTop/2)
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        mScreenHeight = 145*mTextMarginTop + mViewPaddingTop
-
-        this.setMeasuredDimension(mScreenWidth, mScreenHeight)
+        mScreenHeight = 134*mTextMarginTop + 133*accentRect.height()
+        this.setMeasuredDimension(mScreenWidth.toInt(), mScreenHeight.toInt())
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -128,27 +118,38 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     private fun drawLinesAndAxes(canvas: Canvas) {
-        val paddingLeft = (accentRect.width()+2*mViewPaddingRight).toFloat()
-        canvas.drawLine(paddingLeft, mViewPaddingTop.toFloat(),
-                paddingLeft,mScreenHeight.toFloat(), mNormalSeparatorPaint)
+        val paddingLeft = accentRect.width()+2 * mViewPaddingLeft
+        val lineWidth = mScreenWidth
 
+        canvas.drawLine(paddingLeft, mTextMarginTop/2, paddingLeft, mScreenHeight, mNormalSeparatorPaint)
+        canvas.drawLine(paddingLeft, mTextMarginTop/2, lineWidth, mTextMarginTop/2, mNormalSeparatorPaint)
+
+        var yy = mTextMarginTop/2 + mTextMarginTop + accentRect.height()
+        for(i in 1..133) {
+            val path = Path()
+                path.moveTo(paddingLeft, yy)
+                path.lineTo(paddingLeft+lineWidth, yy)
+            canvas.drawPath(path, mDashedSeparatorPaint)
+
+            yy += mTextMarginTop + accentRect.height()
+        }
     }
 
     private fun drawTimes(canvas: Canvas) {
-        var yy = accentRect.height().toFloat()
+        var yy = 0f
         for(i in 9..20) {
             var minute = 0
-            yy += mTextMarginTop
-            canvas.drawText(timeFormat(i, minute), mViewPaddingRight.toFloat(), yy, mAccentTimePaint)
+            yy += mTextMarginTop + accentRect.height().toFloat()
+            canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimePaint)
             for(j in 1..11) {
-                yy += mTextMarginTop + mHeightDiff
+                yy += mTextMarginTop + mHeightDiff + normalRect.height()
                 minute += 5
-                canvas.drawText(timeFormat(i, minute), (mWidthDiff+mViewPaddingRight.toFloat()), yy, mNormalTimePaint)
-                yy += +mHeightDiff
+                canvas.drawText(timeFormat(i, minute), (mWidthDiff+ mViewPaddingLeft), yy, mNormalTimePaint)
+                yy += mHeightDiff
             }
         }
         yy += mTextMarginTop
-        canvas.drawText(timeFormat(21, 0), mViewPaddingRight.toFloat(), yy, mAccentTimePaint)
+        canvas.drawText(timeFormat(21, 0), mViewPaddingLeft, yy, mAccentTimePaint)
     }
 
     private fun timeFormat(hour:Int, minute:Int): String {
