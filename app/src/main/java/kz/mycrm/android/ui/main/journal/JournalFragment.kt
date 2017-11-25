@@ -38,20 +38,14 @@ class JournalFragment : Fragment() {
         val startDate = Calendar.getInstance()
         startDate.add(Calendar.WEEK_OF_MONTH, -2)
 
-        val defaultDate = Calendar.getInstance()
-        defaultDate.add(Calendar.MONTH, -1)
-        defaultDate.add(Calendar.DAY_OF_WEEK, +5)
-
         horizontalCalendar = HorizontalCalendar.Builder(activity, R.id.calendarView)
                 .startDate(startDate.time)
                 .endDate(endDate.time)
-                .datesNumberOnScreen(5)
                 .dayNameFormat("EE")
                 .dayNumberFormat("d")
                 .showDayName(true)
                 .showMonthName(true)
-                .datesNumberOnScreen(9)
-                .defaultSelectedDate(Date())
+                .datesNumberOnScreen(5)
                 .build()
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
@@ -65,6 +59,6 @@ class JournalFragment : Fragment() {
         val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
         spinner.adapter = ArrayAdapter.createFromResource(activity, R.array.spinnerItems, R.layout.item_journal_spinner)
 
-        view.findViewById<View>(R.id.toDay).setOnClickListener(View.OnClickListener { horizontalCalendar.goToday(false) })
+        view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(false, true) })
     }
 }

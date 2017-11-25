@@ -127,9 +127,9 @@ public final class HorizontalCalendar {
      * @param immediate pass true to make the calendar scroll as fast as possible to reach the date of today
      *                  ,or false to play default scroll animation speed.
      */
-    public void goToday(boolean immediate) {
+    public void goToday(boolean immediate, boolean center) {
         setSelectedDatePosition(Collections.binarySearch(mListDays, new Date(), new DateComparator()));
-        selectDate(new Date(), immediate);
+        selectDate(new Date(), immediate, center);
     }
 
     /**
@@ -139,7 +139,7 @@ public final class HorizontalCalendar {
      * @param immediate pass true to make the calendar scroll as fast as possible to reach the target date
      *                  ,or false to play default scroll animation speed.
      */
-    public void selectDate(Date date, boolean immediate) {
+    public void selectDate(Date date, boolean immediate, boolean center) {
         if (loading) {
             handler.date = date;
             handler.immediate = immediate;
@@ -147,18 +147,20 @@ public final class HorizontalCalendar {
             if (immediate) {
                 int datePosition = positionOfDate(date);
                 centerToPositionWithNoAnimation(datePosition);
-                if (calendarListener != null) {
-                    calendarListener.onDateSelected(date, datePosition);
-                    calendarView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCalendarAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
             } else {
-                calendarView.setSmoothScrollSpeed(HorizontalLayoutManager.SPEED_NORMAL);
-                centerCalendarToPosition(positionOfDate(date), date);
+                if(center){
+                    calendarView.setSmoothScrollSpeed(HorizontalLayoutManager.SPEED_NORMAL);
+                    centerCalendarToPosition(positionOfDate(date));
+                }
+            }
+            if(calendarListener != null){
+                calendarListener.onDateSelected(date, mListDays.indexOf(date));
+                calendarView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCalendarAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         }
     }
@@ -168,7 +170,7 @@ public final class HorizontalCalendar {
      *
      * @param position The position to center the calendar to!
      */
-    void centerCalendarToPosition(int position, Date date) {
+    void centerCalendarToPosition(int position) {
         if (position != -1) {
             int shiftCells = numberOfDatesOnScreen / 2;
             int centerItem = calendarView.getPositionOfCenterItem();
@@ -177,16 +179,6 @@ public final class HorizontalCalendar {
                 calendarView.smoothScrollToPosition(position + shiftCells);
             } else if (position < centerItem) {
                 calendarView.smoothScrollToPosition(position - shiftCells);
-            }
-
-            if(calendarListener != null){
-                calendarListener.onDateSelected(date, mListDays.indexOf(date));
-                calendarView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCalendarAdapter.notifyDataSetChanged();
-                    }
-                });
             }
         }
     }
@@ -201,13 +193,6 @@ public final class HorizontalCalendar {
             } else if (position < centerItem) {
                 calendarView.scrollToPosition(position - shiftCells);
             }
-
-            calendarView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mCalendarAdapter.notifyDataSetChanged();
-                }
-            });
         }
     }
 
@@ -646,7 +631,7 @@ public final class HorizontalCalendar {
             if (calendar != null) {
                 calendar.loading = false;
                 if (date != null) {
-                    calendar.selectDate(date, immediate);
+                    calendar.selectDate(date, immediate, true);
                 }
 
             }
