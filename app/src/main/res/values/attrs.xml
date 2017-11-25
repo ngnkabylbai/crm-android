@@ -18,4 +18,15 @@
         <!-- Text color of weekDay -->
         <attr name="textWeekdayColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="JournalView">
+        <attr name="backgroundColor" format="color" />
+        <attr name="separatorColor" format="color" />
+        <attr name="accentTimeColor" format="color" />
+        <attr name="normalTimeColor" format="color" />
+        <attr name="viewPaddingTop" format="dimension" />
+        <attr name="viewPaddingRight" format="dimension" />
+        <attr name="normalTimeSize" format="dimension" />
+        <attr name="accentTimeSize" format="dimension" />
+    </declare-styleable>
 </resources>

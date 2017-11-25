@@ -51,7 +51,7 @@ class JournalFragment : Fragment() {
                 .showDayName(true)
                 .showMonthName(true)
                 .datesNumberOnScreen(9)
-                //                .defaultSelectedDate(new Date())
+                .defaultSelectedDate(Date())
                 .build()
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
