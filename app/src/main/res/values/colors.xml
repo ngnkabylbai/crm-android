@@ -13,5 +13,7 @@
 
     <color name="textColorHint">@color/black</color>
     <color name="textColorHighlight">@color/colorPrimaryDark</color>
+    <color name="notification_type_color">#7F8080</color>
+    <color name="orange">#FD9A4F</color>
 
 </resources>

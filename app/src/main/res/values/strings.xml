@@ -14,6 +14,11 @@
     <string name="navigation_bar_client">user</string>
     <string name="navigation_bar_notification">not</string>
     <string name="navigation_bar_menu">Меню</string>
-    <!--Division activity-->
+    <!--Division fragment-->
     <string name="division_title">Выберите филиал</string>
+    <!--Notification fragment-->
+    <string name="notification_title">Уведомление</string>
+    <string name="current_notification">Текущие</string>
+    <string name="past_notification">Прошедшие</string>
+    <string name="go_to_map">Перейти к карте</string>
 </resources>

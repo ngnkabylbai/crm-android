@@ -17,12 +17,4 @@ class DivisionViewModel : ViewModel(){
     fun requestUserDivisions(accessToken:String, expand: String?): LiveData<Resource<List<Division>>> {
         return userRepositoty.getUserDivisions(accessToken, expand)
     }
-
-//    fun unpackResource(data: Resource<List<Division>>): LiveData<List<Division>> {
-//        return Transformations.map(data, })
-//    }
-
-    fun getDivisions(): LiveData<List<Division>> {
-        return userRepositoty.getDivisions()
-    }
 }

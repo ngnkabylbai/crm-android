@@ -23,6 +23,7 @@ import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.ui.division.DivisionFragment
 import kz.mycrm.android.ui.login.LoginActivity
 import kz.mycrm.android.ui.login.LoginViewModel
+import kz.mycrm.android.ui.notification.NotificationFragment
 import kz.mycrm.android.util.Logger
 
 
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         bottomBar.setOnTabSelectedListener(object : AHBottomNavigation.OnTabSelectedListener {
 
             override fun onTabSelected(tabId: Int, wasSelected: Boolean):Boolean {
+                enableNavigationItems()
                 fragment = setFragment(tabId)
                 fragmentTransaction = supportFragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.fragment, fragment)
@@ -81,17 +83,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFragment(tabId :Int) :Fragment {
 
-        fragment = DivisionFragment()
+        when(tabId){
+            0->fragment = DivisionFragment()
+            2->fragment = NotificationFragment()
+        }
         return fragment
-//        when(tabId){
-//
-//
-//        }
     }
 
     private fun disableNavigationItems() {
         for (i in items.indices - 2 - 3) {
             bottomBar.disableItemAtPosition(i)
+        }
+    }
+
+    private fun enableNavigationItems() {
+        for (i in items.indices) {
+            bottomBar.enableItemAtPosition(i)
         }
     }
 }
