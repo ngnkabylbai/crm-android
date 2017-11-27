@@ -142,10 +142,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             yy += mTextMarginTop + accentRect.height().toFloat()
             canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimePaint)
             for(j in 1..11) {
-                yy += mTextMarginTop + mHeightDiff + normalRect.height()
                 minute += 5
-                canvas.drawText(timeFormat(i, minute), (mWidthDiff+ mViewPaddingLeft), yy, mNormalTimePaint)
-                yy += mHeightDiff
+                if(minute == 30) {
+                    yy += mTextMarginTop + accentRect.height().toFloat()
+                    canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimePaint)
+                } else {
+                    yy += mTextMarginTop + mHeightDiff + normalRect.height()
+                    canvas.drawText(timeFormat(i, minute), (mWidthDiff+ mViewPaddingLeft), yy, mNormalTimePaint)
+                    yy += mHeightDiff
+                }
             }
         }
         yy += mTextMarginTop
