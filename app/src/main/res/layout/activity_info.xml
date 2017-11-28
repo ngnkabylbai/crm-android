@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundDivision"
+    tools:context="kz.mycrm.android.ui.info.InfoActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/info_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/info_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:text="11 august, 11:00"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/close_x"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/service_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/label_text_color"
+        android:text="@string/services"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_topbar" />
+
+    <TextView
+        android:id="@+id/client_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/client"
+        android:textColor="@color/label_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="172dp" />
+
+    <LinearLayout
+        android:id="@+id/client_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_label">
+
+        <TextView
+            android:id="@+id/client_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tom Kotevich"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/client_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="+7 705 456 78 98"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/note_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/note"
+        android:textColor="@color/label_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_info" />
+</android.support.constraint.ConstraintLayout>

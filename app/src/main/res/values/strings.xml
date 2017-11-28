@@ -21,4 +21,8 @@
     <string name="current_notification">Текущие</string>
     <string name="past_notification">Прошедшие</string>
     <string name="go_to_map">Перейти к карте</string>
+    <!--Info activity-->
+    <string name="services">УСЛУГИ</string>
+    <string name="client">КЛИЕНТ</string>
+    <string name="note">ЗАМЕТКА</string>
 </resources>
