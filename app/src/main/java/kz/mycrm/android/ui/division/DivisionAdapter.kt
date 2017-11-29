@@ -1,6 +1,8 @@
 package kz.mycrm.android.ui.division
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -51,8 +53,10 @@ class DivisionAdapter(internal var divisions: List<Division>, internal var conte
             itemView.setOnClickListener(this)
         }
 
-        override fun onClick(p0: View?) {
-            Toast.makeText(itemView.context, "Goes to Fragment and set enable nav_item", Toast.LENGTH_SHORT).show()
+        override fun onClick(p0: View?){
+            var intent : Intent = Intent(itemView.context, MainActivity::class.java)
+            itemView.context.startActivity(intent)
+            Toast.makeText(itemView.context, "call main activity on item clicked", Toast.LENGTH_SHORT).show()
         }
     }
 }

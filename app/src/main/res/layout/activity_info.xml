@@ -33,6 +33,7 @@
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:id="@+id/close_activity"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/close_x"

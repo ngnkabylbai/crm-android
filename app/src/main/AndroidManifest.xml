@@ -25,7 +25,8 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.TransNav" />
-        <activity android:name=".ui.info.InfoActivity"></activity>
+        <activity android:name=".ui.info.InfoActivity" />
+        <activity android:name=".ui.division.DivisionsActivity"></activity>
     </application>
 
 </manifest>

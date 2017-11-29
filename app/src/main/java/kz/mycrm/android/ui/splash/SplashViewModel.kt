@@ -8,6 +8,7 @@ import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.repository.UserRepository
 import kz.mycrm.android.util.AppExecutors
+import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 
 /**
@@ -28,10 +29,12 @@ class SplashViewModel : ViewModel() {
     }
 
     fun getToken(): LiveData<Token> {
+        Logger.debug("getToken")
         return tokenRepository.getToken()
     }
 
     fun loadUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
+        Logger.debug("loadUserDivisions")
         return userRepository.getUserDivisions(accessToken, expand)
     }
 }
