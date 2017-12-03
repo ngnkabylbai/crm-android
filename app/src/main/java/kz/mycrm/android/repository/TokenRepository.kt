@@ -1,10 +1,8 @@
 package kz.mycrm.android.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.application.MycrmApp
+import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
@@ -30,7 +28,7 @@ class TokenRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun shouldFetch(data: Token?): Boolean {
-                return true
+                return (getCount() == 0)
             }
 
             override fun loadFromDb(): LiveData<Token> {

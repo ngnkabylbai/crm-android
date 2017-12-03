@@ -1,4 +1,4 @@
-package kz.mycrm.android.application
+package kz.mycrm.android
 
 import android.app.Application
 import android.arch.persistence.room.Room

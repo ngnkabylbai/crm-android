@@ -10,8 +10,8 @@
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/login_margin_top"
-        android:background="@drawable/logo2"
+        android:layout_marginTop="@dimen/login_content_margin_top"
+        android:background="@mipmap/ic_logo2"
         app:layout_constraintStart_toStartOf="@id/loginLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/login_margin"
         android:layout_marginLeft="@dimen/login_margin"
+
         app:layout_constraintTop_toTopOf="@id/logo"
         app:layout_constraintStart_toEndOf="@id/logo"
         app:layout_constraintBottom_toBottomOf="@id/logo"
@@ -34,18 +35,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_margin"
         android:theme="@style/TextLabel"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo">
 
-        <android.support.design.widget.TextInputEditText
+        <kz.mycrm.android.ui.view.LoginEditTextView
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_login"
+            android:maxLength="16"
+            android:text="+7 7"
+            android:textSize="@dimen/login_text_input_size"
             android:background="@drawable/login_edit_background"
-            android:inputType="text"
-            android:textIsSelectable="false" />
+            android:inputType="phone"
+            android:textIsSelectable="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -54,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_margin"
         android:theme="@style/TextLabel"
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="@id/loginLayout"
         app:layout_constraintTop_toBottomOf="@id/loginLayout">
 
@@ -62,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_password"
+            android:textSize="@dimen/login_text_input_size"
             android:background="@drawable/login_edit_background"
             android:inputType="textPassword"
             android:textIsSelectable="false" />
@@ -72,7 +79,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/action_forgot_password"
-        android:textSize="16sp"
+        android:textSize="@dimen/login_text_action_size"
+        android:layout_marginBottom="@dimen/login_hint_margin_bottom"
         android:textColor="@color/login_textColor"
         app:layout_constraintEnd_toEndOf="@id/passwordLayout"
         app:layout_constraintTop_toTopOf="@id/passwordLayout"
@@ -80,14 +88,14 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="340dp"
+        android:layout_width="@dimen/login_button_width"
         android:layout_height="40dp"
         android:layout_marginTop="@dimen/login_margin"
         android:background="@drawable/login_button_background"
         android:text="@string/action_login"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="@dimen/login_text_input_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLayout" />
@@ -99,7 +107,7 @@
         android:layout_marginTop="@dimen/login_margin"
         android:text="@string/action_create_new_account"
         android:textColor="@color/login_textColor"
-        android:textSize="16sp"
+        android:textSize="@dimen/login_text_action_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginButton" />

@@ -17,4 +17,5 @@
     <color name="orange">#FD9A4F</color>
     <color name="label_text_color">#848684</color>
 
+    <color name="error">#ff0000</color>
 </resources>

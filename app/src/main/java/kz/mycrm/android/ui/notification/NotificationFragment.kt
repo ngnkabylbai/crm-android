@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.division.DivisionAdapter
 import kz.mycrm.android.ui.main.MainViewModel
 
 /**
@@ -31,7 +30,7 @@ class NotificationFragment:Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var view: View = inflater!!.inflate(R.layout.notification_fragment, container, false)
+        var view: View = inflater!!.inflate(R.layout.fragment_notification, container, false)
 
         return view
     }

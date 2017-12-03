@@ -9,7 +9,6 @@ import kz.mycrm.android.remote.UserService
  */
 object ApiUtils {
 
-//    private val baseUrl: String = "https://private-anon-55d088c7b0-apimycrm.apiary-proxy.com/v2/"
     private val baseUrl: String = "http://test.api.mycrm.kz/v2/"
 
     fun getTokenService() : TokenService {

@@ -1,27 +1,18 @@
 package kz.mycrm.android.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.application.MycrmApp
+import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Division
-import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
-import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-class UserRepository {
-
-    private var appExecutors: AppExecutors
-
-    constructor(appExecutors: AppExecutors) {
-        this.appExecutors = appExecutors
-    }
+class UserRepository(private var appExecutors: AppExecutors) {
 
     fun getUserData(): LiveData<Resource<User>>? {
         return null

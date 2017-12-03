@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape android:shape="rectangle"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <corners android:radius="30dp"/>
-    <gradient
-        android:angle="90"
-        android:endColor="#00a9d9"
-        android:centerColor="#1f71b6"
-        android:startColor="#1460a0"
-        android:type="linear" />
-
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true" android:drawable="@drawable/login_button_enabled"/>
+    <item android:state_enabled="false" android:drawable="@drawable/login_button_disabled"/>
+</selector>

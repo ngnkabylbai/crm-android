@@ -2,6 +2,8 @@ package kz.mycrm.android.ui.division
 
 import android.arch.lifecycle.*
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.db.entity.Token
+import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.repository.UserRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Logger
@@ -12,9 +14,16 @@ import kz.mycrm.android.util.Resource
  */
 class DivisionViewModel : ViewModel(){
 
-    private var userRepositoty = UserRepository(AppExecutors)
+    private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
+    private var userRepository = UserRepository(AppExecutors)
 
-    fun requestUserDivisions(accessToken:String, expand: String?): LiveData<Resource<List<Division>>> {
-        return userRepositoty.getUserDivisions(accessToken, expand)
+    fun getToken(): LiveData<Token> {
+        Logger.debug("getToken")
+        return tokenRepository.getToken()
+    }
+
+    fun loadUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
+        Logger.debug("loadUserDivisions")
+        return userRepository.getUserDivisions(accessToken, expand)
     }
 }

@@ -39,16 +39,16 @@ class MainActivity : AppCompatActivity() {
 
         ButterKnife.bind(this)
 
-        items = arrayListOf<AHBottomNavigationItem>(AHBottomNavigationItem(resources.getString(R.string.navigation_bar_calendar), R.drawable.calendar_menu),
-                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_client), R.drawable.clients_menu),
-                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_notification), R.drawable.notifications_menu),
-                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_menu), R.drawable.menu)
+        items = arrayListOf(AHBottomNavigationItem(resources.getString(R.string.navigation_bar_calendar), R.mipmap.ic_nav_calendar),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_client), R.mipmap.ic_nav_clients),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_notification), R.mipmap.ic_nav_notifications),
+                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_menu), R.mipmap.ic_nav_menu)
         )
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         bottomBar.addItems(items)
-        bottomBar.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE)
+        bottomBar.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
         bottomBar.setColoredModeColors(Color.GRAY, Color.DKGRAY)
 
         fragment = NotificationFragment()
@@ -56,16 +56,13 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.fragment, fragment)
         fragmentTransaction.commit()
 
-        bottomBar.setOnTabSelectedListener(object : AHBottomNavigation.OnTabSelectedListener {
-
-            override fun onTabSelected(tabId: Int, wasSelected: Boolean):Boolean {
-                fragment = setFragment(tabId)
-                fragmentTransaction = supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.fragment, fragment)
-                fragmentTransaction.commit()
-                return true
-            }
-        })
+        bottomBar.setOnTabSelectedListener { tabId, wasSelected ->
+            fragment = setFragment(tabId)
+            fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment, fragment)
+            fragmentTransaction.commit()
+            true
+        }
     }
 
     private fun setFragment(tabId :Int) :Fragment {

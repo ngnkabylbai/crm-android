@@ -8,15 +8,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.main.MainViewModel
-import kz.mycrm.android.ui.main.mainIntent
-import kz.mycrm.android.ui.splash.SplashViewModel
+import kz.mycrm.android.SplashViewModel
 import kz.mycrm.android.util.Logger
 
 fun Context.divisionsIntent(): Intent {
@@ -26,7 +23,6 @@ fun Context.divisionsIntent(): Intent {
 class DivisionsActivity : AppCompatActivity() {
 
     private lateinit var divisionViewModel : DivisionViewModel
-    private lateinit var splashViewModel : SplashViewModel
 
     lateinit var rvDivisions : RecyclerView
 
@@ -45,12 +41,11 @@ class DivisionsActivity : AppCompatActivity() {
         rvDivisions.setHasFixedSize(true)
 
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
-        splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
 
-        splashViewModel.getToken().observe(this, Observer { token->
+        divisionViewModel.getToken().observe(this, Observer { token->
             if (token != null){
 
-                splashViewModel.loadUserDivisions(token.token, null).observe(this,
+                divisionViewModel.loadUserDivisions(token.token, null).observe(this,
                         Observer { resourceDivisionList->
                             if (resourceDivisionList != null){
                                 if (resourceDivisionList.data != null){

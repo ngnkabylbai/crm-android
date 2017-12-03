@@ -1,19 +1,15 @@
-package kz.mycrm.android.ui.splash
+package kz.mycrm.android
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import kz.mycrm.android.R
-import kz.mycrm.android.application.MycrmApp
-import kz.mycrm.android.ui.division.divisionsIntent
+import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.login.loginIntent
-import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
 
-    private lateinit var viewModel: SplashViewModel
+    lateinit var viewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,13 +17,13 @@ class SplashActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.checkForToken().observe(this, Observer { token ->
-            if(token != null) {
-                Logger.debug("Token found from db: Rec count:" + MycrmApp.database.TokenDao().getCount()+" data: " + token.token)
-                startActivity(divisionsIntent())
-            } else {
+//            if(token != null) {
+//                Logger.debug("Token found from db: Rec count:" + MycrmApp.database.TokenDao().getCount()+" data: " + token.token)
+//                startActivity(divisionsIntent())
+//            } else {
                 Logger.debug("Token wasn't found. Directing to login activity...")
                 startActivity(loginIntent())
-            }
+//            }
             finish()
         })
     }
