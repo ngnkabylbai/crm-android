@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Login activity -->
-    <dimen name="login_content_margin_top">100dp</dimen>
-    <dimen name="login_margin">50dp</dimen>
     <dimen name="login_editText_width">320dp</dimen>
     <dimen name="login_button_width">320dp</dimen>
     <dimen name="login_text_action_size">16sp</dimen>
