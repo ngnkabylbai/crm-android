@@ -1,19 +1,23 @@
 package kz.mycrm.android.ui.main.journal
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatSpinner
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kz.mycrm.android.R
-import java.text.DateFormat
+import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Status
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -21,7 +25,17 @@ import java.util.*
  */
 class JournalFragment : Fragment() {
 
+    private lateinit var viewModel: JournalViewModel
     private lateinit var horizontalCalendar: HorizontalCalendar
+    private lateinit var token: String
+    private lateinit var mDate: String
+    private var divisionId = 49
+    private var staffId = intArrayOf(748)
+
+    private lateinit var dateFormat: SimpleDateFormat
+
+    @BindView(R.id.date)
+    lateinit var dateView: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_journal, container, false)
@@ -29,7 +43,15 @@ class JournalFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ButterKnife.bind(this, view)
 
+        viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
+        viewModel.getToken().observe(this, Observer { token ->
+            this.token = token!!.token
+        })
+
+        dateFormat = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
+        validDate()
         /** end after 2 weeks from now */
         val endDate = Calendar.getInstance()
         endDate.add(Calendar.WEEK_OF_MONTH, 2)
@@ -45,13 +67,20 @@ class JournalFragment : Fragment() {
                 .dayNumberFormat("d")
                 .showDayName(true)
                 .showMonthName(true)
-                .datesNumberOnScreen(5)
                 .build()
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Date, position: Int) {
-                Toast.makeText(activity, DateFormat.getDateInstance().format(date) + " is selected!", Toast.LENGTH_SHORT).show()
-                Log.d("Selected Item: ", DateFormat.getDateInstance().format(date))
+
+                mDate = formatDate(date)
+                viewModel.requestJournal(token, mDate, divisionId, staffId)
+                        .observe(activity, Observer {journal ->
+                            if(journal?.status == Status.SUCCESS){
+                                Logger.debug("Journal success" + journal.toString())
+                            } else {
+                                Logger.debug("Journal status:"+journal?.status)
+                            }
+                        })
             }
 
         }
@@ -61,4 +90,25 @@ class JournalFragment : Fragment() {
 
         view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(false, true) })
     }
+
+    private fun formatDate(date: Date): String {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        return cal.get(Calendar.YEAR).toString()+
+                "-"+String.format("%02d",cal.get(Calendar.MONTH)+1)+
+                "-"+String.format("%02d",cal.get(Calendar.DAY_OF_MONTH))
+    }
+
+    private fun validDate() {
+        val date = Date()
+        val cal = Calendar.getInstance()
+        cal.time = date
+
+        val dayName = SimpleDateFormat("EEEE", Locale.getDefault())
+        val monthName = SimpleDateFormat("MMMM", Locale.getDefault())
+        val str = String.format("Сегодня %s, %d %s %dг.", dayName.format(cal.time).toLowerCase(),
+                cal.get(Calendar.DAY_OF_MONTH), monthName.format(cal.time).toLowerCase(), cal.get(Calendar.YEAR))
+        dateView.text = str
+    }
+
 }
