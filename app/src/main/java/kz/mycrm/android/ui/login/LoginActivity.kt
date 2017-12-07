@@ -76,7 +76,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         msg.sendToTarget()
     }
 
-    @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword, R.id.createAccount)
+    @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword)
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.loginButton -> {
@@ -97,7 +97,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                 }
             }
             R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
-            R.id.createAccount -> Logger.debug("Create acc clicked")
         }
     }
 

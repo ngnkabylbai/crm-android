@@ -5,13 +5,12 @@
         <shape android:shape="rectangle" >
             <gradient
                 android:angle="0"
-                android:endColor="#00a9d9"
-                android:centerColor="#00a9d9"
-                android:startColor="#1460a0"
+                android:endColor="#28aad5"
+                android:startColor="#1e86d3"
                 android:type="linear" />
         </shape>
     </item>
-    <item android:bottom="3dp">
+    <item android:bottom="1dp">
         <shape android:shape="rectangle" >
             <solid android:color="#FFFFFF" />
         </shape>
