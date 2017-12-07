@@ -19,6 +19,7 @@
     <string name="navigation_bar_menu">Меню</string>
     <!--Division fragment-->
     <string name="division_title">Выберите филиал</string>
+
     <!--Notification fragment-->
     <string name="notification_title">Уведомление</string>
     <string name="current_notification">Текущие</string>
@@ -28,4 +29,12 @@
     <string name="services">УСЛУГИ</string>
     <string name="client">КЛИЕНТ</string>
     <string name="note">ЗАМЕТКА</string>
+
+    <!-- Journal fragment -->
+    <string-array name="spinnerItems">
+        <item>Филиал №1</item>
+        <item>Филиал №2</item>
+        <item>Филиал №3</item>
+        <item>Филиал with looong name №4</item>
+    </string-array>
 </resources>

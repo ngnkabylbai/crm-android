@@ -14,6 +14,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kz.mycrm.android.R
 import kz.mycrm.android.ui.notification.NotificationFragment
+import kz.mycrm.android.ui.main.journal.JournalFragment
 
 
 fun Context.mainIntent(): Intent {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var fragment :Fragment
     lateinit var fragmentTransaction:FragmentTransaction
-
+    private lateinit var journalFragment: JournalFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +52,13 @@ class MainActivity : AppCompatActivity() {
         bottomBar.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
         bottomBar.setColoredModeColors(Color.GRAY, Color.DKGRAY)
 
+        journalFragment = JournalFragment()
         fragment = NotificationFragment()
         fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment, fragment)
         fragmentTransaction.commit()
 
-        bottomBar.setOnTabSelectedListener { tabId, wasSelected ->
+        bottomBar.setOnTabSelectedListener { tabId, _ ->
             fragment = setFragment(tabId)
             fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragment, fragment)
@@ -66,11 +68,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment(tabId :Int) :Fragment {
-
-        when(tabId){
-            0->fragment = NotificationFragment()
-            2->fragment = NotificationFragment()
+        return when(tabId){
+            0->fragment
+            2->fragment
+            else -> {
+                NotificationFragment()
+            }
         }
-        return fragment
     }
 }
