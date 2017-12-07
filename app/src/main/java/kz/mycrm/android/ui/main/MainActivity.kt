@@ -13,7 +13,7 @@ import butterknife.ButterKnife
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.notification.NotificationFragment
+import kz.mycrm.android.ui.main.notification.NotificationFragment
 import kz.mycrm.android.ui.main.journal.JournalFragment
 
 

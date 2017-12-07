@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.notification
+package kz.mycrm.android.ui.main.notification
 
 import android.arch.lifecycle.ViewModel
 

@@ -20,7 +20,7 @@ import kz.mycrm.android.R
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
 import kz.mycrm.android.ui.BaseActivity
-import kz.mycrm.android.ui.division.divisionsIntent
+import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 

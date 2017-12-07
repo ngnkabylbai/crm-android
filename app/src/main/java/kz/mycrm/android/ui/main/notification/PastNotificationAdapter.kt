@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.notification
+package kz.mycrm.android.ui.main.notification
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -12,8 +12,12 @@ import kz.mycrm.android.R
 /**
  * Created by lab on 11/25/17.
  */
-class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<CurrentNotificationAdapter.ViewHolder>(){
+class PastNotificationAdapter(context: Context): RecyclerView.Adapter<PastNotificationAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -22,11 +26,7 @@ class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<Current
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    class ViewHolder(itemView :View) :RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
             Toast.makeText(itemView.context, "Go to map", Toast.LENGTH_SHORT).show()
         }

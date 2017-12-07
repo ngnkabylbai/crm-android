@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundDivision"
-    tools:context="kz.mycrm.android.ui.info.InfoActivity">
+    tools:context=".ui.main.info.InfoActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/info_topbar"

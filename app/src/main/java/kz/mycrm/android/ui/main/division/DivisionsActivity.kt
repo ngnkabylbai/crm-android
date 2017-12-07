@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.division
+package kz.mycrm.android.ui.main.division
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -13,7 +13,6 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
-import kz.mycrm.android.SplashViewModel
 import kz.mycrm.android.util.Logger
 
 fun Context.divisionsIntent(): Intent {

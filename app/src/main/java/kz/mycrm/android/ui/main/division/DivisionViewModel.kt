@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.division
+package kz.mycrm.android.ui.main.division
 
 import android.arch.lifecycle.*
 import kz.mycrm.android.db.entity.Division
