@@ -10,10 +10,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
-//@Entity(foreignKeys = arrayOf(ForeignKey(entity = Order::class,
-//                                          parentColumns = arrayOf("services"),
-//                                          childColumns = arrayOf("service_id"),
-//                                          onDelete = ForeignKey.CASCADE)))
+
 @Entity
 class Service {
 

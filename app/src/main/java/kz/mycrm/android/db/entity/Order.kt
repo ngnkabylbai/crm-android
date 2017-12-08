@@ -3,7 +3,6 @@ package kz.mycrm.android.db.entity
 import android.arch.persistence.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import kz.mycrm.android.util.Converters
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
@@ -103,10 +102,10 @@ class Order {
 //    @Expose
 //    lateinit var files: Array<String>
 
-//    @ColumnInfo(name="services")
-//    @SerializedName("services")
-//    @Expose
-//    lateinit var services: ArrayList<Service>
+    @ColumnInfo(name="services")
+    @SerializedName("services")
+    @Expose
+    lateinit var services: ArrayList<Service>
 
     @ColumnInfo(name="staff_posititon")
     @SerializedName("staff_position")

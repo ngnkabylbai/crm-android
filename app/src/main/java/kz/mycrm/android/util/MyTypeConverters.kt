@@ -8,22 +8,22 @@ import kz.mycrm.android.db.entity.Service
 /**
  * Created by asset on 12/8/17.
  */
-object Converters {
+class MyTypeConverters {
 
     var strSeparator = "__,__"
 
     @TypeConverter
-    fun convertListToString(video: ArrayList<Service>): String {
-        val videoArray = arrayOfNulls<Service>(video.size)
-        for (i in 0 until video.size) {
-            videoArray[i] = video[i]
+    fun convertListToString(services: ArrayList<Service>): String {
+        val serviceArray = arrayOfNulls<Service>(services.size)
+        for (i in 0 until services.size) {
+            serviceArray[i] = services[i]
         }
         var str = ""
         val gson = Gson()
-        for (i in videoArray.indices) {
-            val jsonString = gson.toJson(videoArray[i])
+        for (i in serviceArray.indices) {
+            val jsonString = gson.toJson(serviceArray[i])
             str += jsonString
-            if (i < videoArray.size - 1) {
+            if (i < serviceArray.size - 1) {
                 str += strSeparator
             }
         }
@@ -40,5 +40,4 @@ object Converters {
         }
         return videos
     }
-
 }

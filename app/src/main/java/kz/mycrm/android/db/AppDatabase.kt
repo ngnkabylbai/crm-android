@@ -5,13 +5,14 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import kz.mycrm.android.db.dao.*
 import kz.mycrm.android.db.entity.*
-import kz.mycrm.android.util.Converters
+import kz.mycrm.android.util.MyTypeConverters
 
 /**
  * Created by NKabylbay on 11/11/2017.
  */
 @Database(entities = arrayOf(Token::class, User::class, Division::class, StaffJournal::class,
-        Customer::class, Order::class, OrderPayment::class, Service::class), version =  1)
+        Customer::class, Order::class, OrderPayment::class, Service::class), version =  2)
+@TypeConverters(MyTypeConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun TokenDao(): TokenDao
     abstract fun DivisionDao(): DivisionDao
