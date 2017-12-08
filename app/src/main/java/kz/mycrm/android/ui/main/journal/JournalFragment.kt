@@ -8,6 +8,8 @@ import android.support.v7.widget.AppCompatSpinner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import butterknife.BindView
@@ -50,6 +52,33 @@ class JournalFragment : Fragment() {
             this.token = token!!.token
         })
 
+        setupCalendar(view)
+        setupSpinner(view)
+    }
+
+
+    private fun setupSpinner(view: View) {
+        val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
+        val spinnerItems = ArrayList<String>()
+        val adapter = ArrayAdapter<String>(activity, R.layout.item_journal_spinner, spinnerItems)
+        spinner.adapter = adapter
+        viewModel.getDivisions().observe(activity, Observer { list ->
+            list!!.mapTo(spinnerItems) { it.name.toString() }
+            adapter.notifyDataSetChanged()
+        } )
+
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+
+            }
+        }
+    }
+
+    private fun setupCalendar(view: View) {
         dateFormat = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
         validDate()
         /** end after 2 weeks from now */
@@ -84,11 +113,8 @@ class JournalFragment : Fragment() {
             }
 
         }
-
-        val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
-        spinner.adapter = ArrayAdapter.createFromResource(activity, R.array.spinnerItems, R.layout.item_journal_spinner)
-
         view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(false, true) })
+
     }
 
     private fun formatDate(date: Date): String {
