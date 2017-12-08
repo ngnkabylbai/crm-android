@@ -10,5 +10,4 @@ object Logger {
     fun debug(msg: String) {
         Log.d("DBG", msg)
     }
-
 }

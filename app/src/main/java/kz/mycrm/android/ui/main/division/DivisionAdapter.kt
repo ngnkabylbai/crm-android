@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.division
+package kz.mycrm.android.ui.main.division
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

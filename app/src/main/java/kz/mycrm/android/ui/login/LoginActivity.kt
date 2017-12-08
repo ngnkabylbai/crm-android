@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -17,12 +16,11 @@ import android.widget.ProgressBar
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.R
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
 import kz.mycrm.android.ui.BaseActivity
-import kz.mycrm.android.ui.division.divisionsIntent
+import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
@@ -63,7 +61,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
-        login.setText("+7 701 381 71 15")
+        login.setText("+7 701 381-71-15")
         password.setText("password")
 
         builder = AlertDialog.Builder(this)
@@ -76,48 +74,47 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         msg.sendToTarget()
     }
 
-    @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword, R.id.createAccount)
+    @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword)
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.loginButton -> {
                 clearError()
                 if (isValidInput()) {
                     startLoading()
-                    viewModel.requestToken(login.text.toString(), password.text.toString())
+                    viewModel.requestToken(getValidLogin(), password.text.toString())
                             .observe(this, Observer { token ->
                                 if (token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
                                     progress.visibility = View.GONE
                                     startActivity(divisionsIntent())
                                     finish()
                                 } else if (token?.status == Status.ERROR) { // error, show error message
-                                    password.error = resources.getString(R.string.error_invalid_password)
+                                    login.error = resources.getString(R.string.error_invalid_password)
                                     stopLoading()
                                 }
                             })
                 }
             }
             R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
-            R.id.createAccount -> Logger.debug("Create acc clicked")
         }
     }
 
+    private fun getValidLogin(): String {
+        val string = login.text.toString()
+        val phone = string.replace("[^\\d]".toRegex(), "")
+        return "+7 "+phone.substring(1, 4)+" "+phone.substring(4,7)+" "+phone.substring(7, 9)+" "+phone.substring(9)
+    }
+
     private fun isValidInput(): Boolean {
-        var result = true
-        if (login.text.isEmpty()) {
+        if (login.text.length != 16 || password.text.isEmpty()) {
             login.error = resources.getString(R.string.error_empty_string)
-            result = false
+            return false
         }
-        if (password.text.isEmpty()) {
-            password.error = resources.getString(R.string.error_empty_string)
-            result = false
-        }
-        return result
+        return true
     }
 
     private fun clearError() {
         progress.visibility = View.GONE
         login.error = null
-        password.error = null
     }
 
     private fun startLoading() {

@@ -18,4 +18,7 @@
     <color name="label_text_color">#848684</color>
 
     <color name="error">#ff0000</color>
+
+    <color name="bottom_nav_active">#0090ff</color>
+    <color name="bottom_nav_inactive">#747474</color>
 </resources>

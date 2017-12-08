@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.info
+package kz.mycrm.android.ui.main.info
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
