@@ -18,7 +18,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
         return null
     }
 
-    fun getUserDivisions(accessToken:String, expand:String?): LiveData<Resource<List<Division>>> {
+    fun getUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
             override fun saveCallResult(item: List<Division>) {
                 if ((getCount() == 0)){
@@ -37,7 +37,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Division>>> {
-                return ApiUtils.getUserService().requestDivisions(accessToken, expand)
+                return ApiUtils.getUserService().requestDivisions(accessToken, "self_staff")
             }
         }.asLiveData()
     }

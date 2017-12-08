@@ -44,7 +44,7 @@ class DivisionsActivity : AppCompatActivity() {
         divisionViewModel.getToken().observe(this, Observer { token->
             if (token != null){
 
-                divisionViewModel.loadUserDivisions(token.token, null).observe(this,
+                divisionViewModel.loadUserDivisions(token.token).observe(this,
                         Observer { resourceDivisionList->
                             if (resourceDivisionList != null){
                                 if (resourceDivisionList.data != null){
