@@ -21,5 +21,5 @@ interface OrderPaymentDao {
     fun updateOrderPayment(orderpayment: OrderPayment)
 
     @Query("SELECT * FROM orderpayment LIMIT 1")
-    fun getOrderPaymen(): LiveData<OrderPayment>
+    fun getOrderPayment(): LiveData<OrderPayment>
 }

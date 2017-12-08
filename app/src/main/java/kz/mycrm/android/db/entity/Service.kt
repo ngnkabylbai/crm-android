@@ -1,50 +1,70 @@
 package kz.mycrm.android.db.entity
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
+//@Entity(foreignKeys = arrayOf(ForeignKey(entity = Order::class,
+//                                          parentColumns = arrayOf("services"),
+//                                          childColumns = arrayOf("service_id"),
+//                                          onDelete = ForeignKey.CASCADE)))
+@Entity
 class Service {
 
+   @PrimaryKey
+   @ColumnInfo(name = "service_id")
    @SerializedName("id")
    @Expose
-   private lateinit var id: String
+   lateinit var id: String
 
+   @ColumnInfo(name = "service_price")
    @SerializedName("service_price")
    @Expose
-   private lateinit var servicePrice: String
+   lateinit var servicePrice: String
 
+   @ColumnInfo(name = "duration")
    @SerializedName("duration")
    @Expose
-   private lateinit var duration: String
+   lateinit var duration: String
 
+   @ColumnInfo(name = "price")
    @SerializedName("price")
    @Expose
-   private lateinit var price: String
+   lateinit var price: String
 
+   @ColumnInfo(name = "order_service_id")
    @SerializedName("order_service_id")
    @Expose
-   private lateinit var orderServiceId: String
+   lateinit var orderServiceId: String
 
+   @ColumnInfo(name = "name")
    @SerializedName("name")
    @Expose
-   private lateinit var name: String
+   lateinit var name: String
 
+   @ColumnInfo(name = "quantity")
    @SerializedName("quantity")
    @Expose
-   private lateinit var quantity: String
+   lateinit var quantity: String
 
+   @ColumnInfo(name = "service_name")
    @SerializedName("service_name")
    @Expose
-   private lateinit var serviceName: String
+   lateinit var serviceName: String
 
+   @ColumnInfo(name = "discount")
    @SerializedName("discount")
    @Expose
-   private lateinit var discount: String
+   lateinit var discount: String
 
-   @SerializedName("products")
-   @Expose
-   private lateinit var products: Array<String>
+//   @ColumnInfo(name = "products")
+//   @SerializedName("products")
+//   @Expose
+//   lateinit var products: Array<String>
 }

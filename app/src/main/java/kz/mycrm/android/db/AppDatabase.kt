@@ -2,22 +2,23 @@ package kz.mycrm.android.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import kz.mycrm.android.db.dao.DivisionDao
-import kz.mycrm.android.db.dao.JournalDao
-import kz.mycrm.android.db.dao.TokenDao
-import kz.mycrm.android.db.dao.UserDao
-import kz.mycrm.android.db.entity.Division
-import kz.mycrm.android.db.entity.StaffJournal
-import kz.mycrm.android.db.entity.Token
-import kz.mycrm.android.db.entity.User
+import android.arch.persistence.room.TypeConverters
+import kz.mycrm.android.db.dao.*
+import kz.mycrm.android.db.entity.*
+import kz.mycrm.android.util.Converters
 
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-@Database(entities = arrayOf(Token::class, User::class, Division::class, StaffJournal::class), version =  5)
+@Database(entities = arrayOf(Token::class, User::class, Division::class, StaffJournal::class,
+        Customer::class, Order::class, OrderPayment::class, Service::class), version =  1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun TokenDao(): TokenDao
     abstract fun DivisionDao(): DivisionDao
     abstract fun JournalDao(): JournalDao
+    abstract fun CustomerDao(): CustomerDao
+    abstract fun OrderDao(): OrderDao
+    abstract fun OrderPaymentDao(): OrderPaymentDao
+    abstract fun ServiceDao(): ServiceDao
     abstract fun UserDao(): UserDao
 }

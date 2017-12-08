@@ -11,7 +11,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.division.DivisionAdapter
+import kz.mycrm.android.db.entity.Service
 
 class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -23,6 +23,8 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var rv:RecyclerView
     lateinit var lm:LinearLayoutManager
     lateinit var adapter:ServiceAdapter
+
+    lateinit var serviceList:List<Service>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

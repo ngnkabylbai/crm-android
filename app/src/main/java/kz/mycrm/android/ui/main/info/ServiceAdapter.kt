@@ -37,9 +37,9 @@ class ServiceAdapter(internal var serviceList: List<Service>, internal var conte
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         @BindView(R.id.service_title)
-        internal var title: TextView? = null
+        lateinit var title: TextView
         @BindView(R.id.service_price)
-        internal var price: TextView? = null
+        lateinit var price: TextView
 
         init {
             ButterKnife.bind(itemView)

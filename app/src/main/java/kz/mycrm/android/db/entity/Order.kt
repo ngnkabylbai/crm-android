@@ -1,149 +1,186 @@
 package kz.mycrm.android.db.entity
 
+import android.arch.persistence.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kz.mycrm.android.util.Converters
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
-
+//@Entity(tableName = "mOrder", indices = arrayOf(Index(value = "services", unique = true)))
+@Entity(tableName = "mOrder")
 class Order {
 
-
+    @PrimaryKey
+    @ColumnInfo(name="order_id")
     @SerializedName("id")
     @Expose
-    private lateinit var id: String
+    lateinit var id: String
 
+    @ColumnInfo(name="hours_before")
     @SerializedName("hours_before")
     @Expose
-    private lateinit var hoursBefore: String
+    lateinit var hoursBefore: String
 
+    @ColumnInfo(name="company_customer_id")
     @SerializedName("company_customer_id")
     @Expose
-    private lateinit var companyCustomerId: String
+    lateinit var companyCustomerId: String
 
+    @ColumnInfo(name="customer_phone")
     @SerializedName("customer_phone")
     @Expose
-    private lateinit var customerPhone: String
+    lateinit var customerPhone: String
 
+    @ColumnInfo(name="staff_d")
     @SerializedName("staff_id")
     @Expose
-    private lateinit var staffId: String
+    lateinit var staffId: String
 
     @SerializedName("customer")
     @Expose
-    private lateinit var customer: Customer
+    @Embedded
+    lateinit var customer: Customer
 
+    @ColumnInfo(name="resourceId")
     @SerializedName("resourceId")
     @Expose
-    private lateinit var resourceId: String
+    lateinit var resourceId: String
 
+    @ColumnInfo(name="title")
     @SerializedName("title")
     @Expose
-    private lateinit var title: String
+    lateinit var title: String
 
+    @ColumnInfo(name="company_cash_id")
     @SerializedName("company_cash_id")
     @Expose
-    private lateinit var companyCashId: String
+    lateinit var companyCashId: String
 
+    @ColumnInfo(name="customer_source_id")
     @SerializedName("customer_source_id")
     @Expose
-    private lateinit var customerSourceId: String
+    lateinit var customerSourceId: String
 
+    @ColumnInfo(name="className")
     @SerializedName("className")
     @Expose
-    private lateinit var className: String
+    lateinit var className: String
 
-    @SerializedName("contactCustomers")
-    @Expose
-    private lateinit var contactCustomers: Array<String>
+//    @ColumnInfo(name="contactCustomers")
+//    @SerializedName("contactCustomers")
+//    @Expose
+//    lateinit var contactCustomers: Array<String>
 
+    @ColumnInfo(name="customer_full_name")
     @SerializedName("customer_full_name")
     @Expose
-    private lateinit var customerFullName: String
+    lateinit var customerFullName: String
 
+    @ColumnInfo(name="datetime")
     @SerializedName("datetime")
     @Expose
-    private lateinit var datetime: String
+    lateinit var datetime: String
 
+    @ColumnInfo(name="note")
     @SerializedName("note")
     @Expose
-    private lateinit var note: String
+    lateinit var note: String
 
+    @ColumnInfo(name="end")
     @SerializedName("end")
     @Expose
-    private lateinit var end: String
+    lateinit var end: String
 
+    @ColumnInfo(name="staff_fullname")
     @SerializedName("staff_fullname")
     @Expose
-    private lateinit var staffFullname: String
+    lateinit var staffFullname: String
 
-    @SerializedName("files")
-    @Expose
-    private lateinit var files: Array<String>
+//    @ColumnInfo(name="files")
+//    @SerializedName("files")
+//    @Expose
+//    lateinit var files: Array<String>
 
-    @SerializedName("services")
-    @Expose
-    private lateinit var services: Array<Service>
+//    @ColumnInfo(name="services")
+//    @SerializedName("services")
+//    @Expose
+//    lateinit var services: ArrayList<Service>
 
+    @ColumnInfo(name="staff_posititon")
     @SerializedName("staff_position")
     @Expose
-    private lateinit var staffPosition: String
+    lateinit var staffPosition: String
 
-    @SerializedName("documents")
-    @Expose
-    private lateinit var documents: Array<String>
+//    @ColumnInfo(name="documents")
+//    @SerializedName("documents")
+//    @Expose
+//    lateinit var documents: Array<String>
 
+    @ColumnInfo(name="status")
     @SerializedName("status")
     @Expose
-    private lateinit var status: String
+    lateinit var status: String
 
+    @ColumnInfo(name="products_discount")
     @SerializedName("products_discount")
     @Expose
-    private lateinit var productsDiscount: String
+    lateinit var productsDiscount: String
 
+    @ColumnInfo(name="customer_name")
     @SerializedName("customer_name")
     @Expose
-    private lateinit var customerName: String
+    lateinit var customerName: String
 
+    @ColumnInfo(name="medCard")
     @SerializedName("medCard")
     @Expose
-    private lateinit var medCard: String
+    lateinit var medCard: String
 
+    @ColumnInfo(name="editable")
     @SerializedName("editable")
     @Expose
-    private lateinit var editable: String
+    lateinit var editable: String
 
+    @ColumnInfo(name="price")
     @SerializedName("price")
     @Expose
-    private lateinit var price: String
+    lateinit var price: String
 
+    @ColumnInfo(name="color")
     @SerializedName("color")
     @Expose
-    private lateinit var color: String
+    lateinit var color: String
 
+    @ColumnInfo(name="start")
     @SerializedName("start")
     @Expose
-    private lateinit var start: String
+    lateinit var start: String
 
+    @ColumnInfo(name="insurance_id")
     @SerializedName("insurance_id")
     @Expose
-    private lateinit var insuranceId: String
+    lateinit var insuranceId: String
 
-    @SerializedName("order_payments")
-    @Expose
-    private lateinit var orderPayments: Array<OrderPayment>
+//    @ColumnInfo(name="")
+//    @SerializedName("order_payments")
+//    @Expose
+//    lateinit var orderPayments: Array<OrderPayment>
 
+    @ColumnInfo(name="division_id")
     @SerializedName("division_id")
     @Expose
-    private lateinit var divisionId: String
+    lateinit var divisionId: String
 
+    @ColumnInfo(name="productsprice")
     @SerializedName("productsprice")
     @Expose
-    private lateinit var productsprice: String
+    lateinit var productsprice: String
 
+    @ColumnInfo(name="referrer_id")
     @SerializedName("referrer_id")
     @Expose
-    private lateinit var referrerId: String
+    lateinit var referrerId: String
 
 }

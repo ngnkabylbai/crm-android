@@ -1,5 +1,8 @@
 package kz.mycrm.android.db.entity
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -7,105 +10,132 @@ import com.google.gson.annotations.SerializedName
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
 
+@Entity
 class Customer {
 
+    @PrimaryKey
+    @ColumnInfo(name = "cus_id")
     @SerializedName("id")
     @Expose
-    private lateinit var id: String
+    lateinit var id: String
 
+    @ColumnInfo(name = "source_id_title")
     @SerializedName("source_id_title")
     @Expose
-    private lateinit var sourceIdTitle: String
+    lateinit var sourceIdTitle: String
 
+    @ColumnInfo(name = "phone")
     @SerializedName("phone")
     @Expose
-    private lateinit var phone: String
+    lateinit var phone: String
 
+    @ColumnInfo(name = "canceled_orders")
     @SerializedName("canceled_orders")
     @Expose
-    private lateinit var canceledOrders: String
+    lateinit var canceledOrders: String
 
+    @ColumnInfo(name = "deposit")
     @SerializedName("deposit")
     @Expose
-    private lateinit var deposit: String
+    lateinit var deposit: String
 
+    @ColumnInfo(name = "debt")
     @SerializedName("debt")
     @Expose
-    private lateinit var debt: String
+    lateinit var debt: String
 
+    @ColumnInfo(name = "source_id")
     @SerializedName("source_id")
     @Expose
-    private lateinit var sourceId: String
+    lateinit var sourceId: String
 
+    @ColumnInfo(name = "sms_birthday")
     @SerializedName("sms_birthday")
     @Expose
-    private lateinit var smsBirthday: String
+    lateinit var smsBirthday: String
 
+    @ColumnInfo(name = "sms_exclude")
     @SerializedName("sms_exclude")
     @Expose
-    private lateinit var smsExclude: String
+    lateinit var smsExclude: String
 
+    @ColumnInfo(name = "employer")
     @SerializedName("employer")
     @Expose
-    private lateinit var employer: String
+    lateinit var employer: String
 
+    @ColumnInfo(name = "job")
     @SerializedName("job")
     @Expose
-    private lateinit var job: String
+    lateinit var job: String
 
+    @ColumnInfo(name = "lastname")
     @SerializedName("lastname")
     @Expose
-    private lateinit var lastname: String
+    lateinit var lastname: String
 
+    @ColumnInfo(name = "discount")
     @SerializedName("discount")
     @Expose
-    private lateinit var discount: String
+    lateinit var discount: String
 
+    @ColumnInfo(name = "city")
     @SerializedName("city")
     @Expose
-    private lateinit var city: String
+    lateinit var city: String
 
+    @ColumnInfo(name = "balance")
     @SerializedName("balance")
     @Expose
-    private lateinit var balance: String
+    lateinit var balance: String
 
+    @ColumnInfo(name = "lastVisit")
     @SerializedName("lastVisit")
     @Expose
-    private lateinit var lastVisit: String
+    lateinit var lastVisit: String
 
+    @ColumnInfo(name = "address")
     @SerializedName("address")
     @Expose
-    private lateinit var address: String
+    lateinit var address: String
 
+    @ColumnInfo(name = "smsExcludeTitle")
     @SerializedName("smsExcludeTitle")
     @Expose
-    private lateinit var smsExcludeTitle: String
+    lateinit var smsExcludeTitle: String
 
+    @ColumnInfo(name = "smsBirthdayTitle")
     @SerializedName("smsBirthdayTitle")
     @Expose
-    private lateinit var smsBirthdayTitle: String
+    lateinit var smsBirthdayTitle: String
 
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     @Expose
-    private lateinit var name: String
+    lateinit var name: String
 
+    @ColumnInfo(name = "categoriesTitle")
     @SerializedName("categoriesTitle")
     @Expose
-    private lateinit var categoriesTitle: String
+    lateinit var categoriesTitle: String
 
+    @ColumnInfo(name = "finishedOrders")
     @SerializedName("finishedOrders")
     @Expose
-    private lateinit var finishedOrders: String
+    lateinit var finishedOrders: String
 
+    @ColumnInfo(name = "categories")
     @SerializedName("categories")
     @Expose
-    private lateinit var categories: String
+    lateinit var categories: String
 
+    @ColumnInfo(name = "comments")
     @SerializedName("comments")
     @Expose
-    private lateinit var comments: String
+    lateinit var comments: String
 
+    @ColumnInfo(name = "revenue")
     @SerializedName("revenue")
     @Expose
-    private lateinit var revenue: String
+    lateinit var revenue: String
 }

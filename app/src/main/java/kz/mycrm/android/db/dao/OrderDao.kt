@@ -19,7 +19,7 @@ interface OrderDao {
     @Update
     fun updateOrder(order: Order)
 
-    @Query("SELECT * FROM order LIMIT 1")
-    fun getOrder(): LiveData<Order>
+    @Query("SELECT * FROM mOrder")
+    fun getOrder(): LiveData<List<Order>>
 
 }
