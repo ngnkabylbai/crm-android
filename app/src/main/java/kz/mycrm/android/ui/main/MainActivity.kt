@@ -11,9 +11,10 @@ import android.support.v7.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kz.mycrm.android.R
 import kz.mycrm.android.ui.main.journal.JournalFragment
+import kz.mycrm.android.ui.main.menu.MenuFragment
 import kz.mycrm.android.ui.main.notification.NotificationFragment
 
 
@@ -28,12 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
-    private lateinit var items: List<AHBottomNavigationItem>
-
     private lateinit var fragment :Fragment
     private lateinit var fragmentTransaction:FragmentTransaction
     private lateinit var journalFragment: JournalFragment
     private lateinit var notificationFragment: NotificationFragment
+    private lateinit var menuFragment: MenuFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,43 +41,39 @@ class MainActivity : AppCompatActivity() {
 
         ButterKnife.bind(this)
 
-        items = arrayListOf(AHBottomNavigationItem(resources.getString(R.string.navigation_bar_calendar), R.mipmap.ic_nav_calendar),
-//                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_client), R.mipmap.ic_nav_clients),
-                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_notification), R.mipmap.ic_nav_notifications)
-//                AHBottomNavigationItem(resources.getString(R.string.navigation_bar_menu), R.mipmap.ic_nav_menu)
-        )
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        bottomBar.addItems(items)
         bottomBar.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
         bottomBar.accentColor = ContextCompat.getColor(this, R.color.bottom_nav_active)
         bottomBar.inactiveColor = ContextCompat.getColor(this, R.color.bottom_nav_inactive)
+
+        val navigationAdapter = AHBottomNavigationAdapter(this, R.menu.bottom_menu)
+        navigationAdapter.setupWithBottomNavigation(bottomBar)
 
         journalFragment = JournalFragment()
             val bundle = Bundle()
             bundle.putInt("division_id", intent.extras.getInt("division_id"))
         journalFragment.arguments = bundle
         notificationFragment = NotificationFragment()
+        menuFragment = MenuFragment()
 
-        fragment = notificationFragment
-        fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment, fragment)
-        fragmentTransaction.commit()
-
-        bottomBar.setOnTabSelectedListener { tabId, _ ->
+        val onTabSelectedListener = AHBottomNavigation.OnTabSelectedListener { tabId, _ ->
             fragment = setFragment(tabId)
             fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragment, fragment)
             fragmentTransaction.commit()
             true
         }
+        bottomBar.setOnTabSelectedListener(onTabSelectedListener)
+        onTabSelectedListener.onTabSelected(1, true)
+        bottomBar.currentItem = 1
     }
 
     private fun setFragment(tabId :Int) :Fragment {
         return when(tabId){
             0-> journalFragment
-            2-> notificationFragment
+            1-> notificationFragment
+            2-> menuFragment
             else -> {
                 notificationFragment
             }

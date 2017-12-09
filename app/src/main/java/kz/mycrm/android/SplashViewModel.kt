@@ -17,8 +17,14 @@ import kz.mycrm.android.util.Resource
 class SplashViewModel : ViewModel() {
 
     private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
+    private val userRepository: UserRepository = UserRepository(AppExecutors)
 
     fun checkForToken(): LiveData<Token> {
         return tokenRepository.getToken()
+    }
+
+    fun loadUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
+        Logger.debug("loadUserDivisions")
+        return userRepository.getUserDivisions(accessToken)
     }
 }

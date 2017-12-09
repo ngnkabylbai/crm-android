@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.login
 
+import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -16,9 +17,12 @@ import android.widget.ProgressBar
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.R
+import kz.mycrm.android.SplashActivity
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
+import kz.mycrm.android.splashIntent
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
@@ -67,6 +71,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         builder = AlertDialog.Builder(this)
         builder.create()
         RetrofitClient.setConnectionTimeoutListener(this)
+
+        val layoutTransition = loginParentLayout.layoutTransition ?: LayoutTransition()
+        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        layoutTransition.setDuration(100)
+        loginParentLayout.layoutTransition = layoutTransition
     }
 
     override fun onConnectionTimeout() {
@@ -85,7 +94,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                             .observe(this, Observer { token ->
                                 if (token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
                                     progress.visibility = View.GONE
-                                    startActivity(divisionsIntent())
+                                    startActivity(splashIntent())
                                     finish()
                                 } else if (token?.status == Status.ERROR) { // error, show error message
                                     login.error = resources.getString(R.string.error_invalid_password)
