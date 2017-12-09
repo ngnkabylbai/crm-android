@@ -12,23 +12,11 @@ import kz.mycrm.android.db.entity.Token
 interface DivisionDao {
 
     @Query("SELECT * FROM division")
-    fun getDivisions(): LiveData<List<Division>>
+    fun getDivisionsList(): LiveData<List<Division>>
 
     @Query("SELECT * FROM division WHERE id = :arg0")
     fun getDivisionById(id: Int): LiveData<Division>
 
-    @Query("SELECT COUNT(*) FROM division")
-    fun getCount() : Int
-
-    @Query("SELECT name FROM division")
-    fun getItem() : Int
-
-    @Insert
-    fun insertDivision (division: List<Division>)
-
-    @Update
-    fun updateDivision (division: List<Division>)
-
-    @Delete
-    fun deleteDivision (division: List<Division>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDivisionsList(division: List<Division>)
 }

@@ -24,6 +24,6 @@ class DivisionViewModel : ViewModel(){
 
     fun loadUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
         Logger.debug("loadUserDivisions")
-        return userRepository.getUserDivisions(accessToken)
+        return userRepository.requestUserDivisionList(accessToken)
     }
 }

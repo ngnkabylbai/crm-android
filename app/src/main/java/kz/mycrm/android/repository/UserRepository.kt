@@ -4,10 +4,8 @@ import android.arch.lifecycle.LiveData
 import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Division
-import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
-import kz.mycrm.android.util.MyTypeConverters
 import kz.mycrm.android.util.Resource
 
 /**
@@ -16,14 +14,10 @@ import kz.mycrm.android.util.Resource
 class UserRepository(private var appExecutors: AppExecutors) {
 
 
-    fun getUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
+    fun requestUserDivisionList(accessToken:String): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
             override fun saveCallResult(item: List<Division>) {
-                if ((getCount() == 0)){
-                    insertDivision(item)
-                } else{
-                    updateDivision(item)
-                }
+                MycrmApp.database.DivisionDao().insertDivisionsList(item)
             }
 
             override fun shouldFetch(data: List<Division>?): Boolean {
@@ -31,7 +25,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun loadFromDb(): LiveData<List<Division>> {
-                return getDivisions()
+                return getDivisionsList()
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Division>>> {
@@ -40,23 +34,11 @@ class UserRepository(private var appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
-    fun getDivisions(): LiveData<List<Division>> {
-        return MycrmApp.database.DivisionDao().getDivisions()
+    fun getDivisionsList(): LiveData<List<Division>> {
+        return MycrmApp.database.DivisionDao().getDivisionsList()
     }
 
     fun getDivisionById(id: Int): LiveData<Division> {
         return MycrmApp.database.DivisionDao().getDivisionById(id)
-    }
-
-    fun insertDivision(divisions: List<Division>) {
-        MycrmApp.database.DivisionDao().insertDivision(divisions)
-    }
-
-    fun updateDivision(divisions: List<Division>) {
-        MycrmApp.database.DivisionDao().updateDivision(divisions)
-    }
-
-    fun getCount() : Int {
-        return MycrmApp.database.DivisionDao().getCount()
     }
 }
