@@ -22,16 +22,4 @@ interface JournalDao {
     @Query("SELECT * FROM journal LIMIT 1")
     fun getJournal(): LiveData<StaffJournal>
 
-    @Query("SELECT * FROM mOrder")
-    fun getOrders():LiveData<List<Order>>
-
-    @Query("SELECT * FROM customer")
-    fun getCustomers():LiveData<List<Customer>>
-
-    @Query("SELECT * FROM orderpayment")
-    fun getOrderPayments():LiveData<List<OrderPayment>>
-
-    @Query("SELECT * FROM service")
-    fun getServices():LiveData<List<Service>>
-
 }

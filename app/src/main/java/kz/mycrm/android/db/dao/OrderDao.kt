@@ -14,7 +14,7 @@ import kz.mycrm.android.db.entity.Order
 interface OrderDao {
 
     @Insert
-    fun insertOrder(order: Order)
+    fun insertOrders(orders: List<Order>)
 
     @Update
     fun updateOrder(order: Order)
@@ -22,4 +22,6 @@ interface OrderDao {
     @Query("SELECT * FROM mOrder")
     fun getOrder(): LiveData<List<Order>>
 
+    @Query("SELECT * FROM mOrder")
+    fun getOrders():LiveData<List<Order>>
 }

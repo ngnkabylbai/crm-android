@@ -22,4 +22,7 @@ interface OrderPaymentDao {
 
     @Query("SELECT * FROM orderpayment LIMIT 1")
     fun getOrderPayment(): LiveData<OrderPayment>
+
+    @Query("SELECT * FROM orderpayment")
+    fun getOrderPayments():LiveData<List<OrderPayment>>
 }

@@ -103,11 +103,11 @@ class JournalFragment : Fragment() {
 
                 mDate = formatDate(date)
                 viewModel.requestJournal(token, mDate, divisionId, staffId)
-                        .observe(activity, Observer {journal ->
-                            if(journal?.status == Status.SUCCESS){
-                                Logger.debug("Journal success" + journal.toString())
+                        .observe(activity, Observer {orders ->
+                            if(orders?.status == Status.SUCCESS){
+                                Logger.debug("Journal success" + orders.toString())
                             } else {
-                                Logger.debug("Journal status:"+journal?.status)
+                                Logger.debug("Journal status:"+orders?.status)
                             }
                         })
             }

@@ -13,7 +13,6 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "journal")
 class StaffJournal {
 
-
     @SerializedName("id")
     @Expose
     @PrimaryKey
@@ -28,7 +27,7 @@ class StaffJournal {
     @SerializedName("orders")
     @Expose
     @Ignore
-    lateinit var orders: Array<Order>
+    lateinit var orders: ArrayList<Order>
 
     @SerializedName("end")
     @Expose

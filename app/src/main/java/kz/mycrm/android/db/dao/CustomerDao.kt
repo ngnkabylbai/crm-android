@@ -22,4 +22,7 @@ interface CustomerDao {
 
     @Query("SELECT * FROM customer LIMIT 1")
     fun getCustomer(): LiveData<Customer>
+
+    @Query("SELECT * FROM customer")
+    fun getCustomers():LiveData<List<Customer>>
 }

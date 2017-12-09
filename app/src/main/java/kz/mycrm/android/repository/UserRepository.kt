@@ -37,7 +37,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Division>>> {
-                return ApiUtils.getUserService().requestDivisions(accessToken, "self_staff")
+                return ApiUtils.getUserService().requestDivisions(accessToken, "self-staff")
             }
         }.asLiveData()
     }

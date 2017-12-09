@@ -3,7 +3,7 @@ package kz.mycrm.android.ui.main.journal
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Division
-import kz.mycrm.android.db.entity.StaffJournal
+import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.repository.JournalRepository
 import kz.mycrm.android.repository.TokenRepository
@@ -20,7 +20,7 @@ class JournalViewModel: ViewModel() {
     private var tokenRepository = TokenRepository(AppExecutors)
     private var userRepository = UserRepository(AppExecutors)
 
-    fun requestJournal(token: String, date: String,id: Int, staff: IntArray): LiveData<Resource<StaffJournal>> {
+    fun requestJournal(token: String, date: String,id: Int, staff: IntArray): LiveData<Resource<List<Order>>> {
         return journalRepository.requestJournal(token, date, id, staff)
     }
 
