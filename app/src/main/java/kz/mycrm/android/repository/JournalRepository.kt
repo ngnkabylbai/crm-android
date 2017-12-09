@@ -24,7 +24,8 @@ class JournalRepository(private var appExecutors: AppExecutors) {
         return object : NetworkBoundResource<List<Order>, List<StaffJournal>>(appExecutors) {
                 override fun saveCallResult(item: List<StaffJournal>) {
                     for(s in item) {
-                        MycrmApp.database.OrderDao().insertOrders(s.orders)
+                        for(o in s.orders)
+                            MycrmApp.database.OrderDao().insertOrder(o)
                     }
                 }
 
@@ -34,7 +35,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 
                 override fun loadFromDb(): LiveData<List<Order>> {
     //                TODO: Complete order
-                    return getOrders(date,1,1,1,1)
+                    return getOrders(date, divisionId, staffId[0])
                 }
 
                 override fun createCall(): LiveData<ApiResponse<List<StaffJournal>>> {
@@ -64,7 +65,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 //
 //    }
 
-    private fun getOrders(datetime:String, compCustId:Int, staffId:Int, type:Int, status:Int): LiveData<List<Order>> {
-        return MycrmApp.database.OrderDao().getOrders()
+    private fun getOrders(date:String, divisionId: Int, staffId:Int): LiveData<List<Order>> {
+        return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId)
     }
 }

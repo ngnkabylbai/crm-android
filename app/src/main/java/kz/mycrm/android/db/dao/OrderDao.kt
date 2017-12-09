@@ -11,15 +11,15 @@ import kz.mycrm.android.db.entity.Order
 @Dao
 interface OrderDao {
 
-    @Insert(onConflict = REPLACE)
-    fun insertOrders(orders: List<Order>)
-
     @Update
     fun updateOrder(order: Order)
 
     @Query("SELECT * FROM mOrder")
     fun getOrder(): LiveData<List<Order>>
 
-    @Query("SELECT * FROM mOrder")
-    fun getOrders():LiveData<List<Order>>
+    @Insert(onConflict = REPLACE)
+    fun insertOrder(order: Order)
+
+    @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0 AND division_id = :arg1 AND staff_id = :arg2")
+    fun getOrders(date:String, divisionId: Int, staffId:Int):LiveData<List<Order>>
 }

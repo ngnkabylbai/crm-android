@@ -118,6 +118,7 @@ class JournalFragment : Fragment() {
                 viewModel.requestJournal(token, mDate, divisionId, staffId)
                         .observe(activity, Observer {orders ->
                             if(orders?.status == Status.SUCCESS){
+
                                 Logger.debug("Journal success" + orders.toString())
                             } else {
                                 Logger.debug("Journal status:"+orders?.status)

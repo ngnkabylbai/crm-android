@@ -124,10 +124,10 @@ class Customer {
     @Expose
     lateinit var finishedOrders: String
 
-    @ColumnInfo(name = "categories")
-    @SerializedName("categories")
-    @Expose
-    lateinit var categories: String
+//    @ColumnInfo(name = "categories")
+//    @SerializedName("categories")
+//    @Expose
+//    lateinit var categories: String
 
     @ColumnInfo(name = "comments")
     @SerializedName("comments")

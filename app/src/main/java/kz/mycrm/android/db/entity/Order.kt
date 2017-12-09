@@ -20,42 +20,42 @@ class Order {
     @ColumnInfo(name="hours_before")
     @SerializedName("hours_before")
     @Expose
-    lateinit var hoursBefore: String
+    var hoursBefore: String? = null
 
     @ColumnInfo(name="company_customer_id")
     @SerializedName("company_customer_id")
     @Expose
-    lateinit var companyCustomerId: String
+    var companyCustomerId: String? = null
 
     @ColumnInfo(name="customer_phone")
     @SerializedName("customer_phone")
     @Expose
-    lateinit var customerPhone: String
+    var customerPhone: String? = null
 
-    @ColumnInfo(name="staff_d")
+    @ColumnInfo(name="staff_id")
     @SerializedName("staff_id")
     @Expose
-    lateinit var staffId: String
+    var staffId: String? = null
 
     @SerializedName("customer")
     @Expose
     @Embedded
-    lateinit var customer: Customer
+    var customer: Customer? = null
 
     @ColumnInfo(name="resourceId")
     @SerializedName("resourceId")
     @Expose
-    lateinit var resourceId: String
+    var resourceId: String? = null
 
     @ColumnInfo(name="title")
     @SerializedName("title")
     @Expose
-    lateinit var title: String
+    var title: String? = null
 
     @ColumnInfo(name="company_cash_id")
     @SerializedName("company_cash_id")
     @Expose
-    lateinit var companyCashId: String
+    var companyCashId: String? = null
 
     @ColumnInfo(name="customer_source_id")
     @SerializedName("customer_source_id")
@@ -65,121 +65,121 @@ class Order {
     @ColumnInfo(name="className")
     @SerializedName("className")
     @Expose
-    lateinit var className: String
+    var className: String? = null
 
 //    @ColumnInfo(name="contactCustomers")
 //    @SerializedName("contactCustomers")
 //    @Expose
-//    lateinit var contactCustomers: Array<String>
+//    var contactCustomers: Array? = null<String>
 
     @ColumnInfo(name="customer_full_name")
     @SerializedName("customer_full_name")
     @Expose
-    lateinit var customerFullName: String
+    var customerFullName: String? = null
 
     @ColumnInfo(name="datetime")
     @SerializedName("datetime")
     @Expose
-    lateinit var datetime: String
+    var datetime: String? = null
 
     @ColumnInfo(name="note")
     @SerializedName("note")
     @Expose
-    lateinit var note: String
+    var note: String? = null
 
     @ColumnInfo(name="end")
     @SerializedName("end")
     @Expose
-    lateinit var end: String
+    var end: String? = null
 
     @ColumnInfo(name="staff_fullname")
     @SerializedName("staff_fullname")
     @Expose
-    lateinit var staffFullname: String
+    var staffFullname: String? = null
 
 //    @ColumnInfo(name="files")
 //    @SerializedName("files")
 //    @Expose
-//    lateinit var files: Array<String>
+//    var files: Array? = null<String>
 
     @ColumnInfo(name="services")
     @SerializedName("services")
     @Expose
-    lateinit var services: ArrayList<Service>
+    var services: ArrayList<Service>? = null
 
     @ColumnInfo(name="staff_posititon")
     @SerializedName("staff_position")
     @Expose
-    lateinit var staffPosition: String
+    var staffPosition: String? = null
 
 //    @ColumnInfo(name="documents")
 //    @SerializedName("documents")
 //    @Expose
-//    lateinit var documents: Array<String>
+//    var documents: Array? = null<String>
 
     @ColumnInfo(name="status")
     @SerializedName("status")
     @Expose
-    lateinit var status: String
+    var status: String? = null
 
     @ColumnInfo(name="products_discount")
     @SerializedName("products_discount")
     @Expose
-    lateinit var productsDiscount: String
+    var productsDiscount: String? = null
 
     @ColumnInfo(name="customer_name")
     @SerializedName("customer_name")
     @Expose
-    lateinit var customerName: String
+    var customerName: String? = null
 
     @ColumnInfo(name="medCard")
     @SerializedName("medCard")
     @Expose
-    lateinit var medCard: String
+    var medCard: String? = null
 
     @ColumnInfo(name="editable")
     @SerializedName("editable")
     @Expose
-    lateinit var editable: String
+    var editable: String? = null
 
     @ColumnInfo(name="price")
     @SerializedName("price")
     @Expose
-    lateinit var price: String
+    var price: String? = null
 
     @ColumnInfo(name="color")
     @SerializedName("color")
     @Expose
-    lateinit var color: String
+    var color: String? = null
 
     @ColumnInfo(name="start")
     @SerializedName("start")
     @Expose
-    lateinit var start: String
+    var start: String? = null
 
     @ColumnInfo(name="insurance_id")
     @SerializedName("insurance_id")
     @Expose
-    lateinit var insuranceId: String
+    var insuranceId: String? = null
 
 //    @ColumnInfo(name="")
 //    @SerializedName("order_payments")
 //    @Expose
-//    lateinit var orderPayments: Array<OrderPayment>
+//    var orderPayments: Array? = null<OrderPayment>
 
     @ColumnInfo(name="division_id")
     @SerializedName("division_id")
     @Expose
-    lateinit var divisionId: String
+    var divisionId: String? = null
 
     @ColumnInfo(name="productsprice")
     @SerializedName("productsprice")
     @Expose
-    lateinit var productsprice: String
+    var productsprice: String? = null
 
     @ColumnInfo(name="referrer_id")
     @SerializedName("referrer_id")
     @Expose
-    lateinit var referrerId: String
+    var referrerId: String? = null
 
 }
