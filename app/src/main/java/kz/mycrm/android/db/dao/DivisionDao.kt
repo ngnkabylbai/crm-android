@@ -14,6 +14,9 @@ interface DivisionDao {
     @Query("SELECT * FROM division")
     fun getDivisions(): LiveData<List<Division>>
 
+    @Query("SELECT * FROM division WHERE id = :arg0")
+    fun getDivisionById(id: Int): LiveData<Division>
+
     @Query("SELECT COUNT(*) FROM division")
     fun getCount() : Int
 

@@ -10,16 +10,15 @@ import kz.mycrm.android.util.MyTypeConverters
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-@Database(entities = arrayOf(Token::class, User::class, Division::class, StaffJournal::class,
-        Customer::class, Order::class, OrderPayment::class, Service::class), version =  2)
+@Database(entities = arrayOf(Token::class, Division::class,
+        Customer::class, Order::class, OrderPayment::class, Service::class), version =  16)
 @TypeConverters(MyTypeConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun TokenDao(): TokenDao
     abstract fun DivisionDao(): DivisionDao
-    abstract fun JournalDao(): JournalDao
     abstract fun CustomerDao(): CustomerDao
     abstract fun OrderDao(): OrderDao
     abstract fun OrderPaymentDao(): OrderPaymentDao
     abstract fun ServiceDao(): ServiceDao
-    abstract fun UserDao(): UserDao
+    abstract fun NukeDao() : NukeDao
 }

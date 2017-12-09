@@ -60,7 +60,7 @@ class Order {
     @ColumnInfo(name="customer_source_id")
     @SerializedName("customer_source_id")
     @Expose
-    lateinit var customerSourceId: String
+    var customerSourceId: String? = null
 
     @ColumnInfo(name="className")
     @SerializedName("className")

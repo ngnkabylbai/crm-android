@@ -7,6 +7,7 @@ import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.User
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
+import kz.mycrm.android.util.MyTypeConverters
 import kz.mycrm.android.util.Resource
 
 /**
@@ -14,9 +15,6 @@ import kz.mycrm.android.util.Resource
  */
 class UserRepository(private var appExecutors: AppExecutors) {
 
-    fun getUserData(): LiveData<Resource<User>>? {
-        return null
-    }
 
     fun getUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
@@ -44,6 +42,10 @@ class UserRepository(private var appExecutors: AppExecutors) {
 
     fun getDivisions(): LiveData<List<Division>> {
         return MycrmApp.database.DivisionDao().getDivisions()
+    }
+
+    fun getDivisionById(id: Int): LiveData<Division> {
+        return MycrmApp.database.DivisionDao().getDivisionById(id)
     }
 
     fun insertDivision(divisions: List<Division>) {

@@ -1,10 +1,8 @@
 package kz.mycrm.android.db.dao
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
+import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import kz.mycrm.android.db.entity.Order
 
 /**
@@ -13,7 +11,7 @@ import kz.mycrm.android.db.entity.Order
 @Dao
 interface OrderDao {
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     fun insertOrders(orders: List<Order>)
 
     @Update

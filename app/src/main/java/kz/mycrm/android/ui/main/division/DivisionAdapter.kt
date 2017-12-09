@@ -15,7 +15,9 @@ import kz.mycrm.android.ui.main.mainIntent
  * Created by lab on 11/25/17.
  */
 
-class DivisionAdapter(internal var divisions: List<Division>, internal var context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
+class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<DivisionAdapter.ViewHolder>() {
+
+    private var divisionList = ArrayList<Division>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_division, parent, false)
@@ -25,30 +27,36 @@ class DivisionAdapter(internal var divisions: List<Division>, internal var conte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.address.text = divisions[position].address
-        holder.city.text = divisions[position].cityName
-        holder.title.text = divisions[position].name
+        holder.division = divisionList[position]
+        holder.address.text = divisionList[position].address
+        holder.city.text = divisionList[position].cityName
+        holder.title.text = divisionList[position].name
     }
 
     override fun getItemCount(): Int {
-        return divisions.size
+        return divisionList.size
+    }
+
+    fun add(division: Division) {
+        divisionList.add(division)
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        internal var address: TextView
-        internal var title: TextView
-        internal var city: TextView
+        internal var address: TextView = itemView.findViewById<View>(R.id.item_address) as TextView
+        internal var title: TextView = itemView.findViewById<View>(R.id.item_title) as TextView
+        internal var city: TextView = itemView.findViewById<View>(R.id.item_city) as TextView
+        internal lateinit var division: Division
 
         init {
-            address = itemView.findViewById<View>(R.id.item_address) as TextView
-            title = itemView.findViewById<View>(R.id.item_title) as TextView
-            city = itemView.findViewById<View>(R.id.item_city) as TextView
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?){
-            itemView.context.startActivity(itemView.context.mainIntent())
+            val intent = itemView.context.mainIntent()
+            intent.putExtra("division_id", division.id)
+            itemView.context.startActivity(intent)
             Toast.makeText(itemView.context, "call main activity on item clicked", Toast.LENGTH_SHORT).show()
         }
     }

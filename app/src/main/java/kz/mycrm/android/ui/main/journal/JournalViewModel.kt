@@ -2,6 +2,8 @@ package kz.mycrm.android.ui.main.journal
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
+import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Token
@@ -20,8 +22,8 @@ class JournalViewModel: ViewModel() {
     private var tokenRepository = TokenRepository(AppExecutors)
     private var userRepository = UserRepository(AppExecutors)
 
-    fun requestJournal(token: String, date: String,id: Int, staff: IntArray): LiveData<Resource<List<Order>>> {
-        return journalRepository.requestJournal(token, date, id, staff)
+    fun requestJournal(token: String, date: String, divisionId: Int, staffId: IntArray): LiveData<Resource<List<Order>>> {
+        return journalRepository.requestJournal(token, date, divisionId, staffId)
     }
 
     fun getToken(): LiveData<Token> {
@@ -31,4 +33,9 @@ class JournalViewModel: ViewModel() {
     fun getDivisions(): LiveData<List<Division>> {
         return userRepository.getDivisions()
     }
+
+    fun getDivisionById(id: Int): LiveData<Division> {
+        return userRepository.getDivisionById(id)
+    }
+
 }

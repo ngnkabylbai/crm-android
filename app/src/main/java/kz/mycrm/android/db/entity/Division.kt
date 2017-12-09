@@ -1,9 +1,6 @@
 package kz.mycrm.android.db.entity
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -18,7 +15,7 @@ class Division {
     @ColumnInfo(name="id")
     @SerializedName("id")
     @Expose
-    lateinit var id: String
+    var id = 0
 
     @ColumnInfo(name="company_id")
     @SerializedName("company_id")
@@ -102,7 +99,9 @@ class Division {
 
     @SerializedName("self-staff")
     @Expose
+    @Embedded(prefix = "u")
     var user: User? = null
+
     override fun toString(): String {
         return "Division(id=$id, companyId=$companyId, workingStart=$workingStart, cityName=$cityName, phone=$phone, status=$status, categoryId=$categoryId, url=$url, cityId=$cityId, address=$address, description=$description, name=$name, longitude=$longitude, rating=$rating, latitude=$latitude, workingFinish=$workingFinish, key=$key)"
     }

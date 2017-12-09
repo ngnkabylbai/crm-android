@@ -14,7 +14,7 @@ interface JournalService {
 
     @GET("user/schedule")
     fun requestJournal(@Query("access-token")token: String, @Query("date")date: String,
-                        @Query("division_id")id: Int, @Query("staff")staff: IntArray): LiveData<ApiResponse<StaffJournal>>
+                        @Query("division_id")id: Int, @Query("staff")staff: IntArray): LiveData<ApiResponse<List<StaffJournal>>>
 
 //    @GET("order")
 //    fun requestOrders(@Query("access-token")token:String, @Query("company_customer_id")compCustId:Int,

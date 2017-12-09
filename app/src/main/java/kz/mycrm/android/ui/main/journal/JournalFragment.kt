@@ -31,8 +31,8 @@ class JournalFragment : Fragment() {
     private lateinit var horizontalCalendar: HorizontalCalendar
     private lateinit var token: String
     private lateinit var mDate: String
-    private var divisionId = 49
-    private var staffId = intArrayOf(748)
+    private var divisionId = -1
+    private lateinit var staffId: IntArray
 
     private lateinit var dateFormat: SimpleDateFormat
 
@@ -47,9 +47,16 @@ class JournalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         ButterKnife.bind(this, view)
 
+        divisionId = arguments.getInt("division_id")
+
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
         viewModel.getToken().observe(this, Observer { token ->
             this.token = token!!.token
+        })
+
+        viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
+            divisionId = division?.id ?: 0
+            staffId = intArrayOf(division?.user?.id?.toInt() ?: 0)
         })
 
         setupCalendar(view)
@@ -64,8 +71,14 @@ class JournalFragment : Fragment() {
         spinner.adapter = adapter
         viewModel.getDivisions().observe(activity, Observer { list ->
             list!!.mapTo(spinnerItems) { it.name.toString() }
+            for(d in list) {
+                if(d.id == divisionId) {
+                    spinner.setSelection(spinnerItems.indexOf(d.name))
+                }
+            }
             adapter.notifyDataSetChanged()
         } )
+
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {

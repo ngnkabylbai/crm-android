@@ -10,12 +10,10 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
-@Entity(tableName = "journal")
 class StaffJournal {
 
     @SerializedName("id")
     @Expose
-    @PrimaryKey
     @ColumnInfo(name = "id")
     lateinit var id: String
 
@@ -27,10 +25,11 @@ class StaffJournal {
     @SerializedName("orders")
     @Expose
     @Ignore
-    lateinit var orders: ArrayList<Order>
+    lateinit var orders: List<Order>
 
     @SerializedName("end")
     @Expose
     @ColumnInfo(name = "end")
     lateinit var end: String
+
 }

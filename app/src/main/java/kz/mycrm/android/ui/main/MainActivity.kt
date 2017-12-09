@@ -1,20 +1,20 @@
 package kz.mycrm.android.ui.main
 
 import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.main.notification.NotificationFragment
 import kz.mycrm.android.ui.main.journal.JournalFragment
+import kz.mycrm.android.ui.main.notification.NotificationFragment
 
 
 fun Context.mainIntent(): Intent {
@@ -55,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         bottomBar.inactiveColor = ContextCompat.getColor(this, R.color.bottom_nav_inactive)
 
         journalFragment = JournalFragment()
+            val bundle = Bundle()
+            bundle.putInt("division_id", intent.extras.getInt("division_id"))
+        journalFragment.arguments = bundle
         notificationFragment = NotificationFragment()
 
         fragment = notificationFragment

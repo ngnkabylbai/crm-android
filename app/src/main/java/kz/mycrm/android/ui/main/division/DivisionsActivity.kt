@@ -13,7 +13,10 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Status
 
 fun Context.divisionsIntent(): Intent {
     return Intent(this, DivisionsActivity::class.java)
@@ -29,7 +32,6 @@ class DivisionsActivity : AppCompatActivity() {
     lateinit var title : TextView
 
     private lateinit var adapter : DivisionAdapter
-    private lateinit var lm : LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,17 +51,21 @@ class DivisionsActivity : AppCompatActivity() {
                             if (resourceDivisionList != null){
                                 if (resourceDivisionList.data != null){
                                     Logger.debug("resource" + resourceDivisionList.data.size)
-                                    if (resourceDivisionList.data.size > 1){
-                                        Toast.makeText(this, "Here must be list of divisions", Toast.LENGTH_SHORT).show()
+                                    if (resourceDivisionList.data.size > 1 && resourceDivisionList.status == Status.SUCCESS){
+                                        adapter = DivisionAdapter(this)
+                                        rvDivisions.adapter = adapter
+                                        rvDivisions.layoutManager = LinearLayoutManager(this)
+                                        for(d in resourceDivisionList.data) {
+                                            adapter.add(d)
+                                        }
                                     }else{
-                                        Logger.debug("resourceHere")
-                                        Toast.makeText(this, "Here must be opened main activity", Toast.LENGTH_SHORT).show()
-//                                        startActivity(mainIntent())
+                                        if(resourceDivisionList.data.size == 1 && resourceDivisionList.status == Status.SUCCESS) {
+                                            val intent = mainIntent()
+                                            intent.putExtra("division_id", resourceDivisionList.data[0].id)
+                                            startActivity(intent)
+                                            finish()
+                                        }
                                     }
-                                    lm = LinearLayoutManager(this)
-                                    adapter = DivisionAdapter(resourceDivisionList.data, this)
-                                    rvDivisions.setLayoutManager(lm)
-                                    rvDivisions.setAdapter(adapter)
                                 }
                             }
                         })
