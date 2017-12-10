@@ -28,7 +28,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by Nurbek Kabylbay on 23.11.2017.
  */
-class JournalFragment : Fragment() {
+class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     private lateinit var viewModel: JournalViewModel
     private lateinit var horizontalCalendar: HorizontalCalendar
@@ -52,6 +52,8 @@ class JournalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         ButterKnife.bind(this, view)
 
+        journal.setOnEventClickListener(this)
+
         divisionId = arguments.getInt("division_id")
 
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
@@ -67,7 +69,6 @@ class JournalFragment : Fragment() {
         setupCalendar(view)
         setupSpinner(view)
     }
-
 
     private fun setupSpinner(view: View) {
         val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
@@ -155,5 +156,10 @@ class JournalFragment : Fragment() {
         val str = String.format("Сегодня %s, %d %s %dг.", dayName.format(cal.time).toLowerCase(),
                 cal.get(Calendar.DAY_OF_MONTH), monthName.format(cal.time).toLowerCase(), cal.get(Calendar.YEAR))
         dateView.text = str
+    }
+
+    override fun onOrderEventClicked(order: Order) {
+        super.onOrderEventClicked(order)
+        Logger.debug("Event clicked:" + order.toString())
     }
 }

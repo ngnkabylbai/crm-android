@@ -2,17 +2,16 @@ package kz.mycrm.android.ui.view
 
 import android.content.Context
 import android.graphics.*
+import android.support.v4.view.GestureDetectorCompat
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +23,7 @@ import kotlin.collections.ArrayList
  */
 class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
+    // Paints of main elements and background
     private lateinit var mBackgroundPaint: Paint
     private lateinit var mAccentTimeTextPaint: Paint
     private lateinit var mNormalTimeTextPaint: Paint
@@ -37,8 +37,6 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private lateinit var mOrderPatientNamePaint: TextPaint
     private lateinit var mOrderPatientNumberPaint: TextPaint
     private lateinit var mOrderServiceListPaint: TextPaint
-
-
 
     // Attributes and default values
     private var mTextMarginTop = 100f
@@ -69,12 +67,38 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var mScreenHeight = 0f
 
     // Order events
-    private var mOrderEvents: ArrayList<Order> = ArrayList()
+    private var mOrderList: ArrayList<Order> = ArrayList()
+    private var mOrderEventList: ArrayList<OrderEvent> = ArrayList()
     private var mRectStartX: Float = accentRect.width()+2 * mViewPaddingLeft
     private var mOrderTextMarginTop: Float = mTextMarginTop/2
     private var mOrder5minHeight: Float = mTextMarginTop+accentRect.height()
 
+    // Order Click handling
+    private var mOrderEventClickListener: OrderEventClickListener? = null
+    private var mGestureDetector: GestureDetectorCompat
+
+    private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            if(mOrderEventClickListener != null && !mOrderEventList.isEmpty()) {
+                for(event in mOrderEventList) {
+                    if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
+                        mOrderEventClickListener!!.onOrderEventClicked(event.order)
+                        playSoundEffect(SoundEffectConstants.CLICK)
+                        return super.onSingleTapConfirmed(e)
+                    }
+                }
+            }
+            return super.onSingleTapConfirmed(e)
+        }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            return true
+        }
+    }
+
     init {
+
+        mGestureDetector = GestureDetectorCompat(context, mGestureListener)
 
         val displayMetrics = DisplayMetrics()
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
@@ -185,14 +209,24 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         drawEventOrders(canvas)
     }
 
+    /**
+     * Draws all orders in the mOrderList
+     * @param canvas The canvas where to draw
+     */
     private fun drawEventOrders(canvas: Canvas) {
-        if(mOrderEvents.isEmpty())
+        if(mOrderList.isEmpty())
             return
-        for(orderEvent in mOrderEvents!!) {
+        for(orderEvent in mOrderList) {
             drawOrderEvent(canvas, orderEvent)
         }
     }
 
+    /**
+     * Draws a particular order. During the process it creates OrderEvent object with obtained
+     * order Rect and adds it into mOrderEventList
+     * @param canvas The canvas where to draw
+     * @param order The order should be drawn
+     */
     private fun drawOrderEvent(canvas: Canvas, order: Order?) {
         if(order == null)
             return
@@ -203,8 +237,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val orderBottom = getOrderBottom(order, orderTop)
         val orderRect = Rect(orderLeft.toInt(), orderTop.toInt(), orderRight.toInt(), orderBottom.toInt())
 
+        mOrderEventList.add(OrderEvent(orderRect, order))
+
         val accentRight = orderLeft + 10f
-//        val bottom = (mOrderTextMarginTop+6*mOrder5minHeight).toInt()
 
         canvas.drawRect(orderRect, mOrderBackgroundPaint)
         canvas.drawRect(orderLeft, orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
@@ -245,6 +280,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
     }
 
+    /**
+     * The function that calculates where the top of an order should be. The journal starts from
+     * 09:00, therefore, firstly, it calculates number of (5 minutes) between the start of the
+     * journal and the start time of the order. The whole journal has padding as mTextMarginTop/2.
+     * So sum the of mTextMarginTop/2 and number of (5 minutes) multiplied by the height of
+     * (5 minute order) gives us the result
+     * @param order The order the TOP should be calculated of
+     * @return TOP value
+     */
     private fun getOrderTop(order: Order?): Float {
         if(order == null)
             return mTextMarginTop/2
@@ -270,9 +314,16 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         if(diffIn5minutes == 0.toLong())
             return mTextMarginTop/2
-        return mTextMarginTop/2 + diffIn5minutes*mOrder5minHeight // + start Time
+        return mTextMarginTop/2 + diffIn5minutes*mOrder5minHeight
     }
 
+    /**
+     * The function that calculated where the bottom of an order should be. It calculates number of
+     * (5 minutes) between start and end times of the order
+     * @param order The order the BOTTOM should be calculated of
+     * @param top The top value of the order
+     * @return BOTTOM value
+     */
     private fun getOrderBottom(order: Order?, top: Float) : Float {
         if(order == null)
             return mTextMarginTop/2
@@ -294,22 +345,48 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return top + diffIn5minutes* mOrder5minHeight - 1f
+        return top + diffIn5minutes* mOrder5minHeight - 1f // -1f gives a gap between two orders
     }
 
+    /**
+     * The function calculates where the left side of an order should start
+     * @param order The order the LEFT should be calculated of
+     * @return LEFT value
+     */
     private fun getOrderLeft(order: Order?): Float {
         return mRectStartX
     }
 
+    /**
+     * The function calculates where the right side of an order should start
+     * @param order The order the RIGHT should be calculated of
+     * @return RIGHT value
+     */
     private fun getOrderRight(order: Order?): Float {
         return mScreenWidth
     }
 
+    /**
+     * The function return a rect of with bounds of a text
+     * @param text A text
+     * @param paint A paint the text drawn with
+     * @param rect A rect where the bound should be saved
+     * @return The rect with bounds of the text
+     */
     private fun getBoundedRect(text:String, paint: TextPaint, rect: Rect): Rect {
         paint.getTextBounds(text, 0, text.length, rect)
         return rect
     }
 
+    /***
+     * The function draws a text on an Order. The text is ellipsized at the end
+     * @param orderRect The rect of the order
+     * @param text The text to draw
+     * @param textX X coordinate of the text
+     * @param textY Y coordinate of the text
+     * @param paint A paint the text will be drawn
+     * @param canvas The canvas where the order is drawn
+     */
     private fun drawOrderText(orderRect: Rect,text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
         val widthDiff = 2*(textX - orderRect.left)
         val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat()-widthDiff  , TextUtils.TruncateAt.END)
@@ -374,22 +451,54 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return String.format("%02d:%02d", hour, minute)
     }
 
-    fun updateEventsAndInvalidate(newOrderEvents: ArrayList<Order>?, status: Status) {
-        if(!isSameListWithOrigin(newOrderEvents)) {
-            this.mOrderEvents = newOrderEvents!!
+    /**
+     * The function sets new values to mOrderList with the status of the new list and redraws the
+     * whole view. If the status isSUCCESS, then a toast with number of orders is shown.
+     * @param newOrderList A new OrderList
+     * @param status The status of the new list
+     */
+    fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>?, status: Status) {
+        if(!isSameListWithOrigin(newOrderList)) {
+            this.mOrderList = newOrderList!!
             invalidate()
             if(status == Status.SUCCESS)
-                Toast.makeText(context, "Количество записей: " + mOrderEvents.size, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun isSameListWithOrigin(newOrderEvents: ArrayList<Order>?): Boolean {
-        if(newOrderEvents == null || newOrderEvents.isEmpty())
+    /**
+     * The function compares a list with mOrderList
+     * @param newOrderList A new list to compare
+     * @return The new list is same with mOrderList or not
+     */
+    private fun isSameListWithOrigin(newOrderList: ArrayList<Order>?): Boolean {
+        if(newOrderList == null || newOrderList.isEmpty())
             return true
-        if(mOrderEvents.isEmpty())
+        if(mOrderList.isEmpty())
             return false
 
-        return newOrderEvents.any { mOrderEvents.contains(it) }
+        return newOrderList.any { mOrderList.contains(it) }
+    }
+
+    /** Setter for EventClickListener */
+    fun setOnEventClickListener(listener: OrderEventClickListener) {
+        mOrderEventClickListener = listener
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return mGestureDetector.onTouchEvent(event)
+    }
+
+    /////////////////////////////////////////////////////
+    ///                   ORDER EVENT                  //
+    /////////////////////////////////////////////////////
+    inner class OrderEvent(var rect: Rect, var order: Order)
+
+    /////////////////////////////////////////////////////
+    ///                   LISTENER                     //
+    /////////////////////////////////////////////////////
+    interface OrderEventClickListener {
+        fun onOrderEventClicked(order: Order) {}
     }
 }
 
