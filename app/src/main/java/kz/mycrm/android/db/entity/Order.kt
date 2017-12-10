@@ -67,10 +67,10 @@ class Order {
     @Expose
     var className: String? = null
 
-//    @ColumnInfo(name="contactCustomers")
-//    @SerializedName("contactCustomers")
-//    @Expose
-//    var contactCustomers: Array? = null<String>
+    @ColumnInfo(name="contactCustomers")
+    @SerializedName("contactCustomers")
+    @Expose
+    var contactCustomers: List<String>? = null
 
     @ColumnInfo(name="customer_full_name")
     @SerializedName("customer_full_name")
@@ -97,25 +97,25 @@ class Order {
     @Expose
     var staffFullname: String? = null
 
-//    @ColumnInfo(name="files")
-//    @SerializedName("files")
-//    @Expose
-//    var files: Array? = null<String>
+    @ColumnInfo(name="files")
+    @SerializedName("files")
+    @Expose
+    var files: List<String>? = null
 
     @ColumnInfo(name="services")
     @SerializedName("services")
     @Expose
-    var services: ArrayList<Service>? = null
+    lateinit var services: List<Service>
 
     @ColumnInfo(name="staff_posititon")
     @SerializedName("staff_position")
     @Expose
     var staffPosition: String? = null
 
-//    @ColumnInfo(name="documents")
-//    @SerializedName("documents")
-//    @Expose
-//    var documents: Array? = null<String>
+    @ColumnInfo(name="documents")
+    @SerializedName("documents")
+    @Expose
+    var documents: List <String>? = null
 
     @ColumnInfo(name="status")
     @SerializedName("status")
@@ -181,5 +181,84 @@ class Order {
     @SerializedName("referrer_id")
     @Expose
     var referrerId: String? = null
+
+    override fun toString(): String {
+        return "Order(id='$id', staffId=$staffId, customer=$customer, end=$end, start=$start)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Order
+
+        if (id != other.id) return false
+        if (hoursBefore != other.hoursBefore) return false
+        if (companyCustomerId != other.companyCustomerId) return false
+        if (customerPhone != other.customerPhone) return false
+        if (staffId != other.staffId) return false
+        if (customer != other.customer) return false
+        if (resourceId != other.resourceId) return false
+        if (title != other.title) return false
+        if (companyCashId != other.companyCashId) return false
+        if (customerSourceId != other.customerSourceId) return false
+        if (className != other.className) return false
+        if (customerFullName != other.customerFullName) return false
+        if (datetime != other.datetime) return false
+        if (note != other.note) return false
+        if (end != other.end) return false
+        if (staffFullname != other.staffFullname) return false
+        if (services != other.services) return false
+        if (staffPosition != other.staffPosition) return false
+        if (status != other.status) return false
+        if (productsDiscount != other.productsDiscount) return false
+        if (customerName != other.customerName) return false
+        if (medCard != other.medCard) return false
+        if (editable != other.editable) return false
+        if (price != other.price) return false
+        if (color != other.color) return false
+        if (start != other.start) return false
+        if (insuranceId != other.insuranceId) return false
+        if (divisionId != other.divisionId) return false
+        if (productsprice != other.productsprice) return false
+        if (referrerId != other.referrerId) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + (hoursBefore?.hashCode() ?: 0)
+        result = 31 * result + (companyCustomerId?.hashCode() ?: 0)
+        result = 31 * result + (customerPhone?.hashCode() ?: 0)
+        result = 31 * result + (staffId?.hashCode() ?: 0)
+        result = 31 * result + (customer?.hashCode() ?: 0)
+        result = 31 * result + (resourceId?.hashCode() ?: 0)
+        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (companyCashId?.hashCode() ?: 0)
+        result = 31 * result + (customerSourceId?.hashCode() ?: 0)
+        result = 31 * result + (className?.hashCode() ?: 0)
+        result = 31 * result + (customerFullName?.hashCode() ?: 0)
+        result = 31 * result + (datetime?.hashCode() ?: 0)
+        result = 31 * result + (note?.hashCode() ?: 0)
+        result = 31 * result + (end?.hashCode() ?: 0)
+        result = 31 * result + (staffFullname?.hashCode() ?: 0)
+        result = 31 * result + (services?.hashCode() ?: 0)
+        result = 31 * result + (staffPosition?.hashCode() ?: 0)
+        result = 31 * result + (status?.hashCode() ?: 0)
+        result = 31 * result + (productsDiscount?.hashCode() ?: 0)
+        result = 31 * result + (customerName?.hashCode() ?: 0)
+        result = 31 * result + (medCard?.hashCode() ?: 0)
+        result = 31 * result + (editable?.hashCode() ?: 0)
+        result = 31 * result + (price?.hashCode() ?: 0)
+        result = 31 * result + (color?.hashCode() ?: 0)
+        result = 31 * result + (start?.hashCode() ?: 0)
+        result = 31 * result + (insuranceId?.hashCode() ?: 0)
+        result = 31 * result + (divisionId?.hashCode() ?: 0)
+        result = 31 * result + (productsprice?.hashCode() ?: 0)
+        result = 31 * result + (referrerId?.hashCode() ?: 0)
+        return result
+    }
+
 
 }

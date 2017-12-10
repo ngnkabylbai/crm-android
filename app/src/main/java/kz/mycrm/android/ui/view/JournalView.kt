@@ -2,12 +2,21 @@ package kz.mycrm.android.ui.view
 
 import android.content.Context
 import android.graphics.*
+import android.text.TextPaint
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.util.Resource
+import kz.mycrm.android.util.Status
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -16,10 +25,20 @@ import kz.mycrm.android.R
 class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private lateinit var mBackgroundPaint: Paint
-    private lateinit var mAccentTimePaint: Paint
-    private lateinit var mNormalTimePaint: Paint
+    private lateinit var mAccentTimeTextPaint: Paint
+    private lateinit var mNormalTimeTextPaint: Paint
     private lateinit var mNormalSeparatorPaint: Paint
     private lateinit var mDashedSeparatorPaint: Paint
+
+    // Paints of Orders
+    private lateinit var mOrderBackgroundPaint: Paint
+    private lateinit var mOrderLeftAccentPaint: Paint
+    private lateinit var mOrderTimeTextPaint: TextPaint
+    private lateinit var mOrderPatientNamePaint: TextPaint
+    private lateinit var mOrderPatientNumberPaint: TextPaint
+    private lateinit var mOrderServiceListPaint: TextPaint
+
+
 
     // Attributes and default values
     private var mTextMarginTop = 100f
@@ -30,6 +49,13 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var mAccentTimeColor = Color.rgb(106, 105, 110)
     private var mNormalTimeSize = 14
     private var mAccentTimeSize = 18
+    private var mOrderBackgroundColor = Color.rgb(11, 121, 224)
+    private var mOrderLeftAccentColor = Color.rgb(16, 88, 204)
+    private var mOrderTextColor = Color.rgb(255, 255, 255)
+    private var mOrderTimeTextSize = 14
+    private var mOrderPatientNameSize = 18
+    private var mOrderPatientNumberSize = 18
+    private var mOrderServiceListSize = 14
 
     private val accentRect = Rect()
     private val normalRect = Rect()
@@ -41,6 +67,12 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     // Global variables used as View's height and width
     private var mScreenWidth = 0f
     private var mScreenHeight = 0f
+
+    // Order events
+    private var mOrderEvents: ArrayList<Order> = ArrayList()
+    private var mRectStartX: Float = accentRect.width()+2 * mViewPaddingLeft
+    private var mOrderTextMarginTop: Float = mTextMarginTop/2
+    private var mOrder5minHeight: Float = mTextMarginTop+accentRect.height()
 
     init {
 
@@ -56,12 +88,19 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             mSeparatorColor = a.getColor(R.styleable.JournalView_separatorColor, mSeparatorColor)
             mNormalTimeSize = a.getDimensionPixelSize(R.styleable.JournalView_normalTimeSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mNormalTimeSize.toFloat(), context.resources.displayMetrics).toInt())
             mAccentTimeSize = a.getDimensionPixelSize(R.styleable.JournalView_accentTimeSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mAccentTimeSize.toFloat(), context.resources.displayMetrics).toInt())
+            mOrderTimeTextSize = a.getDimensionPixelSize(R.styleable.JournalView_mOrderTimeTextSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mOrderTimeTextSize.toFloat(), context.resources.displayMetrics).toInt())
+            mOrderPatientNameSize = a.getDimensionPixelSize(R.styleable.JournalView_mOrderPatientNameSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mOrderPatientNameSize.toFloat(), context.resources.displayMetrics).toInt())
+            mOrderPatientNumberSize = a.getDimensionPixelSize(R.styleable.JournalView_mOrderPatientNumberSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mOrderPatientNumberSize.toFloat(), context.resources.displayMetrics).toInt())
+            mOrderServiceListSize = a.getDimensionPixelSize(R.styleable.JournalView_mOrderServiceListSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mOrderServiceListSize.toFloat(), context.resources.displayMetrics).toInt())
         } finally {
             a.recycle()
         }
         viewInit()
     }
 
+    /**
+     * Initializes view models
+     */
     private fun viewInit() {
         // Background
         mBackgroundPaint = Paint()
@@ -77,35 +116,62 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mDashedSeparatorPaint.pathEffect = DashPathEffect(floatArrayOf(5f, 10f), 0f)
 
         // Time accented
-        mAccentTimePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mAccentTimePaint.color = mAccentTimeColor
-        mAccentTimePaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        mAccentTimePaint.textSize = mAccentTimeSize.toFloat()
-        mAccentTimePaint.getTextBounds("09:00", 0, "09:00".length, accentRect)
+        mAccentTimeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mAccentTimeTextPaint.color = mAccentTimeColor
+        mAccentTimeTextPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        mAccentTimeTextPaint.textSize = mAccentTimeSize.toFloat()
+        mAccentTimeTextPaint.getTextBounds("09:00", 0, "09:00".length, accentRect)
 
         mTextMarginTop = accentRect.height()*2.toFloat()
         mViewPaddingLeft = mTextMarginTop/2
 
         // Time normal
-        mNormalTimePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mNormalTimePaint.color = mNormalTimeColor
-        mNormalTimePaint.textSize = mNormalTimeSize.toFloat()
-        mNormalTimePaint.getTextBounds("09:00", 0, "09:00".length, normalRect)
+        mNormalTimeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mNormalTimeTextPaint.color = mNormalTimeColor
+        mNormalTimeTextPaint.textSize = mNormalTimeSize.toFloat()
+        mNormalTimeTextPaint.getTextBounds("09:00", 0, "09:00".length, normalRect)
 
         // Difference between normal and accented text
         mHeightDiff = (accentRect.height() - normalRect.height())/2
         mWidthDiff = accentRect.width() - normalRect.width()
+
+        // Order
+        mOrderBackgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mOrderBackgroundPaint.color = mOrderBackgroundColor
+        mOrderBackgroundPaint.alpha = 180
+
+        mOrderLeftAccentPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mOrderLeftAccentPaint.color = mOrderLeftAccentColor
+
+        mOrderTimeTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+        mOrderTimeTextPaint.color = mOrderTextColor
+        mOrderTimeTextPaint.textSize = mOrderTimeTextSize.toFloat()
+
+        mOrderPatientNamePaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+        mOrderPatientNamePaint.color = mOrderTextColor
+        mOrderPatientNamePaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        mOrderPatientNamePaint.textSize = mOrderPatientNameSize.toFloat()
+
+        mOrderPatientNumberPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+        mOrderPatientNumberPaint.color = mOrderTextColor
+        mOrderPatientNumberPaint.textSize = mOrderPatientNumberSize.toFloat()
+
+        mOrderServiceListPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+        mOrderServiceListPaint.color = mOrderTextColor
+        mOrderServiceListPaint.textSize = mOrderServiceListSize.toFloat()
+
+        mRectStartX = accentRect.width()+2 * mViewPaddingLeft
+        mOrderTextMarginTop = mTextMarginTop/2
+        mOrder5minHeight = mTextMarginTop+accentRect.height()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        mScreenHeight = 134*mTextMarginTop + 133*accentRect.height()
+        mScreenHeight = 158*mTextMarginTop + 157*accentRect.height()
         this.setMeasuredDimension(mScreenWidth.toInt(), mScreenHeight.toInt())
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
         // Background
         canvas.drawRect(0f,0f,canvas.width.toFloat(),canvas.height.toFloat(),mBackgroundPaint)
 
@@ -115,50 +181,215 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         // Lines and Axes
         drawLinesAndAxes(canvas)
 
+        // Order events
+        drawEventOrders(canvas)
     }
 
-    private fun drawLinesAndAxes(canvas: Canvas) {
-        val paddingLeft = accentRect.width()+2 * mViewPaddingLeft
-        val lineWidth = mScreenWidth
+    private fun drawEventOrders(canvas: Canvas) {
+        if(mOrderEvents.isEmpty())
+            return
+        for(orderEvent in mOrderEvents!!) {
+            drawOrderEvent(canvas, orderEvent)
+        }
+    }
 
-        canvas.drawLine(paddingLeft, mTextMarginTop/2, paddingLeft, mScreenHeight, mNormalSeparatorPaint)
-        canvas.drawLine(paddingLeft, mTextMarginTop/2, lineWidth, mTextMarginTop/2, mNormalSeparatorPaint)
+    private fun drawOrderEvent(canvas: Canvas, order: Order?) {
+        if(order == null)
+            return
+        // Order rect and Left Accent
+        val orderLeft = getOrderLeft(order)
+        val orderTop = getOrderTop(order)
+        val orderRight = getOrderRight(order)
+        val orderBottom = getOrderBottom(order, orderTop)
+        val orderRect = Rect(orderLeft.toInt(), orderTop.toInt(), orderRight.toInt(), orderBottom.toInt())
+
+        val accentRight = orderLeft + 10f
+//        val bottom = (mOrderTextMarginTop+6*mOrder5minHeight).toInt()
+
+        canvas.drawRect(orderRect, mOrderBackgroundPaint)
+        canvas.drawRect(orderLeft, orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
+
+        var textX = 0f
+        var textY = 0f
+        val marginTop = 20f
+        var rect = Rect()
+        var text = order.start?.substring(11, 16) +" - "+ order.end?.substring(11, 16)
+
+        rect = getBoundedRect(text, mOrderTimeTextPaint, rect)
+        textX += orderRect.left + 15f
+        textY = orderRect.top + rect.height() + marginTop
+        drawOrderText(orderRect, text, textX, textY, mOrderTimeTextPaint, canvas)
+
+        text = order.customer?.lastname + " " + order.customer?.name
+        rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
+        textX = textX
+        textY += rect.height() + marginTop
+        drawOrderText(orderRect, text, textX, textY, mOrderPatientNamePaint, canvas)
+
+        text = order.customer?.phone ?: ""
+        rect = getBoundedRect(text, mOrderPatientNumberPaint, rect)
+        textX = textX
+        textY += rect.height() + marginTop
+        drawOrderText(orderRect, text, textX, textY, mOrderPatientNumberPaint, canvas)
+
+        if(order.services != null) {
+            text = ""
+            for(s in order.services!!) {
+                text += s.serviceName + " "
+            }
+
+            rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
+            textX = textX
+            textY = orderRect.bottom.toFloat() -  rect.height()
+            drawOrderText(orderRect, text, textX, textY, mOrderServiceListPaint, canvas)
+        }
+    }
+
+    private fun getOrderTop(order: Order?): Float {
+        if(order == null)
+            return mTextMarginTop/2
+        // 2017-12-08 09:00:00
+        val timeStart = "09:00:00" // Day starts from 09:00
+        val timeEnd = order.start!!.substring(11)
+
+        val dateStart: Date?
+        val dateEnd: Date?
+        var diffIn5minutes: Long = 0
+
+        val format = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+
+        try {
+            dateStart = format.parse(timeStart)
+            dateEnd = format.parse(timeEnd)
+
+            val difference = dateEnd.time - dateStart.time
+            diffIn5minutes = difference/(1000*60) / 5
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        if(diffIn5minutes == 0.toLong())
+            return mTextMarginTop/2
+        return mTextMarginTop/2 + diffIn5minutes*mOrder5minHeight // + start Time
+    }
+
+    private fun getOrderBottom(order: Order?, top: Float) : Float {
+        if(order == null)
+            return mTextMarginTop/2
+        // 2017-12-08 09:00
+        val timeStart = order.start!!.substring(11)
+        val timeEnd = order.end!!.substring(11)
+
+        val dateStart: Date?
+        val dateEnd: Date?
+        var diffIn5minutes: Long = 0
+        val format = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+
+        try {
+            dateStart = format.parse(timeStart)
+            dateEnd = format.parse(timeEnd)
+
+            val difference = dateEnd.time - dateStart.time
+            diffIn5minutes = difference/(1000*60) / 5
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return top + diffIn5minutes* mOrder5minHeight - 1f
+    }
+
+    private fun getOrderLeft(order: Order?): Float {
+        return mRectStartX
+    }
+
+    private fun getOrderRight(order: Order?): Float {
+        return mScreenWidth
+    }
+
+    private fun getBoundedRect(text:String, paint: TextPaint, rect: Rect): Rect {
+        paint.getTextBounds(text, 0, text.length, rect)
+        return rect
+    }
+
+    private fun drawOrderText(orderRect: Rect,text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
+        val widthDiff = 2*(textX - orderRect.left)
+        val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat()-widthDiff  , TextUtils.TruncateAt.END)
+        canvas.drawText(txt, 0, txt.length, textX, textY, paint)
+    }
+
+    /**
+     * The function draws lines and axes as separators of the view
+     * @param canvas The main canvas of the view
+     */
+    private fun drawLinesAndAxes(canvas: Canvas) {
+        val lineStartX = accentRect.width()+2 * mViewPaddingLeft
+        val lineEndX = mScreenWidth
+
+        canvas.drawLine(lineStartX, mTextMarginTop/2, lineStartX, mScreenHeight, mNormalSeparatorPaint)
+        canvas.drawLine(lineStartX, mTextMarginTop/2, lineEndX, mTextMarginTop/2, mNormalSeparatorPaint)
 
         var yy = mTextMarginTop/2 + mTextMarginTop + accentRect.height()
-        for(i in 1..133) {
+        for(i in 1..157) {
             val path = Path()
-                path.moveTo(paddingLeft, yy)
-                path.lineTo(paddingLeft+lineWidth, yy)
+                path.moveTo(lineStartX, yy)
+                path.lineTo(lineEndX, yy)
             canvas.drawPath(path, mDashedSeparatorPaint)
 
             yy += mTextMarginTop + accentRect.height()
         }
     }
 
+    /**
+     * The function draws texts of times on the left side
+     * @param canvas The main canvas of the view
+     */
     private fun drawTimes(canvas: Canvas) {
         var yy = 0f
-        for(i in 9..20) {
+        for(i in 9..22) {
             var minute = 0
             yy += mTextMarginTop + accentRect.height().toFloat()
-            canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimePaint)
+            canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimeTextPaint)
             for(j in 1..11) {
                 minute += 5
                 if(minute == 30) {
                     yy += mTextMarginTop + accentRect.height().toFloat()
-                    canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimePaint)
+                    canvas.drawText(timeFormat(i, minute), mViewPaddingLeft, yy, mAccentTimeTextPaint)
                 } else {
                     yy += mTextMarginTop + mHeightDiff + normalRect.height()
-                    canvas.drawText(timeFormat(i, minute), (mWidthDiff+ mViewPaddingLeft), yy, mNormalTimePaint)
+                    canvas.drawText(timeFormat(i, minute), (mWidthDiff+ mViewPaddingLeft), yy, mNormalTimeTextPaint)
                     yy += mHeightDiff
                 }
             }
         }
         yy += mTextMarginTop
-        canvas.drawText(timeFormat(21, 0), mViewPaddingLeft, yy, mAccentTimePaint)
+        canvas.drawText(timeFormat(21, 0), mViewPaddingLeft, yy, mAccentTimeTextPaint)
     }
 
+    /**
+    * The function returns a string with right time format
+     * @param hour The hour of the time
+     * @param minute The minute of the time
+     * @return The valid time format
+    * */
     private fun timeFormat(hour:Int, minute:Int): String {
         return String.format("%02d:%02d", hour, minute)
+    }
+
+    fun updateEventsAndInvalidate(newOrderEvents: ArrayList<Order>?, status: Status) {
+        if(!isSameListWithOrigin(newOrderEvents)) {
+            this.mOrderEvents = newOrderEvents!!
+            invalidate()
+            if(status == Status.SUCCESS)
+                Toast.makeText(context, "Количество записей: " + mOrderEvents.size, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun isSameListWithOrigin(newOrderEvents: ArrayList<Order>?): Boolean {
+        if(newOrderEvents == null || newOrderEvents.isEmpty())
+            return true
+        if(mOrderEvents.isEmpty())
+            return false
+
+        return newOrderEvents.any { mOrderEvents.contains(it) }
     }
 }
 

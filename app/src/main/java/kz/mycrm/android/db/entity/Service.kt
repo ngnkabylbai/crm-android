@@ -53,7 +53,7 @@ class Service {
    @ColumnInfo(name = "service_name")
    @SerializedName("service_name")
    @Expose
-   lateinit var serviceName: String
+   var serviceName: String? = null
 
    @ColumnInfo(name = "discount")
    @SerializedName("discount")
@@ -63,5 +63,5 @@ class Service {
 //   @ColumnInfo(name = "products")
 //   @SerializedName("products")
 //   @Expose
-//   lateinit var products: Array<String>
+//   var products: Array<String>? = null
 }

@@ -17,10 +17,13 @@ import butterknife.ButterKnife
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.ui.view.JournalView
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Nurbek Kabylbay on 23.11.2017.
@@ -38,6 +41,8 @@ class JournalFragment : Fragment() {
 
     @BindView(R.id.date)
     lateinit var dateView: TextView
+    @BindView(R.id.journal)
+    lateinit var journal: JournalView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_journal, container, false)
@@ -117,11 +122,12 @@ class JournalFragment : Fragment() {
                 mDate = formatDate(date)
                 viewModel.requestJournal(token, mDate, divisionId, staffId)
                         .observe(activity, Observer {orders ->
-                            if(orders?.status == Status.SUCCESS){
-
-                                Logger.debug("Journal success" + orders.toString())
+                            if(orders?.status == Status.ERROR) {
+                                Logger.debug("Journal status:"+orders.status)
                             } else {
-                                Logger.debug("Journal status:"+orders?.status)
+                                Logger.debug("Journal. STATUS: " + orders?.status)
+                                if(orders?.data != null)
+                                    journal.updateEventsAndInvalidate(orders.data as ArrayList<Order>, orders.status)
                             }
                         })
             }
@@ -150,5 +156,4 @@ class JournalFragment : Fragment() {
                 cal.get(Calendar.DAY_OF_MONTH), monthName.format(cal.time).toLowerCase(), cal.get(Calendar.YEAR))
         dateView.text = str
     }
-
 }

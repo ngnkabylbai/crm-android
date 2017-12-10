@@ -26,5 +26,9 @@
         <attr name="normalTimeColor" format="color" />
         <attr name="normalTimeSize" format="dimension" />
         <attr name="accentTimeSize" format="dimension" />
+        <attr name="mOrderTimeTextSize" format="dimension"/>
+        <attr name="mOrderPatientNameSize"  format="dimension" />
+        <attr name="mOrderPatientNumberSize" format="dimension" />
+        <attr name="mOrderServiceListSize" format="dimension" />
     </declare-styleable>
 </resources>
