@@ -15,11 +15,14 @@ interface OrderDao {
     fun updateOrder(order: Order)
 
     @Query("SELECT * FROM mOrder")
-    fun getOrder(): LiveData<List<Order>>
+    fun getAllOrdersList(): LiveData<List<Order>>
 
     @Insert(onConflict = REPLACE)
     fun insertOrder(order: Order)
 
     @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0 AND division_id = :arg1 AND staff_id = :arg2")
-    fun getOrders(date:String, divisionId: Int, staffId:Int):LiveData<List<Order>>
+    fun getOrders(date: String, divisionId: Int, staffId:Int):LiveData<List<Order>>
+
+    @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0")
+    fun getOrdersByDate(date: String): LiveData<List<Order>>
 }

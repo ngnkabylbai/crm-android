@@ -8,22 +8,42 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Order
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by lab on 11/25/17.
  */
 class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<CurrentNotificationAdapter.ViewHolder>(){
+
+    private var notificationList: ArrayList<Order> = ArrayList()
+
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return notificationList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_division, parent, false)
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_notification, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val notification = notificationList[position]
+
+        holder.name.text = notification.customer?.lastname + " " + notification.customer?.name + " " + notification.services[0].serviceName
+        holder.time.text = notification.start?.substring(11, 16) // 15:00
+        holder.type.text = "Напоминание".toUpperCase()
+    }
+
+    // TODO: change type to Notification
+    fun add(notification: Order) {
+        notificationList.add(notification)
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        notificationList.clear()
     }
 
     class ViewHolder(itemView :View) :RecyclerView.ViewHolder(itemView), View.OnClickListener {
