@@ -271,8 +271,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         if(order.services != null) {
             text = ""
             for(s in order.services!!) {
-                text += s.serviceName + " "
+                text += s.serviceName + ", "
             }
+
+            text = text.substring(0, text.length-2)
 
             rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
             textX = textX
@@ -301,7 +303,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val dateEnd: Date?
         var diffIn5minutes: Long = 0
 
-        val format = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+        val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
         try {
             dateStart = format.parse(timeStart)
@@ -335,7 +337,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val dateStart: Date?
         val dateEnd: Date?
         var diffIn5minutes: Long = 0
-        val format = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+        val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
         try {
             dateStart = format.parse(timeStart)
@@ -460,15 +462,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      */
     private var isUpdated = true
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>?, status: Status) {
-        if(!isSameListWithOrigin(newOrderList)) {
+        if(!isSameListWithOrigin(newOrderList, status)) {
             isUpdated = true
             this.mOrderList = newOrderList!!
             invalidate()
-        } else {
+        }
+        if(isUpdated && status == Status.SUCCESS) {
+            Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_SHORT).show()
             isUpdated = false
         }
-        if(isUpdated)
-            Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_LONG).show()
     }
 
     /**
@@ -476,11 +478,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param newOrderList A new list to compare
      * @return The new list is same with mOrderList or not
      */
-    private fun isSameListWithOrigin(newOrderList: ArrayList<Order>?): Boolean {
-        if(newOrderList == null || (newOrderList.isEmpty() && mOrderList.isEmpty()))
+    private fun isSameListWithOrigin(newOrderList: ArrayList<Order>?, status: Status): Boolean {
+        if(newOrderList == null || (newOrderList.isEmpty() && mOrderList.isEmpty() && status == Status.LOADING))
             return true
-        if(mOrderList.isEmpty())
-            return false
 
         return newOrderList.any { mOrderList.contains(it) }
     }

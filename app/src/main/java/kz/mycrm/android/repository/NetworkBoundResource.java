@@ -86,7 +86,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             } else {
                 onFetchFailed();
                 result.addSource(dbSource,
-                        newData -> setValue(Resource.Companion.error(response.errorMessage, newData)));
+                        newData -> setValue(Resource.Companion.error(response.errorMessage != null ? response.errorMessage : "No response", newData)));
             }
         });
     }

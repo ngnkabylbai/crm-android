@@ -14,6 +14,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
@@ -24,14 +25,14 @@ fun Context.divisionsIntent(): Intent {
 
 class DivisionsActivity : AppCompatActivity() {
 
-    private lateinit var divisionViewModel : DivisionViewModel
+    private lateinit var divisionViewModel: DivisionViewModel
 
-    lateinit var rvDivisions : RecyclerView
+    lateinit var rvDivisions: RecyclerView
 
     @BindView(R.id.tvTitile)
-    lateinit var title : TextView
+    lateinit var title: TextView
 
-    private lateinit var adapter : DivisionAdapter
+    private lateinit var adapter: DivisionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,35 +41,28 @@ class DivisionsActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         rvDivisions = findViewById(R.id.rvDivisions)
         rvDivisions.setHasFixedSize(true)
+        adapter = DivisionAdapter(this)
+        rvDivisions.adapter = adapter
+        rvDivisions.layoutManager = LinearLayoutManager(this)
 
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
 
-        divisionViewModel.getToken().observe(this, Observer { token->
-            if (token != null){
+        divisionViewModel.getToken().observe(this, Observer { token ->
+            if (token != null) {
 
-                divisionViewModel.loadUserDivisions(token.token).observe(this,
-                        Observer { resourceDivisionList->
-                            if (resourceDivisionList != null){
-                                if (resourceDivisionList.data != null){
-                                    Logger.debug("resource" + resourceDivisionList.data.size)
-                                    if (resourceDivisionList.data.size > 1 && resourceDivisionList.status == Status.SUCCESS){
-                                        adapter = DivisionAdapter(this)
-                                        rvDivisions.adapter = adapter
-                                        rvDivisions.layoutManager = LinearLayoutManager(this)
-                                        for(d in resourceDivisionList.data) {
-                                            adapter.add(d)
-                                        }
-                                    }else{
-                                        if(resourceDivisionList.data.size == 1 && resourceDivisionList.status == Status.SUCCESS) {
-                                            val intent = mainIntent()
-                                            intent.putExtra("division_id", resourceDivisionList.data[0].id)
-                                            startActivity(intent)
-                                            finish()
-                                        }
-                                    }
-                                }
+                divisionViewModel.loadUserDivisions(token.token).observe(this, Observer { resourceDivisionList ->
+                    if (resourceDivisionList?.data != null) {
+                        Logger.debug("resource" + resourceDivisionList.data.size)
+                        if (resourceDivisionList.status != Status.ERROR) {
+                            adapter.clear()
+                            for (d in resourceDivisionList.data) {
+                                adapter.add(d)
                             }
-                        })
+                        } else {
+                            startActivity(loginIntent())
+                        }
+                    }
+                })
             }
         })
     }

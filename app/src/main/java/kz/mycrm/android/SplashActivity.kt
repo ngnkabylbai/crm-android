@@ -27,36 +27,42 @@ class SplashActivity : BaseActivity() {
 
     private lateinit var viewModel: SplashViewModel
 
+//    TODO: Refactor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         if (isInternetAvailable()) {
-            viewModel.checkForToken().observe(this, Observer { token ->
+            viewModel.checkForToken().observe(this, Observer { token -> // obtaining token
                 if (token != null) {
-                    viewModel.loadUserDivisions(token.token).observe(this,
-                            Observer { resourceDivisionList ->
-                                if (resourceDivisionList?.status == Status.SUCCESS) {
-                                    if (resourceDivisionList.data != null) {
-                                        Logger.debug("resource" + resourceDivisionList.data.size)
-                                        if (resourceDivisionList.data.size > 1) {
-                                            startActivity(divisionsIntent())
-                                            finish()
-                                        } else {
-                                            if (resourceDivisionList.data.size == 1) {
-                                                val intent = mainIntent()
-                                                intent.putExtra("division_id", resourceDivisionList.data[0].id)
-                                                startActivity(intent)
-                                                finish()
-                                            }
-                                        }
-                                    } else {
-                                        Toast.makeText(this, "No divisions available", Toast.LENGTH_SHORT).show()
-                                        startActivity(loginIntent())
-                                    }
-                                }
-                            })
+
+                    startActivity(divisionsIntent()) // for MVP
+                    finish()
+
+//                    TODO: Simplify it
+//                    viewModel.loadUserDivisions(token.token).observe(this, // making request of divisions
+//                            Observer { resourceDivisionList ->
+//                                if (resourceDivisionList?.status == Status.SUCCESS) {
+//                                    if (resourceDivisionList.data != null) { // if list is not null
+////                                        Logger.debug("resource" + resourceDivisionList.data.size)
+////                                        if (resourceDivisionList.data.size > 1) { // if size is more than 1 start division activity
+////                                            startActivity(divisionsIntent())
+////                                            finish()
+////                                        } else {
+////                                            if (resourceDivisionList.data.size == 1) { // otherwise choose the one and start main activity
+////                                                val intent = mainIntent()
+////                                                intent.putExtra("division_id", resourceDivisionList.data[0].id)
+////                                                startActivity(intent)
+////                                                finish()
+////                                            }
+////                                        }
+//                                    } else {
+//                                        Toast.makeText(this, "No divisions available", Toast.LENGTH_SHORT).show()
+//                                        startActivity(loginIntent())
+//                                    }
+//                                }
+//                            })
                 } else {
                     Logger.debug("Token wasn't found. Directing to login activity...")
                     startActivity(loginIntent())

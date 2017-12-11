@@ -42,6 +42,11 @@ class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<Divi
         notifyDataSetChanged()
     }
 
+    fun clear() {
+        divisionList.clear()
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         internal var address: TextView = itemView.findViewById<View>(R.id.item_address) as TextView
@@ -57,7 +62,6 @@ class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<Divi
             val intent = itemView.context.mainIntent()
             intent.putExtra("division_id", division.id)
             itemView.context.startActivity(intent)
-            Toast.makeText(itemView.context, "call main activity on item clicked", Toast.LENGTH_SHORT).show()
         }
     }
 }
