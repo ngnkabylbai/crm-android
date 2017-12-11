@@ -27,7 +27,8 @@ class ServiceAdapter(internal var serviceList: List<Service>, internal var conte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        holder.price.setText(serviceList[position].price)
+        holder.title.setText(serviceList[position].serviceName)
     }
 
     override fun getItemCount(): Int {
@@ -36,13 +37,10 @@ class ServiceAdapter(internal var serviceList: List<Service>, internal var conte
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        @BindView(R.id.service_title)
-        lateinit var title: TextView
-        @BindView(R.id.service_price)
-        lateinit var price: TextView
+        internal var title: TextView = itemView.findViewById<View>(R.id.service_title) as TextView
+        internal var price: TextView = itemView.findViewById<View>(R.id.service_price) as TextView
 
         init {
-            ButterKnife.bind(itemView)
             itemView.setOnClickListener { Toast.makeText(context, "service number " + itemView.id, Toast.LENGTH_SHORT).show() }
         }
     }

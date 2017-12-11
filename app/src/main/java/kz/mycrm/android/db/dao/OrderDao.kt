@@ -25,4 +25,7 @@ interface OrderDao {
 
     @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0")
     fun getOrdersByDate(date: String): LiveData<List<Order>>
+
+    @Query("SELECT * FROM mOrder WHERE order_id = :arg0")
+    fun getOrderById(id: String): LiveData<Order>
 }

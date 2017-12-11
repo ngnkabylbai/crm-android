@@ -92,6 +92,11 @@ class Service {
       return result
    }
 
+   override fun toString(): String {
+      return "Service(id='$id', servicePrice=$servicePrice, duration=$duration, price=$price, orderServiceId=$orderServiceId, name=$name, quantity=$quantity, serviceName=$serviceName, discount=$discount)"
+   }
+
+
 //   @ColumnInfo(name = "products")
 //   @SerializedName("products")
 //   @Expose

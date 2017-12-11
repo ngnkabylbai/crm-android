@@ -2,6 +2,7 @@ package kz.mycrm.android.ui.main.journal
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatSpinner
@@ -18,6 +19,7 @@ import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.ui.main.info.InfoActivity
 import kz.mycrm.android.ui.view.JournalView
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
@@ -160,6 +162,9 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     override fun onOrderEventClicked(order: Order) {
         super.onOrderEventClicked(order)
+        var intent: Intent = Intent(context, InfoActivity::class.java)
+        intent.putExtra("id", order.id)
+        startActivity(intent)
         Logger.debug("Event clicked:" + order.toString())
     }
 }
