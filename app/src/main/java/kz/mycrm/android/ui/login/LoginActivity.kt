@@ -53,8 +53,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     lateinit var login: EditText
     @BindView(R.id.password)
     lateinit var password: EditText
-    @BindView(R.id.progress)
-    lateinit var progress: ProgressBar
     @BindView(R.id.loginButton)
     lateinit var loginButton: Button
 
@@ -93,7 +91,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                     viewModel.requestToken(getValidLogin(), password.text.toString())
                             .observe(this, Observer { token ->
                                 if (token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
-                                    progress.visibility = View.GONE
                                     startActivity(splashIntent())
                                     finish()
                                 } else if (token?.status == Status.ERROR) { // error, show error message
@@ -122,17 +119,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     }
 
     private fun clearError() {
-        progress.visibility = View.GONE
         login.error = null
     }
 
     private fun startLoading() {
-        progress.visibility = View.VISIBLE
         loginButton.isEnabled = false
     }
 
     private fun stopLoading() {
-        progress.visibility = View.GONE
         loginButton.isEnabled = true
     }
 }
