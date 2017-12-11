@@ -22,120 +22,182 @@ class Customer {
     @ColumnInfo(name = "source_id_title")
     @SerializedName("source_id_title")
     @Expose
-    lateinit var sourceIdTitle: String
+    var sourceIdTitle: String? = null
 
     @ColumnInfo(name = "phone")
     @SerializedName("phone")
     @Expose
-    lateinit var phone: String
+    var phone: String? = null
 
     @ColumnInfo(name = "canceled_orders")
     @SerializedName("canceled_orders")
     @Expose
-    lateinit var canceledOrders: String
+    var canceledOrders: String? = null
 
     @ColumnInfo(name = "deposit")
     @SerializedName("deposit")
     @Expose
-    lateinit var deposit: String
+    var deposit: String? = null
 
     @ColumnInfo(name = "debt")
     @SerializedName("debt")
     @Expose
-    lateinit var debt: String
+    var debt: String? = null
 
     @ColumnInfo(name = "source_id")
     @SerializedName("source_id")
     @Expose
-    lateinit var sourceId: String
+    var sourceId: String? = null
 
     @ColumnInfo(name = "sms_birthday")
     @SerializedName("sms_birthday")
     @Expose
-    lateinit var smsBirthday: String
+    var smsBirthday: String? = null
 
     @ColumnInfo(name = "sms_exclude")
     @SerializedName("sms_exclude")
     @Expose
-    lateinit var smsExclude: String
+    var smsExclude: String? = null
 
     @ColumnInfo(name = "employer")
     @SerializedName("employer")
     @Expose
-    lateinit var employer: String
+    var employer: String? = null
 
     @ColumnInfo(name = "job")
     @SerializedName("job")
     @Expose
-    lateinit var job: String
+    var job: String? = null
 
     @ColumnInfo(name = "lastname")
     @SerializedName("lastname")
     @Expose
-    lateinit var lastname: String
+    var lastname: String? = null
 
     @ColumnInfo(name = "discount")
     @SerializedName("discount")
     @Expose
-    lateinit var discount: String
+    var discount: String? = null
 
     @ColumnInfo(name = "city")
     @SerializedName("city")
     @Expose
-    lateinit var city: String
+    var city: String? = null
 
     @ColumnInfo(name = "balance")
     @SerializedName("balance")
     @Expose
-    lateinit var balance: String
+    var balance: String? = null
 
     @ColumnInfo(name = "lastVisit")
     @SerializedName("lastVisit")
     @Expose
-    lateinit var lastVisit: String
+    var lastVisit: String? = null
 
     @ColumnInfo(name = "address")
     @SerializedName("address")
     @Expose
-    lateinit var address: String
+    var address: String? = null
 
     @ColumnInfo(name = "smsExcludeTitle")
     @SerializedName("smsExcludeTitle")
     @Expose
-    lateinit var smsExcludeTitle: String
+    var smsExcludeTitle: String? = null
 
     @ColumnInfo(name = "smsBirthdayTitle")
     @SerializedName("smsBirthdayTitle")
     @Expose
-    lateinit var smsBirthdayTitle: String
+    var smsBirthdayTitle: String? = null
 
     @ColumnInfo(name = "name")
     @SerializedName("name")
     @Expose
-    lateinit var name: String
+    var name: String? = null
 
     @ColumnInfo(name = "categoriesTitle")
     @SerializedName("categoriesTitle")
     @Expose
-    lateinit var categoriesTitle: String
+    var categoriesTitle: String? = null
 
     @ColumnInfo(name = "finishedOrders")
     @SerializedName("finishedOrders")
     @Expose
-    lateinit var finishedOrders: String
+    var finishedOrders: String? = null
 
 //    @ColumnInfo(name = "categories")
 //    @SerializedName("categories")
 //    @Expose
-//    lateinit var categories: String
+//    var categories: String? = null
 
     @ColumnInfo(name = "comments")
     @SerializedName("comments")
     @Expose
-    lateinit var comments: String
+    var comments: String? = null
 
     @ColumnInfo(name = "revenue")
     @SerializedName("revenue")
     @Expose
-    lateinit var revenue: String
+    var revenue: String? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Customer
+
+        if (id != other.id) return false
+        if (sourceIdTitle != other.sourceIdTitle) return false
+        if (phone != other.phone) return false
+        if (canceledOrders != other.canceledOrders) return false
+        if (deposit != other.deposit) return false
+        if (debt != other.debt) return false
+        if (sourceId != other.sourceId) return false
+        if (smsBirthday != other.smsBirthday) return false
+        if (smsExclude != other.smsExclude) return false
+        if (employer != other.employer) return false
+        if (job != other.job) return false
+        if (lastname != other.lastname) return false
+        if (discount != other.discount) return false
+        if (city != other.city) return false
+        if (balance != other.balance) return false
+        if (lastVisit != other.lastVisit) return false
+        if (address != other.address) return false
+        if (smsExcludeTitle != other.smsExcludeTitle) return false
+        if (smsBirthdayTitle != other.smsBirthdayTitle) return false
+        if (name != other.name) return false
+        if (categoriesTitle != other.categoriesTitle) return false
+        if (finishedOrders != other.finishedOrders) return false
+        if (comments != other.comments) return false
+        if (revenue != other.revenue) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + (sourceIdTitle?.hashCode() ?: 0)
+        result = 31 * result + (phone?.hashCode() ?: 0)
+        result = 31 * result + (canceledOrders?.hashCode() ?: 0)
+        result = 31 * result + (deposit?.hashCode() ?: 0)
+        result = 31 * result + (debt?.hashCode() ?: 0)
+        result = 31 * result + (sourceId?.hashCode() ?: 0)
+        result = 31 * result + (smsBirthday?.hashCode() ?: 0)
+        result = 31 * result + (smsExclude?.hashCode() ?: 0)
+        result = 31 * result + (employer?.hashCode() ?: 0)
+        result = 31 * result + (job?.hashCode() ?: 0)
+        result = 31 * result + (lastname?.hashCode() ?: 0)
+        result = 31 * result + (discount?.hashCode() ?: 0)
+        result = 31 * result + (city?.hashCode() ?: 0)
+        result = 31 * result + (balance?.hashCode() ?: 0)
+        result = 31 * result + (lastVisit?.hashCode() ?: 0)
+        result = 31 * result + (address?.hashCode() ?: 0)
+        result = 31 * result + (smsExcludeTitle?.hashCode() ?: 0)
+        result = 31 * result + (smsBirthdayTitle?.hashCode() ?: 0)
+        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (categoriesTitle?.hashCode() ?: 0)
+        result = 31 * result + (finishedOrders?.hashCode() ?: 0)
+        result = 31 * result + (comments?.hashCode() ?: 0)
+        result = 31 * result + (revenue?.hashCode() ?: 0)
+        return result
+    }
 }

@@ -23,32 +23,32 @@ class Service {
    @ColumnInfo(name = "service_price")
    @SerializedName("service_price")
    @Expose
-   lateinit var servicePrice: String
+   var servicePrice: String? = null
 
    @ColumnInfo(name = "duration")
    @SerializedName("duration")
    @Expose
-   lateinit var duration: String
+   var duration: String? = null
 
    @ColumnInfo(name = "price")
    @SerializedName("price")
    @Expose
-   lateinit var price: String
+   var price: String? = null
 
    @ColumnInfo(name = "order_service_id")
    @SerializedName("order_service_id")
    @Expose
-   lateinit var orderServiceId: String
+   var orderServiceId: String? = null
 
    @ColumnInfo(name = "name")
    @SerializedName("name")
    @Expose
-   lateinit var name: String
+   var name: String? = null
 
    @ColumnInfo(name = "quantity")
    @SerializedName("quantity")
    @Expose
-   lateinit var quantity: String
+   var quantity: String? = null
 
    @ColumnInfo(name = "service_name")
    @SerializedName("service_name")
@@ -58,10 +58,45 @@ class Service {
    @ColumnInfo(name = "discount")
    @SerializedName("discount")
    @Expose
-   lateinit var discount: String
+   var discount: String? = null
+
+   override fun equals(other: Any?): Boolean {
+      if (this === other) return true
+      if (javaClass != other?.javaClass) return false
+
+      other as Service
+
+      if (id != other.id) return false
+      if (servicePrice != other.servicePrice) return false
+      if (duration != other.duration) return false
+      if (price != other.price) return false
+      if (orderServiceId != other.orderServiceId) return false
+      if (name != other.name) return false
+      if (quantity != other.quantity) return false
+      if (serviceName != other.serviceName) return false
+      if (discount != other.discount) return false
+
+      return true
+   }
+
+   override fun hashCode(): Int {
+      var result = id.hashCode()
+      result = 31 * result + (servicePrice?.hashCode() ?: 0)
+      result = 31 * result + (duration?.hashCode() ?: 0)
+      result = 31 * result + (price?.hashCode() ?: 0)
+      result = 31 * result + (orderServiceId?.hashCode() ?: 0)
+      result = 31 * result + (name?.hashCode() ?: 0)
+      result = 31 * result + (quantity?.hashCode() ?: 0)
+      result = 31 * result + (serviceName?.hashCode() ?: 0)
+      result = 31 * result + (discount?.hashCode() ?: 0)
+      return result
+   }
 
 //   @ColumnInfo(name = "products")
 //   @SerializedName("products")
 //   @Expose
 //   var products: Array<String>? = null
+
+
+
 }

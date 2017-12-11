@@ -216,6 +216,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private fun drawEventOrders(canvas: Canvas) {
         if(mOrderList.isEmpty())
             return
+        mOrderEventList.clear()
         for(orderEvent in mOrderList) {
             drawOrderEvent(canvas, orderEvent)
         }
@@ -457,13 +458,17 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param newOrderList A new OrderList
      * @param status The status of the new list
      */
+    private var isUpdated = true
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>?, status: Status) {
         if(!isSameListWithOrigin(newOrderList)) {
+            isUpdated = true
             this.mOrderList = newOrderList!!
             invalidate()
-            if(status == Status.SUCCESS)
-                Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_LONG).show()
+        } else {
+            isUpdated = false
         }
+        if(isUpdated)
+            Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_LONG).show()
     }
 
     /**
@@ -472,7 +477,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @return The new list is same with mOrderList or not
      */
     private fun isSameListWithOrigin(newOrderList: ArrayList<Order>?): Boolean {
-        if(newOrderList == null || newOrderList.isEmpty())
+        if(newOrderList == null || (newOrderList.isEmpty() && mOrderList.isEmpty()))
             return true
         if(mOrderList.isEmpty())
             return false
