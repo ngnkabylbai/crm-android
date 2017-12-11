@@ -20,16 +20,16 @@ class StaffJournal {
     @SerializedName("start")
     @Expose
     @ColumnInfo(name = "start")
-    lateinit var start: String
+    var start: String? = null
 
     @SerializedName("orders")
     @Expose
     @Ignore
-    lateinit var orders: List<Order>
+    var orders: List<Order>? = null
 
     @SerializedName("end")
     @Expose
     @ColumnInfo(name = "end")
-    lateinit var end: String
+    var end: String? = null
 
 }

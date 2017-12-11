@@ -24,8 +24,10 @@ class JournalRepository(private var appExecutors: AppExecutors) {
         return object : NetworkBoundResource<List<Order>, List<StaffJournal>>(appExecutors) {
                 override fun saveCallResult(item: List<StaffJournal>) {
                     for(s in item) {
-                        for(o in s.orders)
-                            MycrmApp.database.OrderDao().insertOrder(o)
+                        s.orders?.let {
+                            for(o in s.orders!!)
+                                MycrmApp.database.OrderDao().insertOrder(o)
+                        }
                     }
                 }
 

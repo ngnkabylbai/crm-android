@@ -132,10 +132,10 @@ class Order {
     @Expose
     var customerName: String? = null
 
-    @ColumnInfo(name="medCard")
-    @SerializedName("medCard")
-    @Expose
-    var medCard: String? = null
+//    @ColumnInfo(name="medCard")
+//    @SerializedName("medCard")
+//    @Expose
+//    var medCard: String? = null
 
     @ColumnInfo(name="editable")
     @SerializedName("editable")
@@ -213,7 +213,7 @@ class Order {
         if (status != other.status) return false
         if (productsDiscount != other.productsDiscount) return false
         if (customerName != other.customerName) return false
-        if (medCard != other.medCard) return false
+//        if (medCard != other.medCard) return false
         if (editable != other.editable) return false
         if (price != other.price) return false
         if (color != other.color) return false
@@ -248,7 +248,7 @@ class Order {
         result = 31 * result + (status?.hashCode() ?: 0)
         result = 31 * result + (productsDiscount?.hashCode() ?: 0)
         result = 31 * result + (customerName?.hashCode() ?: 0)
-        result = 31 * result + (medCard?.hashCode() ?: 0)
+//        result = 31 * result + (medCard?.hashCode() ?: 0)
         result = 31 * result + (editable?.hashCode() ?: 0)
         result = 31 * result + (price?.hashCode() ?: 0)
         result = 31 * result + (color?.hashCode() ?: 0)

@@ -214,10 +214,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The canvas where to draw
      */
     private fun drawEventOrders(canvas: Canvas) {
-        if(mOrderList.isEmpty())
+        if(mOrderEventList.isEmpty())
             return
-        mOrderEventList.clear()
-        for(orderEvent in mOrderList) {
+        for(orderEvent in mOrderEventList) {
             drawOrderEvent(canvas, orderEvent)
         }
     }
@@ -228,49 +227,43 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The canvas where to draw
      * @param order The order should be drawn
      */
-    private fun drawOrderEvent(canvas: Canvas, order: Order?) {
-        if(order == null)
-            return
+    private fun drawOrderEvent(canvas: Canvas, orderEvent: OrderEvent) {
         // Order rect and Left Accent
-        val orderLeft = getOrderLeft(order)
-        val orderTop = getOrderTop(order)
-        val orderRight = getOrderRight(order)
-        val orderBottom = getOrderBottom(order, orderTop)
-        val orderRect = Rect(orderLeft.toInt(), orderTop.toInt(), orderRight.toInt(), orderBottom.toInt())
-
-        mOrderEventList.add(OrderEvent(orderRect, order))
+        val orderLeft = orderEvent.rect.left.toFloat()
+        val orderBottom = orderEvent.rect.bottom.toFloat()
+        val orderTop = orderEvent.rect.top.toFloat()
 
         val accentRight = orderLeft + 10f
 
-        canvas.drawRect(orderRect, mOrderBackgroundPaint)
+        canvas.drawRect(orderEvent.rect, mOrderBackgroundPaint)
         canvas.drawRect(orderLeft, orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
 
         var textX = 0f
         var textY = 0f
         val marginTop = 20f
         var rect = Rect()
-        var text = order.start?.substring(11, 16) +" - "+ order.end?.substring(11, 16)
+        var text = orderEvent.order.start?.substring(11, 16) +" - "+ orderEvent.order.end?.substring(11, 16)
 
         rect = getBoundedRect(text, mOrderTimeTextPaint, rect)
-        textX += orderRect.left + 15f
-        textY = orderRect.top + rect.height() + marginTop
-        drawOrderText(orderRect, text, textX, textY, mOrderTimeTextPaint, canvas)
+        textX += orderEvent.rect.left + 15f
+        textY = orderEvent.rect.top + rect.height() + marginTop
+        drawOrderText(orderEvent.rect, text, textX, textY, mOrderTimeTextPaint, canvas)
 
-        text = order.customer?.lastname + " " + order.customer?.name
+        text = orderEvent.order.customer?.lastname + " " + orderEvent.order.customer?.name
         rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
         textX = textX
         textY += rect.height() + marginTop
-        drawOrderText(orderRect, text, textX, textY, mOrderPatientNamePaint, canvas)
+        drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNamePaint, canvas)
 
-        text = order.customer?.phone ?: ""
+        text = orderEvent.order.customer?.phone ?: ""
         rect = getBoundedRect(text, mOrderPatientNumberPaint, rect)
         textX = textX
         textY += rect.height() + marginTop
-        drawOrderText(orderRect, text, textX, textY, mOrderPatientNumberPaint, canvas)
+        drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNumberPaint, canvas)
 
-        if(order.services != null) {
+        if(orderEvent.order.services != null) {
             text = ""
-            for(s in order.services!!) {
+            for(s in orderEvent.order.services!!) {
                 text += s.serviceName + ", "
             }
 
@@ -278,8 +271,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
             rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
             textX = textX
-            textY = orderRect.bottom.toFloat() -  rect.height()
-            drawOrderText(orderRect, text, textX, textY, mOrderServiceListPaint, canvas)
+            textY = orderEvent.rect.bottom.toFloat() -  rect.height()
+            drawOrderText(orderEvent.rect, text, textX, textY, mOrderServiceListPaint, canvas)
         }
     }
 
@@ -348,6 +341,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        if(diffIn5minutes.toInt() == 0)
+            return top
         return top + diffIn5minutes* mOrder5minHeight - 1f // -1f gives a gap between two orders
     }
 
@@ -461,15 +456,31 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param status The status of the new list
      */
     private var isUpdated = true
-    fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>?, status: Status) {
+    fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>, status: Status) {
         if(!isSameListWithOrigin(newOrderList, status)) {
             isUpdated = true
-            this.mOrderList = newOrderList!!
+            this.mOrderList = newOrderList
+            loadOrderEventRects(newOrderList)
             invalidate()
         }
         if(isUpdated && status == Status.SUCCESS) {
-            Toast.makeText(context, "Количество записей: " + mOrderList.size, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Количество записей: " + mOrderEventList.size, Toast.LENGTH_SHORT).show()
             isUpdated = false
+        }
+    }
+
+    private fun loadOrderEventRects(newOrderList: ArrayList<Order>) {
+        mOrderEventList.clear()
+        for(order in newOrderList) {
+            val orderLeft = getOrderLeft(order)
+            val orderTop = getOrderTop(order)
+            val orderRight = getOrderRight(order)
+            val orderBottom = getOrderBottom(order, orderTop)
+            val orderRect = Rect(orderLeft.toInt(), orderTop.toInt(), orderRight.toInt(), orderBottom.toInt())
+            if(orderTop >= orderBottom) {
+                return
+            }
+            mOrderEventList.add(OrderEvent(orderRect, order))
         }
     }
 
@@ -478,8 +489,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param newOrderList A new list to compare
      * @return The new list is same with mOrderList or not
      */
-    private fun isSameListWithOrigin(newOrderList: ArrayList<Order>?, status: Status): Boolean {
-        if(newOrderList == null || (newOrderList.isEmpty() && mOrderList.isEmpty() && status == Status.LOADING))
+    private fun isSameListWithOrigin(newOrderList: ArrayList<Order>, status: Status): Boolean {
+        if(newOrderList.isEmpty() && mOrderList.isEmpty() && status == Status.LOADING)
             return true
 
         return newOrderList.any { mOrderList.contains(it) }
