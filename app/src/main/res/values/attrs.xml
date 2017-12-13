@@ -22,13 +22,15 @@
     <declare-styleable name="JournalView">
         <attr name="backgroundColor" format="color" />
         <attr name="separatorColor" format="color" />
-        <attr name="accentTimeColor" format="color" />
-        <attr name="normalTimeColor" format="color" />
+        <attr name="timeTextColor" format="color" />
         <attr name="normalTimeSize" format="dimension" />
         <attr name="accentTimeSize" format="dimension" />
-        <attr name="mOrderTimeTextSize" format="dimension"/>
-        <attr name="mOrderPatientNameSize"  format="dimension" />
-        <attr name="mOrderPatientNumberSize" format="dimension" />
-        <attr name="mOrderServiceListSize" format="dimension" />
+        <attr name="orderTimeTextSize" format="dimension"/>
+        <attr name="orderPatientNameSize"  format="dimension" />
+        <attr name="orderPatientNumberSize" format="dimension" />
+        <attr name="orderServiceListSize" format="dimension" />
+        <attr name="orderBackgroundColor" format="color" />
+        <attr name="orderLeftAccentColor" format="color" />
+        <attr name="orderTextColor" format="color" />
     </declare-styleable>
 </resources>
