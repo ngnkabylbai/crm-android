@@ -12,11 +12,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import butterknife.BindView
 import butterknife.ButterKnife
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
+import kotlinx.android.synthetic.main.fragment_journal.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
@@ -44,18 +43,12 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
     private val spinnerItems = ArrayList<String>()
     private val divisionList = ArrayList<Division>()
 
-    @BindView(R.id.date)
-    lateinit var dateView: TextView
-    @BindView(R.id.journal)
-    lateinit var journal: JournalView
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_journal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ButterKnife.bind(this, view)
 
         journal.setOnEventClickListener(this)
 
@@ -83,6 +76,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
             divisionList.clear()
             list!!.mapTo(spinnerItems) { it.name.toString() }
             for(d in list) {
+
                 if(d.id == divisionId) {
                     spinner.setSelection(spinnerItems.indexOf(d.name))
                 }
@@ -93,7 +87,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 divisionId = divisionList[position].id
                 spinner.setSelection(position)
             }
@@ -154,9 +148,9 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
     }
 
     private fun validDate() {
-        val date = Date()
+        val dateTime = Date()
         val cal = Calendar.getInstance()
-        cal.time = date
+        cal.time = dateTime
 
         val dayName = SimpleDateFormat("EEEE", Locale.getDefault())
         val monthName = SimpleDateFormat("MMMM", Locale.getDefault())

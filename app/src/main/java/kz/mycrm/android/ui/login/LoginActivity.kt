@@ -11,18 +11,11 @@ import android.os.Looper
 import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.R
-import kz.mycrm.android.SplashActivity
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
-import kz.mycrm.android.splashIntent
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
@@ -49,17 +42,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         }
     }
 
-    @BindView(R.id.login)
-    lateinit var login: EditText
-    @BindView(R.id.password)
-    lateinit var password: EditText
-    @BindView(R.id.loginButton)
-    lateinit var loginButton: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 

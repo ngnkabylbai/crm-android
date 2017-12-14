@@ -33,15 +33,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/current_notif_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="@string/current_notification"
-                android:textColor="@color/notification_type_color"
-                android:textSize="17sp" />
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvCurrentNotifications"

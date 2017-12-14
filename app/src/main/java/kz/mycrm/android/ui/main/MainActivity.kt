@@ -8,10 +8,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import kz.mycrm.android.R
 import kz.mycrm.android.ui.main.journal.JournalFragment
 import kz.mycrm.android.ui.main.menu.MenuFragment
@@ -23,9 +22,6 @@ fun Context.mainIntent(): Intent {
 }
 
 class MainActivity : AppCompatActivity() {
-
-    @BindView(R.id.bottom_navigation)
-    lateinit var bottomBar :AHBottomNavigation
 
     private lateinit var viewModel: MainViewModel
 
@@ -39,16 +35,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ButterKnife.bind(this)
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        bottomBar.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
-        bottomBar.accentColor = ContextCompat.getColor(this, R.color.bottom_nav_active)
-        bottomBar.inactiveColor = ContextCompat.getColor(this, R.color.bottom_nav_inactive)
+        bottomNavigation.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
+        bottomNavigation.accentColor = ContextCompat.getColor(this, R.color.bottom_nav_active)
+        bottomNavigation.inactiveColor = ContextCompat.getColor(this, R.color.bottom_nav_inactive)
 
         val navigationAdapter = AHBottomNavigationAdapter(this, R.menu.bottom_menu)
-        navigationAdapter.setupWithBottomNavigation(bottomBar)
+        navigationAdapter.setupWithBottomNavigation(bottomNavigation)
 
         journalFragment = JournalFragment()
             val bundle = Bundle()
@@ -64,9 +58,9 @@ class MainActivity : AppCompatActivity() {
             fragmentTransaction.commit()
             true
         }
-        bottomBar.setOnTabSelectedListener(onTabSelectedListener)
+        bottomNavigation.setOnTabSelectedListener(onTabSelectedListener)
         onTabSelectedListener.onTabSelected(1, true)
-        bottomBar.currentItem = 1
+        bottomNavigation.currentItem = 1
     }
 
     private fun setFragment(tabId :Int) :Fragment {

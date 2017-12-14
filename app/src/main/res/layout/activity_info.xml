@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/info_time"
+            android:id="@+id/infoTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -35,7 +35,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/close_activity"
+            android:id="@+id/closeActivity"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginBottom="8dp"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@+id/client_label">
 
             <TextView
-                android:id="@+id/client_name"
+                android:id="@+id/clientName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tom Kotevich"
@@ -87,7 +87,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/client_phone"
+                android:id="@+id/clientPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -153,7 +153,7 @@
             app:layout_constraintTop_toTopOf="@+id/client_docs" />
 
         <TextView
-            android:id="@+id/client_notes"
+            android:id="@+id/clientNotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"

@@ -5,20 +5,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
-import kz.mycrm.android.db.entity.Customer
-import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.ui.main.MainViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import java.util.*
 
 /**
  * Created by lab on 11/25/17.
@@ -26,11 +20,6 @@ import java.util.Date
 class NotificationFragment: Fragment() {
     private lateinit var viewModel: NotificationViewModel
     private lateinit var sharedViewModel: MainViewModel
-
-    @BindView(R.id.rvCurrentNotifications)
-    lateinit var rvCurrentNotifications: RecyclerView
-//    @BindView(R.id.rvPastNotifications)
-//    lateinit var rvPastNotifications: RecyclerView
 
     private lateinit var currentNotificationAdapter : CurrentNotificationAdapter
     private lateinit var pastNotificationAdapter : PastNotificationAdapter
@@ -41,8 +30,6 @@ class NotificationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        ButterKnife.bind(this, view)
 
         viewModel = ViewModelProviders.of(this).get(NotificationViewModel::class.java)
 

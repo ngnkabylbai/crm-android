@@ -40,10 +40,13 @@
 
                     <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/divisionSpinner"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:maxWidth="150dp"
                         android:dropDownWidth="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        app:layout_constraintEnd_toStartOf="@id/toDay"
                         app:layout_constraintStart_toStartOf="@id/title"
                         app:layout_constraintTop_toBottomOf="@id/title" />
 
@@ -94,7 +97,7 @@
             android:orientation="vertical">
             <TextView
                 android:visibility="visible"
-                android:id="@+id/date"
+                android:id="@+id/dateView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -115,7 +118,7 @@
                 android:background="#E0E0E0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date" />
+                app:layout_constraintTop_toBottomOf="@id/dateView" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 

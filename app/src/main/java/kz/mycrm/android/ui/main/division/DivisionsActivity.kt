@@ -4,13 +4,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
+import android.view.View
+import kotlinx.android.synthetic.main.activity_divisions.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
@@ -28,16 +27,12 @@ class DivisionsActivity : AppCompatActivity() {
 
     lateinit var rvDivisions: RecyclerView
 
-    @BindView(R.id.tvTitle)
-    lateinit var title: TextView
-
     private lateinit var adapter: DivisionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_divisions)
 
-        ButterKnife.bind(this)
         rvDivisions = findViewById(R.id.rvDivisions)
         rvDivisions.setHasFixedSize(true)
         adapter = DivisionAdapter(this)
@@ -51,14 +46,15 @@ class DivisionsActivity : AppCompatActivity() {
                 if (resourceList?.data != null && resourceList.status == Status.SUCCESS) {
                     val list = resourceList.data
                     Logger.debug("resource" + list.size)
-                    if (list.size > 1) {
+//                    if (list.size > 1) {
                         adapter.clear()
                         for (d in resourceList.data) {
                             adapter.add(d)
                         }
-                    } else if (list.size == 1) {
-                        startMain(list[0])
-                    }
+//                    } else if (list.size == 1) {
+//                        startMain(list[0])
+//                    }
+                    progress.visibility = View.GONE
                 } else if ((resourceList?.data == null && resourceList?.status == Status.SUCCESS) || resourceList?.status == Status.ERROR) {
                     startLogin()
                 }
