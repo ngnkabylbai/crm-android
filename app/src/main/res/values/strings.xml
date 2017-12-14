@@ -18,12 +18,12 @@
     <string name="navigation_bar_notification">not</string>
     <string name="navigation_bar_menu">Меню</string>
     <!--Division fragment-->
-    <string name="division_title">Выберите филиал</string>
+    <string name="division_title">Выбор филиала</string>
 
     <!--Notification fragment-->
-    <string name="notification_title">Уведомление</string>
-    <string name="current_notification">Текущие</string>
-    <string name="past_notification">Прошедшие</string>
+    <string name="notification_title">Уведомления</string>
+    <string name="current_notification">ТЕКУЩИЕ</string>
+    <string name="past_notification">ПРОШЕДШИЕ</string>
     <string name="go_to_map">Перейти к карте</string>
     <!--Info activity-->
     <string name="services">УСЛУГИ</string>

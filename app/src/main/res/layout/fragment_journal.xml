@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundColor"
+        android:background="@color/primaryBackgroundColor"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -132,7 +132,8 @@
             app:backgroundColor="#e5eff9"
             app:orderBackgroundColor="#1058cc"
             app:orderLeftAccentColor="#1058cc"
-            app:orderTextColor="#fff"/>
+            app:orderTextColor="#fff"
+            app:timeTextColor="@color/black"/>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

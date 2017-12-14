@@ -9,13 +9,10 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
-import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
-import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
@@ -29,7 +26,7 @@ class DivisionsActivity : AppCompatActivity() {
 
     lateinit var rvDivisions: RecyclerView
 
-    @BindView(R.id.tvTitile)
+    @BindView(R.id.tvTitle)
     lateinit var title: TextView
 
     private lateinit var adapter: DivisionAdapter

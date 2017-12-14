@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Customer
+import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.ui.main.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -52,6 +55,19 @@ class NotificationFragment: Fragment() {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val today = Date()
         val dateTime = format.format(today)
+
+//        val order = Order()
+//        val customer = Customer()
+//        customer.name = "Максат"
+//        customer.lastname = "Нуржаусын"
+//        val service = Service()
+//        service.serviceName = "повторное посещение"
+//
+//        order.customer = customer
+//        order.services = listOf(service)
+//        order.start = "xxxx-xx-xx 15:00:00"
+//
+//        currentNotificationAdapter.add(order)
 
         viewModel.getToDaysNotifications(dateTime).observe(this, Observer { notificationList->
             if(notificationList != null && notificationList.isNotEmpty()) {

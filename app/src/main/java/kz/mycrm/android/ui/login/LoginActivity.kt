@@ -91,7 +91,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                     viewModel.requestToken(getValidLogin(), password.text.toString())
                             .observe(this, Observer { token ->
                                 if (token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
-                                    startActivity(splashIntent())
+                                    startActivity(divisionsIntent())
                                     finish()
                                 } else if (token?.status == Status.ERROR) { // error, show error message
                                     login.error = resources.getString(R.string.error_invalid_password)

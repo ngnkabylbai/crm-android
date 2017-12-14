@@ -32,8 +32,8 @@ class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<Current
         val notification = notificationList[position]
 
         holder.name.text = notification.customer?.lastname + " " + notification.customer?.name + " " + notification.services[0].serviceName
-        holder.time.text = notification.start?.substring(11, 16) // 15:00
-        holder.type.text = "Напоминание".toUpperCase()
+//        holder.time.text = notification.start?.substring(11, 16) // 15:00
+//        holder.type.text = "Напоминание".toUpperCase()
     }
 
     // TODO: change type to Notification
