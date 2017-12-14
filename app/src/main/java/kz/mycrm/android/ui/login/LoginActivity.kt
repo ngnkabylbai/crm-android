@@ -11,6 +11,7 @@ import android.os.Looper
 import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.view.View
+import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.R
@@ -45,6 +46,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 

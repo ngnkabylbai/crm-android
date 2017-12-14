@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import butterknife.ButterKnife
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kotlinx.android.synthetic.main.fragment_journal.*
@@ -61,7 +60,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
         viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
             divisionId = division?.id ?: 0
-            staffId = intArrayOf(division?.user?.id?.toInt() ?: 0)
+            staffId = intArrayOf(division?.staff?.id?.toInt() ?: 0)
         })
 
         setupCalendar(view)
@@ -129,7 +128,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
                             } else {
                                 Logger.debug("Journal. STATUS: " + orders?.status)
                                 if(orders?.data != null)
-                                    journal.updateEventsAndInvalidate(orders.data as ArrayList<Order>, orders.status)
+                                    journal?.updateEventsAndInvalidate(orders.data as ArrayList<Order>, orders.status)
                             }
                         })
             }

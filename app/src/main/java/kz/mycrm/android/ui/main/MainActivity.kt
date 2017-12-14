@@ -47,8 +47,10 @@ class MainActivity : AppCompatActivity() {
         journalFragment = JournalFragment()
             val bundle = Bundle()
             bundle.putInt("division_id", intent.extras.getInt("division_id"))
-        journalFragment.arguments = bundle
+            journalFragment.arguments = bundle
         notificationFragment = NotificationFragment()
+            notificationFragment.arguments = bundle
+
         menuFragment = MenuFragment()
 
         val onTabSelectedListener = AHBottomNavigation.OnTabSelectedListener { tabId, _ ->

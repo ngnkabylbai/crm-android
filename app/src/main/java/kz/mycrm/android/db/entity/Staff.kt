@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-class User {
+class Staff {
 
     @SerializedName("id")
     @Expose

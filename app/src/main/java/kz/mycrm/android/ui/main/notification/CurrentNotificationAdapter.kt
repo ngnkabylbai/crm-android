@@ -1,6 +1,7 @@
 package kz.mycrm.android.ui.main.notification
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +10,21 @@ import android.widget.TextView
 import android.widget.Toast
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by lab on 11/25/17.
  */
-class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var TYPE_HEADER = 0
     private var TYPE_ITEM = 1
 
     private var notificationList: ArrayList<Order> = ArrayList()
+
+    private val fromFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    private val targetFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
@@ -40,11 +45,17 @@ class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<Recycle
 
         } else if(holder is ViewItemHolder) {
             val notification = notificationList[position-1]
-            val str = notification.customerName +" "+ notification.services[0].serviceName
-            holder.name.text = str
+            holder.name.text = notification.title
+
+            try {
+                val date = fromFormat.parse(notification.datetime)
+                holder.time.text = targetFormat.format(date).toLowerCase()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            holder.type.text = "Визит".toUpperCase()
         }
-//        holder.time.text = notification.start?.substring(11, 16) // 15:00
-//        holder.type.text = "Напоминание".toUpperCase()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -66,6 +77,11 @@ class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<Recycle
 
     fun clear() {
         notificationList.clear()
+    }
+
+    fun setListAndNotify(notificationList: ArrayList<Order>) {
+        this.notificationList = notificationList
+        notifyDataSetChanged()
     }
 
     class ViewItemHolder(itemView :View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

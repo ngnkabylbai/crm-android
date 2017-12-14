@@ -41,7 +41,7 @@ class ServiceAdapter(internal var serviceList: List<Service>, internal var conte
         internal var price: TextView = itemView.findViewById<View>(R.id.service_price) as TextView
 
         init {
-            itemView.setOnClickListener { Toast.makeText(context, "service number " + itemView.id, Toast.LENGTH_SHORT).show() }
+//            itemView.setOnClickListener { Toast.makeText(context, "service number " + itemView.id, Toast.LENGTH_SHORT).show() }
         }
     }
 }

@@ -100,7 +100,7 @@ class Division {
     @SerializedName("self-staff")
     @Expose
     @Embedded(prefix = "u")
-    var user: User? = null
+    var staff: Staff? = null
 
     override fun toString(): String {
         return "Division(id=$id, companyId=$companyId, workingStart=$workingStart, cityName=$cityName, phone=$phone, status=$status, categoryId=$categoryId, url=$url, cityId=$cityId, address=$address, description=$description, name=$name, longitude=$longitude, rating=$rating, latitude=$latitude, workingFinish=$workingFinish, key=$key)"

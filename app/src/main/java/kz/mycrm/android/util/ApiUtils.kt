@@ -1,9 +1,6 @@
 package kz.mycrm.android.util
 
-import kz.mycrm.android.remote.JournalService
-import kz.mycrm.android.remote.RetrofitClient
-import kz.mycrm.android.remote.TokenService
-import kz.mycrm.android.remote.UserService
+import kz.mycrm.android.remote.*
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -22,5 +19,9 @@ object ApiUtils {
 
     fun getJournalService(): JournalService {
         return RetrofitClient.getClient(baseUrl).create(JournalService::class.java)
+    }
+
+    fun getOrderService(): OrderService {
+        return RetrofitClient.getClient(baseUrl).create(OrderService::class.java)
     }
 }
