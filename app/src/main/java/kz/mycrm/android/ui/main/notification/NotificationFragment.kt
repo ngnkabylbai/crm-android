@@ -69,7 +69,8 @@ class NotificationFragment : Fragment() {
 
         viewModel.getToken().observe(this, Observer { token ->
             viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
-                viewModel.getToDaysNotifications(token!!.token, division?.staff!!.id).observe(this, Observer { resourceList ->
+                if(token?.token != null && division?.staff != null)
+                viewModel.getToDaysNotifications(token.token, division.staff!!.id).observe(this, Observer { resourceList ->
                     if (resourceList != null && resourceList.status != Status.ERROR) {
                         val orderList = resourceList.data
                         if (orderList != null) {
