@@ -31,11 +31,5 @@
     <string name="note">ЗАМЕТКА</string>
     <string name="file">Файлы</string>
     <string name="docs">Документы</string>
-    <!-- Journal fragment -->
-    <string-array name="spinnerItems">
-        <item>Филиал №1</item>
-        <item>Филиал №2</item>
-        <item>Филиал №3</item>
-        <item>Филиал with looong name №4</item>
-    </string-array>
+
 </resources>
