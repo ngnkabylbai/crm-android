@@ -6,18 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
-import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
-import kz.mycrm.android.util.Status
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.InetAddress
-import java.net.URL
 
 fun Context.splashIntent(): Intent {
     return Intent(this, SplashActivity::class.java)
@@ -27,42 +20,17 @@ class SplashActivity : BaseActivity() {
 
     private lateinit var viewModel: SplashViewModel
 
-//    TODO: Refactor
+    //    TODO: Refactor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         if (isInternetAvailable()) {
-            viewModel.checkForToken().observe(this, Observer { token -> // obtaining token
+            viewModel.isAuthenticated().observe(this, Observer { token ->
                 if (token != null) {
-
                     startActivity(divisionsIntent()) // for MVP
                     finish()
-
-//                    TODO: Simplify it
-//                    viewModel.loadUserDivisions(token.token).observe(this, // making request of divisions
-//                            Observer { resourceDivisionList ->
-//                                if (resourceDivisionList?.status == Status.SUCCESS) {
-//                                    if (resourceDivisionList.data != null) { // if list is not null
-////                                        Logger.debug("resource" + resourceDivisionList.data.size)
-////                                        if (resourceDivisionList.data.size > 1) { // if size is more than 1 start division activity
-////                                            startActivity(divisionsIntent())
-////                                            finish()
-////                                        } else {
-////                                            if (resourceDivisionList.data.size == 1) { // otherwise choose the one and start main activity
-////                                                val intent = mainIntent()
-////                                                intent.putExtra("division_id", resourceDivisionList.data[0].id)
-////                                                startActivity(intent)
-////                                                finish()
-////                                            }
-////                                        }
-//                                    } else {
-//                                        Toast.makeText(this, "No divisions available", Toast.LENGTH_SHORT).show()
-//                                        startActivity(loginIntent())
-//                                    }
-//                                }
-//                            })
                 } else {
                     Logger.debug("Token wasn't found. Directing to login activity...")
                     startActivity(loginIntent())

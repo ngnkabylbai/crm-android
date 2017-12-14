@@ -51,16 +51,16 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel = ViewModelProviders.of(this).get(InfoViewModel::class.java)
 
-        var intent: Intent = getIntent()
+        val intent: Intent = intent
 
         viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order->
-            client_name.setText(order?.customerFullName)
-            client_phone.setText(order?.customerPhone)
-            client_notes.setText(order?.note)
+            client_name.text = order?.customerName
+            client_phone.text = order?.customerPhone
+            client_notes.text = order?.note
             if (order != null){
                 adapter = ServiceAdapter(order.services, this)
-                rv.setLayoutManager(lm)
-                rv.setAdapter(adapter)
+                rv.layoutManager = lm
+                rv.adapter = adapter
             }
             Logger.debug("order = " + order?.services.toString())
         })

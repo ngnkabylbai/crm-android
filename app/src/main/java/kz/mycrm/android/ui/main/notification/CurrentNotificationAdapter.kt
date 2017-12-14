@@ -30,8 +30,8 @@ class CurrentNotificationAdapter(context: Context): RecyclerView.Adapter<Current
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val notification = notificationList[position]
-
-        holder.name.text = notification.customer?.lastname + " " + notification.customer?.name + " " + notification.services[0].serviceName
+        val str = notification.customerName +" "+ notification.services[0].serviceName
+        holder.name.text = str
 //        holder.time.text = notification.start?.substring(11, 16) // 15:00
 //        holder.type.text = "Напоминание".toUpperCase()
     }

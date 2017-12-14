@@ -12,7 +12,9 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
+import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
@@ -45,22 +47,34 @@ class DivisionsActivity : AppCompatActivity() {
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
 
         divisionViewModel.getToken().observe(this, Observer { token ->
-            if (token != null) {
-
-                divisionViewModel.loadUserDivisions(token.token).observe(this, Observer { resourceDivisionList ->
-                    if (resourceDivisionList?.data != null) {
-                        Logger.debug("resource" + resourceDivisionList.data.size)
-                        if (resourceDivisionList.status != Status.ERROR) {
-                            adapter.clear()
-                            for (d in resourceDivisionList.data) {
-                                adapter.add(d)
-                            }
-                        } else {
-                            startActivity(loginIntent())
+            divisionViewModel.loadUserDivisions(token!!.token).observe(this, Observer { resourceList ->
+                if (resourceList?.data != null && resourceList.status == Status.SUCCESS) {
+                    val list = resourceList.data
+                    Logger.debug("resource" + list.size)
+                    if (list.size > 1) {
+                        adapter.clear()
+                        for (d in resourceList.data) {
+                            adapter.add(d)
                         }
+                    } else if (list.size == 1) {
+                        startMain(list[0])
                     }
-                })
-            }
+                } else if ((resourceList?.data == null && resourceList?.status == Status.SUCCESS) || resourceList?.status == Status.ERROR) {
+                    startLogin()
+                }
+            })
         })
+    }
+
+    private fun startLogin() {
+        startActivity(loginIntent())
+        finish()
+    }
+
+    private fun startMain(division: Division) {
+        val intent = mainIntent()
+        intent.putExtra("division_id", division.id)
+        startActivity(intent)
+        finish()
     }
 }

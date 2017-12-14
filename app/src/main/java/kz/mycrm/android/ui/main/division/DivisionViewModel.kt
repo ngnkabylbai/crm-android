@@ -18,7 +18,7 @@ class DivisionViewModel : ViewModel(){
     private var userRepository = UserRepository(AppExecutors)
 
     fun getToken(): LiveData<Token> {
-        Logger.debug("getToken")
+        Logger.debug("getTokenAsLiveData")
         return tokenRepository.getToken()
     }
 

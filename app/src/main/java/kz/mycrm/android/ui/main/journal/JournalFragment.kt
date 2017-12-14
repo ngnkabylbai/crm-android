@@ -18,6 +18,7 @@ import butterknife.ButterKnife
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.ui.main.info.InfoActivity
 import kz.mycrm.android.ui.view.JournalView
@@ -40,6 +41,8 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
     private lateinit var staffId: IntArray
 
     private lateinit var dateFormat: SimpleDateFormat
+    private val spinnerItems = ArrayList<String>()
+    private val divisionList = ArrayList<Division>()
 
     @BindView(R.id.date)
     lateinit var dateView: TextView
@@ -74,15 +77,16 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     private fun setupSpinner(view: View) {
         val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
-        val spinnerItems = ArrayList<String>()
         val adapter = ArrayAdapter<String>(activity, R.layout.item_journal_spinner, spinnerItems)
         spinner.adapter = adapter
         viewModel.getDivisions().observe(activity, Observer { list ->
+            divisionList.clear()
             list!!.mapTo(spinnerItems) { it.name.toString() }
             for(d in list) {
                 if(d.id == divisionId) {
                     spinner.setSelection(spinnerItems.indexOf(d.name))
                 }
+                divisionList.add(d)
             }
             adapter.notifyDataSetChanged()
         } )
@@ -90,7 +94,8 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-
+                divisionId = divisionList[position].id
+                spinner.setSelection(position)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {

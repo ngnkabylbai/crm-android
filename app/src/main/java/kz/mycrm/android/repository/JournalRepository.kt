@@ -41,7 +41,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                 }
 
                 override fun createCall(): LiveData<ApiResponse<List<StaffJournal>>> {
-                    return ApiUtils.getJournalService().requestJournal(token, date, divisionId, staffId)
+                    return ApiUtils.getJournalService().requestJournal(token, date, divisionId, staffId, "services")
                 }
             }.asLiveData()
     }
