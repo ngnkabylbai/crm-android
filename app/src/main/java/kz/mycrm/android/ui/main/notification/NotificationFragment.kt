@@ -42,6 +42,7 @@ class NotificationFragment : Fragment() {
 
         rvCurrentNotifications.adapter = currentNotificationAdapter
         rvCurrentNotifications.layoutManager = LinearLayoutManager(activity)
+        progress.visibility = View.VISIBLE
 
 //        val order = Order()
 //        val customer = Customer()
@@ -80,6 +81,7 @@ class NotificationFragment : Fragment() {
                             }
                             orderArrayList = getFilteredList(orderArrayList)
                             currentNotificationAdapter.setListAndNotify(orderArrayList)
+                            progress.visibility = View.GONE
                         }
                     }
                 })
