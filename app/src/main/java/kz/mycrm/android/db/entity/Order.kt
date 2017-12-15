@@ -3,13 +3,19 @@ package kz.mycrm.android.db.entity
 import android.arch.persistence.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
-//@Entity(tableName = "mOrder", indices = arrayOf(Index(value = "services", unique = true)))
 @Entity(tableName = "mOrder")
-class Order {
+class Order : Comparable<Order> {
+
+    companion object {
+        val datetimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val compareDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    }
 
     @PrimaryKey
     @ColumnInfo(name="order_id")
@@ -243,7 +249,7 @@ class Order {
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (end?.hashCode() ?: 0)
         result = 31 * result + (staffFullname?.hashCode() ?: 0)
-        result = 31 * result + (services?.hashCode() ?: 0)
+        result = 31 * result + (services.hashCode())
         result = 31 * result + (staffPosition?.hashCode() ?: 0)
         result = 31 * result + (status?.hashCode() ?: 0)
         result = 31 * result + (productsDiscount?.hashCode() ?: 0)
@@ -260,5 +266,7 @@ class Order {
         return result
     }
 
-
+    override fun compareTo(other: Order): Int {
+        return compareDateFormat.parse(this.datetime).compareTo(compareDateFormat.parse(other.datetime))
+    }
 }
