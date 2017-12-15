@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,15 @@ import java.util.*
 /**
  * Created by lab on 11/25/17.
  */
-class NotificationFragment : Fragment() {
+class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var viewModel: NotificationViewModel
-    private lateinit var sharedViewModel: MainViewModel
 
     private lateinit var currentNotificationAdapter: CurrentNotificationAdapter
-    private lateinit var pastNotificationAdapter: PastNotificationAdapter
 
     private val datetimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private var divisionId = 0
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_notification, container, false)
@@ -38,12 +40,12 @@ class NotificationFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(NotificationViewModel::class.java)
 
         currentNotificationAdapter = CurrentNotificationAdapter(activity)
-        pastNotificationAdapter = PastNotificationAdapter(activity)
 
         rvCurrentNotifications.adapter = currentNotificationAdapter
         rvCurrentNotifications.layoutManager = LinearLayoutManager(activity)
-        progress.visibility = View.VISIBLE
+        rvCurrentNotifications.setHasFixedSize(true)
 
+        divisionId = arguments.getInt("division_id")
 //        val order = Order()
 //        val customer = Customer()
 //        customer.name = "Максат"
@@ -65,26 +67,44 @@ class NotificationFragment : Fragment() {
 //
 //        })
 
-        val divisionId = arguments.getInt("division_id")
-        var orderArrayList = ArrayList<Order>()
+        swipeRefreshContainer.setOnRefreshListener(this)
+        swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark)
 
+        swipeRefreshContainer.post {
+            loadNotifications()
+        }
+    }
+
+    override fun onRefresh() {
+        loadNotifications()
+    }
+
+    private fun loadNotifications() {
+        swipeRefreshContainer.isRefreshing = true
+
+        var orderArrayList = ArrayList<Order>()
         viewModel.getToken().observe(this, Observer { token ->
             viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
                 if(token?.token != null && division?.staff != null)
-                viewModel.getToDaysNotifications(token.token, division.staff!!.id).observe(this, Observer { resourceList ->
-                    if (resourceList != null && resourceList.status != Status.ERROR) {
-                        val orderList = resourceList.data
-                        if (orderList != null) {
-                            orderArrayList.clear()
-                            for (order in orderList) {
-                                orderArrayList.add(order)
+                    viewModel.getToDaysNotifications(token.token, division.staff!!.id).observe(this, Observer { resourceList ->
+                        if (resourceList != null && resourceList.status != Status.ERROR) {
+                            val orderList = resourceList.data
+                            if (orderList != null) {
+                                orderArrayList.clear()
+                                for (order in orderList) {
+                                    orderArrayList.add(order)
+                                }
+                                orderArrayList = getFilteredList(orderArrayList)
+                                currentNotificationAdapter.setListAndNotify(orderArrayList)
                             }
-                            orderArrayList = getFilteredList(orderArrayList)
-                            currentNotificationAdapter.setListAndNotify(orderArrayList)
-                            progress.visibility = View.GONE
                         }
-                    }
-                })
+
+                        if(resourceList?.status == Status.SUCCESS || resourceList?.status == Status.SUCCESS)
+                            swipeRefreshContainer.isRefreshing = false
+                    })
             })
         })
     }
