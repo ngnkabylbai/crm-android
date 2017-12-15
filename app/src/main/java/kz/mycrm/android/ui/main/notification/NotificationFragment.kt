@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.ui.main.MainViewModel
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
@@ -87,7 +86,7 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         var orderArrayList = ArrayList<Order>()
         viewModel.getToken().observe(this, Observer { token ->
-            viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
+            viewModel.getDivisionLiveDataById(divisionId).observe(activity, Observer { division ->
                 if(token?.token != null && division?.staff != null)
                     viewModel.getToDaysNotifications(token.token, division.staff!!.id).observe(this, Observer { resourceList ->
                         if (resourceList != null && resourceList.status != Status.ERROR) {

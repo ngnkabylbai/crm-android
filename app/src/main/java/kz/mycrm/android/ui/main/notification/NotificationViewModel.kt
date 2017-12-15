@@ -29,7 +29,7 @@ class NotificationViewModel: ViewModel() {
         return MycrmApp.database.TokenDao().getTokenLiveData()
     }
 
-    fun getDivisionById(divisionId: Int): LiveData<Division> {
-        return MycrmApp.database.DivisionDao().getDivisionById(divisionId)
+    fun getDivisionLiveDataById(divisionId: Int): LiveData<Division> {
+        return MycrmApp.database.DivisionDao().getDivisionLiveDataById(divisionId)
     }
 }

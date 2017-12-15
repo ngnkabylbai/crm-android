@@ -27,7 +27,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun loadFromDb(): LiveData<List<Division>> {
-                return getDivisionsList()
+                return getDivisionsListLiveData()
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Division>>> {
@@ -36,11 +36,15 @@ class UserRepository(private var appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
-    fun getDivisionsList(): LiveData<List<Division>> {
+    fun getDivisionsListLiveData(): LiveData<List<Division>> {
+        return MycrmApp.database.DivisionDao().getDivisionsListLiveData()
+    }
+
+    fun getDivisionsList(): List<Division> {
         return MycrmApp.database.DivisionDao().getDivisionsList()
     }
 
-    fun getDivisionById(id: Int): LiveData<Division> {
+    fun getDivisionById(id: Int): Division {
         return MycrmApp.database.DivisionDao().getDivisionById(id)
     }
 }

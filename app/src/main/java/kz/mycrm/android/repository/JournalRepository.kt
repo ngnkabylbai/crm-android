@@ -18,7 +18,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 //    The function requests for a journal by a date, but returns a list of Orders
 //    The journal is used only to retrieve the Orders
 //    Fetched journal's Orders are inserted into the database
-    fun requestJournal(token: String, date: String, divisionId:Int, staffId: IntArray)
+    fun requestJournal(date: String, divisionId:Int, staffId: IntArray)
         : LiveData<Resource<List<Order>>> {
 
         return object : NetworkBoundResource<List<Order>, List<StaffJournal>>(appExecutors) {
@@ -41,7 +41,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                 }
 
                 override fun createCall(): LiveData<ApiResponse<List<StaffJournal>>> {
-                    return ApiUtils.getJournalService().requestJournal(token, date, divisionId, staffId, "services")
+                    return ApiUtils.getJournalService().requestJournal(date, divisionId, staffId, "services")
                 }
             }.asLiveData()
     }

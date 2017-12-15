@@ -5,22 +5,23 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatSpinner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.HorizontalCalendarListener
 import kotlinx.android.synthetic.main.fragment_journal.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.ui.main.info.InfoActivity
+import kz.mycrm.android.ui.main.info.infoIntent
 import kz.mycrm.android.ui.view.JournalView
 import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,14 +34,15 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     private lateinit var viewModel: JournalViewModel
     private lateinit var horizontalCalendar: HorizontalCalendar
-    private lateinit var token: String
     private lateinit var mDate: String
-    private var divisionId = -1
-    private lateinit var staffId: IntArray
+    private var mDivisionId = -1
+    private lateinit var mStaffId: IntArray
 
     private lateinit var dateFormat: SimpleDateFormat
     private val spinnerItems = ArrayList<String>()
     private val divisionList = ArrayList<Division>()
+
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_journal, container, false)
@@ -50,45 +52,49 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         journal.setOnEventClickListener(this)
-
-        divisionId = arguments.getInt("division_id")
-
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
-        viewModel.getToken().observe(this, Observer { token ->
-            this.token = token!!.token
-        })
 
-        viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
-            divisionId = division?.id ?: 0
-            staffId = intArrayOf(division?.staff?.id?.toInt() ?: 0)
+        mDivisionId = arguments.getInt("division_id")
+        val division = viewModel.getDivisionById(mDivisionId)
+            mDivisionId = division.id
+            mStaffId = intArrayOf(division.staff?.id?.toInt() ?: 0)
+
+        adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
+        divisionSpinner.adapter = adapter
+
+        viewModel.getOrderLis().observe(activity, Observer {orders ->
+            when(orders!!.status) {
+                Status.LOADING -> onLoading(orders)
+                Status.SUCCESS -> onSuccess(orders)
+                Status.ERROR -> onError()
+            }
         })
 
         setupCalendar(view)
         setupSpinner(view)
+
+        updateAndRefreshJournal(mDate, mDivisionId, mStaffId)
     }
 
     private fun setupSpinner(view: View) {
-        val spinner = view.findViewById<View>(R.id.divisionSpinner) as AppCompatSpinner
-        val adapter = ArrayAdapter<String>(activity, R.layout.item_journal_spinner, spinnerItems)
-        spinner.adapter = adapter
-        viewModel.getDivisions().observe(activity, Observer { list ->
-            divisionList.clear()
-            spinnerItems.clear()
-            list!!.mapTo(spinnerItems) { it.name.toString() }
-            for(d in list) {
-                if(d.id == divisionId) {
-                    spinner.setSelection(spinnerItems.indexOf(d.name))
-                }
-                divisionList.add(d)
+        val list = viewModel.getDivisions()
+        divisionList.clear()
+        spinnerItems.clear()
+
+        list.mapTo(spinnerItems) { it.name!! }
+        for(d in list) {
+            if(d.id == mDivisionId) {
+                divisionSpinner.setSelection(spinnerItems.indexOf(d.name))
             }
-            adapter.notifyDataSetChanged()
-        } )
+            divisionList.add(d)
+        }
+        adapter.notifyDataSetChanged()
 
-
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+        divisionSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                divisionId = divisionList[position].id
-                spinner.setSelection(position)
+                mDivisionId = divisionList[position].id
+                divisionSpinner.setSelection(position)
+                updateAndRefreshJournal(null, mDivisionId, null)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
@@ -99,6 +105,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     private fun setupCalendar(view: View) {
         dateFormat = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
+        mDate = dateFormat.format(Date())
         validDate()
         /** end after 2 weeks from now */
         val endDate = Calendar.getInstance()
@@ -119,23 +126,31 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Date, position: Int) {
-
                 mDate = formatDate(date)
-                viewModel.requestJournal(token, mDate, divisionId, staffId)
-                        .observe(activity, Observer {orders ->
-                            if(orders?.status == Status.ERROR) {
-                                Logger.debug("Journal status:"+orders.status)
-                            } else {
-                                Logger.debug("Journal. STATUS: " + orders?.status)
-                                if(orders?.data != null)
-                                    journal?.updateEventsAndInvalidate(orders.data as ArrayList<Order>, orders.status)
-                            }
-                        })
+                updateAndRefreshJournal(mDate, null, null)
             }
 
         }
         view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(false, true) })
 
+    }
+
+    private fun onLoading(orders: Resource<List<Order>>) {
+        onSuccess(orders)
+    }
+
+    private fun onSuccess(orders: Resource<List<Order>>) {
+        if(orders.data != null)
+            journal?.updateEventsAndInvalidate(orders.data as ArrayList<Order>, orders.status)
+    }
+
+    private fun onError() {
+        Toast.makeText(activity, "Произошла ошибка", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateAndRefreshJournal(date: String?, divisionId: Int?, staffId: IntArray?) {
+        viewModel.updateData(date ?: mDate, divisionId ?: mDivisionId, staffId ?: mStaffId)
+        viewModel.startRefresh()
     }
 
     private fun formatDate(date: Date): String {
@@ -160,8 +175,8 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
     override fun onOrderEventClicked(order: Order) {
         super.onOrderEventClicked(order)
-        var intent: Intent = Intent(context, InfoActivity::class.java)
-        intent.putExtra("id", order.id)
+        val intent: Intent = activity.infoIntent()
+            intent.putExtra("id", order.id)
         startActivity(intent)
         Logger.debug("Event clicked:" + order.toString())
     }

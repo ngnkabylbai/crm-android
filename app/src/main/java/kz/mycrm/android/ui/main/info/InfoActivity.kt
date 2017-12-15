@@ -2,6 +2,7 @@ package kz.mycrm.android.ui.main.info
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -17,6 +18,10 @@ import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.util.Logger
 import java.text.SimpleDateFormat
 import java.util.*
+
+fun Context.infoIntent(): Intent {
+    return Intent(this, InfoActivity::class.java)
+}
 
 class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
