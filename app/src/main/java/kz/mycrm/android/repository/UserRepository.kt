@@ -13,8 +13,10 @@ import kz.mycrm.android.util.Resource
  */
 class UserRepository(private var appExecutors: AppExecutors) {
 
+    private val tokenRepository = TokenRepository(AppExecutors)
+    private val token = tokenRepository.getToken()
 
-    fun requestUserDivisionList(accessToken:String): LiveData<Resource<List<Division>>> {
+    fun requestUserDivisionList(): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
             override fun saveCallResult(item: List<Division>) {
                 MycrmApp.database.DivisionDao().insertDivisionsList(item)
@@ -29,7 +31,7 @@ class UserRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Division>>> {
-                return ApiUtils.getUserService().requestDivisions(accessToken, "self-staff")
+                return ApiUtils.getUserService().requestDivisions("self-staff")
             }
         }.asLiveData()
     }

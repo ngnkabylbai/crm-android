@@ -10,6 +10,7 @@ import android.widget.Toast
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
+import kz.mycrm.android.util.ApiUtils
 
 fun Context.splashIntent(): Intent {
     return Intent(this, SplashActivity::class.java)

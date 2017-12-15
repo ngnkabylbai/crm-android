@@ -26,7 +26,7 @@ class NotificationViewModel: ViewModel() {
     }
 
     fun getToken(): LiveData<Token> {
-        return MycrmApp.database.TokenDao().getToken()
+        return MycrmApp.database.TokenDao().getTokenLiveData()
     }
 
     fun getDivisionById(divisionId: Int): LiveData<Division> {

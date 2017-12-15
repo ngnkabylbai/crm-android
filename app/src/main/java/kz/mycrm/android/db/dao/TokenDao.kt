@@ -16,7 +16,10 @@ interface TokenDao {
     fun updateToken(token: Token)
 
     @Query("SELECT * FROM token LIMIT 1")
-    fun getToken(): LiveData<Token>
+    fun getTokenLiveData(): LiveData<Token>
+
+    @Query("SELECT * FROM token LIMIT 1")
+    fun getToken(): Token
 
     @Query("SELECT COUNT(*) FROM token")
     fun getCount() : Int

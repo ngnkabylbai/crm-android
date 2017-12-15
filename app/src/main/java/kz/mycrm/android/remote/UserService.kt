@@ -12,5 +12,5 @@ import retrofit2.http.Query
 interface UserService {
 
     @GET("user/division")
-    fun requestDivisions(@Query("access-token")token:String, @Query("expand")expand:String?): LiveData<ApiResponse<List<Division>>>
+    fun requestDivisions(@Query("expand")expand:String?): LiveData<ApiResponse<List<Division>>>
 }
