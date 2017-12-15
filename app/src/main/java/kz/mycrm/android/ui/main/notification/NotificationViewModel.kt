@@ -1,13 +1,12 @@
 package kz.mycrm.android.ui.main.notification
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import kz.mycrm.android.MycrmApp
-import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.repository.NotificationRepository
-import kz.mycrm.android.repository.TokenRepository
+import kz.mycrm.android.repository.UserRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -16,20 +15,29 @@ import kz.mycrm.android.util.Resource
  */
 class NotificationViewModel: ViewModel() {
 
-    private val notificationRepostitory = NotificationRepository(AppExecutors)
-    private val tokenRepostiory = TokenRepository(AppExecutors)
+    private val notificationRepository = NotificationRepository(AppExecutors)
+    private val userRepository = UserRepository(AppExecutors)
+
+    private val orderList: LiveData<Resource<List<Order>>>
+    private val toFetch = MutableLiveData<Boolean>()
+    private var divisionId = 0
+
+    init {
+        orderList = Transformations.switchMap(toFetch) { _-> getToDaysNotifications()}
+    }
 
 //    TODO: Change type to Notification
-    fun getToDaysNotifications(accessToken: String, staffId: String): LiveData<Resource<List<Order>>> {
-//        return MycrmApp.database.OrderDao().getAllOrdersList()
-        return notificationRepostitory.requestAllOrders(accessToken, staffId)
+    fun getToDaysNotifications(): LiveData<Resource<List<Order>>> {
+        val staffId = userRepository.getDivisionById(divisionId).staff?.id ?: 0
+
+        return notificationRepository.requestAllOrders(staffId.toString())
     }
 
-    fun getToken(): LiveData<Token> {
-        return MycrmApp.database.TokenDao().getTokenLiveData()
+    fun setDivisionId(divisionId: Int) {
+        this.divisionId = divisionId
     }
 
-    fun getDivisionLiveDataById(divisionId: Int): LiveData<Division> {
-        return MycrmApp.database.DivisionDao().getDivisionLiveDataById(divisionId)
+    fun startRefresh() {
+        toFetch.value = null
     }
 }

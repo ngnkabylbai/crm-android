@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface OrderService {
 
     @GET("order")
-    fun requestAllOrders(@Query("access-token")token:String, @Query("staff_id")staffId: String,
+    fun requestAllOrders(@Query("staff_id")staffId: String,
                          @Query("expand")expand:String): LiveData<ApiResponse<List<Order>>>
 
 }
