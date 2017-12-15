@@ -24,8 +24,10 @@ public class HttpInterceptor implements Interceptor {
 		builder.header("Accept", "application/json"); //if necessary, say to consume JSON
 
 		Token token = MycrmApp.database.TokenDao().getToken();
-		String tokenString = token.token; //save token of this request for future
-		setAuthHeader(builder, tokenString); //write current token to request
+		if(token != null) {
+			String tokenString = token.token; //save token of this request for future
+			setAuthHeader(builder, tokenString); //write current token to request
+		}
 
 		request = builder.build(); //overwrite old request
 		Response response = chain.proceed(request); //perform request, here original request will be executed

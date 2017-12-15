@@ -50,6 +50,13 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        viewModel.requestToken().observe(this, Observer { token ->
+            when(token!!.status) {
+                Status.LOADING -> onLoading()
+                Status.SUCCESS -> onSuccess()
+                Status.ERROR -> onError()
+            }
+        })
 
         login.setText("+7 701 381-71-15")
         password.setText("password")
@@ -64,6 +71,21 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         loginParentLayout.layoutTransition = layoutTransition
     }
 
+    private fun onLoading() {
+        startLoading()
+    }
+
+    private fun onSuccess() {
+        startActivity(divisionsIntent())
+        finish()
+    }
+
+    private fun onError() {
+        login.error = resources.getString(R.string.error_invalid_password)
+        requestFocusToLogin()
+        stopLoading()
+    }
+
     override fun onConnectionTimeout() {
         val msg = mHandler.obtainMessage()
         msg.sendToTarget()
@@ -75,35 +97,26 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
             R.id.loginButton -> {
                 clearError()
                 if (isValidInput()) {
-                    startLoading()
-                    viewModel.requestToken(getValidLogin(), password.text.toString())
-                            .observe(this, Observer { token ->
-                                if (token?.status == Status.SUCCESS) { // success, token received. Go to MainActivity
-                                    startActivity(divisionsIntent())
-                                    finish()
-                                } else if (token?.status == Status.ERROR) { // error, show error message
-                                    login.error = resources.getString(R.string.error_invalid_password)
-                                    stopLoading()
-                                }
-                            })
+                    viewModel.updateAuthData(login.text.toString(), password.text.toString())
+                    viewModel.startRefresh()
                 }
             }
             R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
         }
     }
 
-    private fun getValidLogin(): String {
-        val string = login.text.toString()
-        val phone = string.replace("[^\\d]".toRegex(), "")
-        return "+7 "+phone.substring(1, 4)+" "+phone.substring(4,7)+" "+phone.substring(7, 9)+" "+phone.substring(9)
-    }
-
     private fun isValidInput(): Boolean {
         if (login.text.length != 16 || password.text.isEmpty()) {
             login.error = resources.getString(R.string.error_empty_string)
+            requestFocusToLogin()
             return false
         }
         return true
+    }
+
+    private fun requestFocusToLogin() {
+        login.requestFocus()
+        login.setSelection(login.text.length)
     }
 
     private fun clearError() {
