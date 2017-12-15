@@ -73,9 +73,9 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         spinner.adapter = adapter
         viewModel.getDivisions().observe(activity, Observer { list ->
             divisionList.clear()
+            spinnerItems.clear()
             list!!.mapTo(spinnerItems) { it.name.toString() }
             for(d in list) {
-
                 if(d.id == divisionId) {
                     spinner.setSelection(spinnerItems.indexOf(d.name))
                 }
