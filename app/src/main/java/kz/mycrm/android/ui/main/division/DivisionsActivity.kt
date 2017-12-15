@@ -5,11 +5,11 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import kotlinx.android.synthetic.main.activity_divisions.*
+import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
@@ -21,7 +21,7 @@ fun Context.divisionsIntent(): Intent {
     return Intent(this, DivisionsActivity::class.java)
 }
 
-class DivisionsActivity : AppCompatActivity() {
+class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var divisionViewModel: DivisionViewModel
 
@@ -41,25 +41,43 @@ class DivisionsActivity : AppCompatActivity() {
 
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
 
+        swipeRefreshContainer.setOnRefreshListener(this)
+        swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark)
+
+        swipeRefreshContainer.post {
+            loadDivisions()
+        }
+    }
+
+    private fun loadDivisions() {
+        swipeRefreshContainer.isRefreshing = true
+
         divisionViewModel.getToken().observe(this, Observer { token ->
             divisionViewModel.loadUserDivisions(token!!.token).observe(this, Observer { resourceList ->
                 if (resourceList?.data != null && resourceList.status == Status.SUCCESS) {
                     val list = resourceList.data
                     Logger.debug("resource" + list.size)
 //                    if (list.size > 1) {
-                        adapter.clear()
-                        for (d in resourceList.data) {
-                            adapter.add(d)
-                        }
+                    adapter.clear()
+                    for (d in resourceList.data) {
+                        adapter.add(d)
+                    }
 //                    } else if (list.size == 1) {
 //                        startMain(list[0])
 //                    }
-                    progress.visibility = View.GONE
+                    swipeRefreshContainer.isRefreshing = false
                 } else if ((resourceList?.data == null && resourceList?.status == Status.SUCCESS) || resourceList?.status == Status.ERROR) {
                     startLogin()
                 }
             })
         })
+    }
+
+    override fun onRefresh() {
+        loadDivisions()
     }
 
     private fun startLogin() {
