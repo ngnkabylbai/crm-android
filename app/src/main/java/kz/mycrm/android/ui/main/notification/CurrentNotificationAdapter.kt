@@ -23,7 +23,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
 
     private var notificationList: ArrayList<Order> = ArrayList()
 
-    private val fromFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    private val fromFormat = Order.datetimeFormat
     private val targetFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
 

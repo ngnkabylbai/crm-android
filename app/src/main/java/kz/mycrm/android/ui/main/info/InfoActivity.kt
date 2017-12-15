@@ -12,6 +12,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_info.*
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.util.Logger
 import java.text.SimpleDateFormat
@@ -24,7 +25,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var adapter:ServiceAdapter
 
     private var serviceList:List<Service>? = null
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    private val dateFormat = Order.datetimeFormat
     private val textDateFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
     private lateinit var viewModel:InfoViewModel

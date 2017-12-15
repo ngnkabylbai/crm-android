@@ -26,7 +26,7 @@ class NotificationFragment : Fragment() {
     private lateinit var currentNotificationAdapter: CurrentNotificationAdapter
     private lateinit var pastNotificationAdapter: PastNotificationAdapter
 
-    private val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val datetimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_notification, container, false)
@@ -90,15 +90,17 @@ class NotificationFragment : Fragment() {
     }
 
     private fun getFilteredList(list: ArrayList<Order>): ArrayList<Order> {
-        val today = Date()
+        val todayStr = datetimeFormat.format(Date())
+        val today = datetimeFormat.parse(todayStr)
         val result = ArrayList<Order>()
         for(order in list) {
-            val date = format.parse(order.datetime)
-            if(date.after(today)) {
+            val date = datetimeFormat.parse(order.datetime)
+            if(date.equals(today) || date.after(today)) {
                 result.add(order)
             }
         }
 
+        Collections.sort(result)
         return result
     }
 }
