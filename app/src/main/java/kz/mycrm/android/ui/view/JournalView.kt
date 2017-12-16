@@ -277,10 +277,16 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         textY += rect.height() + marginTop
         drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNamePaint, canvas)
 
+        if((orderEvent.rect.bottom-orderEvent.rect.top+1f)/mOrder5minHeight == 2f)
+            return
+
         text = orderEvent.order.customerPhone ?: ""
         rect = getBoundedRect(text, mOrderPatientNumberPaint, rect)
         textY += rect.height() + marginTop
         drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNumberPaint, canvas)
+
+        if((orderEvent.rect.bottom-orderEvent.rect.top+1f)/mOrder5minHeight == 3f)
+            return
 
         if(orderEvent.order.services != null) {
             text = ""
