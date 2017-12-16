@@ -19,25 +19,29 @@ class NotificationViewModel: ViewModel() {
     private val userRepository = UserRepository(AppExecutors)
 
     private val orderList: LiveData<Resource<List<Order>>>
-    private val toFetch = MutableLiveData<Boolean>()
+    private val toRefresh = MutableLiveData<Boolean>()
     private var divisionId = 0
+    private lateinit var staffId:String
 
     init {
-        orderList = Transformations.switchMap(toFetch) { _-> getToDaysNotifications()}
+        orderList = Transformations.switchMap(toRefresh) { _-> requestNotificationList()}
     }
 
 //    TODO: Change type to Notification
     fun getToDaysNotifications(): LiveData<Resource<List<Order>>> {
-        val staffId = userRepository.getDivisionById(divisionId).staff?.id ?: 0
+        return orderList
+    }
 
-        return notificationRepository.requestAllOrders(staffId.toString())
+    private fun requestNotificationList(): LiveData<Resource<List<Order>>> {
+        return notificationRepository.requestAllOrders(staffId)
     }
 
     fun setDivisionId(divisionId: Int) {
         this.divisionId = divisionId
+        this.staffId = userRepository.getDivisionById(divisionId).staff?.id ?: ""
     }
 
     fun startRefresh() {
-        toFetch.value = null
+        toRefresh.value = null
     }
 }
