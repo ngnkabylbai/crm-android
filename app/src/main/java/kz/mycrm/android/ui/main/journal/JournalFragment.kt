@@ -71,12 +71,12 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         })
 
         setupCalendar(view)
-        setupSpinner(view)
+        setupSpinner()
 
         updateAndRefreshJournal(mDate, mDivisionId, mStaffId)
     }
 
-    private fun setupSpinner(view: View) {
+    private fun setupSpinner() {
         val list = viewModel.getDivisions()
         divisionList.clear()
         spinnerItems.clear()

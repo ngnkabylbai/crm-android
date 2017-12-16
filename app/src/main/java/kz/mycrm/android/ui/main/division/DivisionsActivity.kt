@@ -69,7 +69,7 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun onSuccess(resourceList: Resource<List<Division>>) {
-        if (resourceList?.data != null && resourceList.status == Status.SUCCESS) {
+        if (resourceList.data != null && resourceList.status == Status.SUCCESS) {
             val list = resourceList.data
             Logger.debug("resource" + list.size)
 //                    if (list.size > 1) {
@@ -81,7 +81,7 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 //                        startMain(list[0])
 //                    }
             swipeRefreshContainer.isRefreshing = false
-        } else if ((resourceList?.data == null && resourceList?.status == Status.SUCCESS) || resourceList?.status == Status.ERROR) {
+        } else if ((resourceList.data == null && resourceList.status == Status.SUCCESS) || resourceList.status == Status.ERROR) {
             startLogin()
         }
     }
