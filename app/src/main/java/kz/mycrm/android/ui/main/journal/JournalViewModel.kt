@@ -31,10 +31,11 @@ class JournalViewModel: ViewModel() {
         orderList = Transformations.switchMap(toRefresh) { _ -> requestJournal(date, divisionId, staffId)}
     }
 
-    fun updateData(date: String, divisionId: Int, staffId: IntArray) {
+    fun refreshData(date: String, divisionId: Int, staffId: IntArray) {
         this.divisionId = divisionId
         this.date = date
         this.staffId = staffId
+        toRefresh.value = null
     }
 
     fun startRefresh() {

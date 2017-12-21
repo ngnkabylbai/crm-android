@@ -73,7 +73,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         setupCalendar(view)
         setupSpinner()
 
-        updateAndRefreshJournal(mDate, mDivisionId, mStaffId)
+        viewModel.refreshData(mDate, mDivisionId, mStaffId)
     }
 
     private fun setupSpinner() {
@@ -94,7 +94,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 mDivisionId = divisionList[position].id
                 divisionSpinner.setSelection(position)
-                updateAndRefreshJournal(null, mDivisionId, null)
+                viewModel.refreshData(mDate, mDivisionId, mStaffId)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
@@ -127,7 +127,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Date, position: Int) {
                 mDate = formatDate(date)
-                updateAndRefreshJournal(mDate, null, null)
+                viewModel.refreshData(mDate, mDivisionId, mStaffId)
             }
 
         }
@@ -148,10 +148,6 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         Toast.makeText(activity, "Произошла ошибка", Toast.LENGTH_SHORT).show()
     }
 
-    private fun updateAndRefreshJournal(date: String?, divisionId: Int?, staffId: IntArray?) {
-        viewModel.updateData(date ?: mDate, divisionId ?: mDivisionId, staffId ?: mStaffId)
-        viewModel.startRefresh()
-    }
 
     private fun formatDate(date: Date): String {
         val cal = Calendar.getInstance()
