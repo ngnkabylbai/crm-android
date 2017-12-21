@@ -11,6 +11,8 @@ import android.os.Looper
 import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
@@ -111,11 +113,23 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     }
 
     private fun startLoading() {
-        loginButton.isEnabled = false
+        loginButton.startAnimation(fadeAnimation(false))
     }
 
     private fun stopLoading() {
-        loginButton.isEnabled = true
+        loginButton.startAnimation(fadeAnimation(true))
+    }
+
+    private fun fadeAnimation(fadeIn: Boolean): Animation {
+        val animation = if (fadeIn)
+                AlphaAnimation(0f, 1.0f)
+            else
+                AlphaAnimation(1.0f, 0f)
+
+        animation.duration = 250
+        animation.isFillEnabled = true
+        animation.fillAfter = true
+        return animation
     }
 }
 
