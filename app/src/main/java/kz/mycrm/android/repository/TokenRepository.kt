@@ -15,7 +15,7 @@ import kz.mycrm.android.util.Resource
 class TokenRepository(private var appExecutors: AppExecutors) {
 
     fun getToken(): LiveData<Token> {
-        return MycrmApp.database.TokenDao().getToken()
+        return MycrmApp.database.TokenDao().getTokenLiveData()
     }
 
     fun requestToken(login: String, password: String): LiveData<Resource<Token>> {

@@ -1,11 +1,11 @@
 package kz.mycrm.android.ui.login
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.repository.TokenRepository
-import kz.mycrm.android.repository.UserRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -16,7 +16,30 @@ class LoginViewModel : ViewModel() {
 
     private var tokenRepository = TokenRepository(AppExecutors)
 
-    fun requestToken(login: String, password: String): LiveData<Resource<Token>> {
-        return tokenRepository.requestToken(login, password)
+    private val token: LiveData<Resource<Token>>
+    private lateinit var phone: String
+    private lateinit var password: String
+
+    private val toRequest = MutableLiveData<Boolean>()
+
+    init {
+        token = Transformations.switchMap(toRequest) { _ -> tokenRepository.requestToken(phone, password)}
+    }
+
+
+    fun startRefresh() {
+        toRequest.value = null
+    }
+
+    fun requestToken(): LiveData<Resource<Token>> {
+        return token
+    }
+
+    fun updateAuthData(newPhone: String, newPassword: String) {
+        this.password = newPassword
+
+        var formattedPhone = newPhone.replace("[^\\d]".toRegex(), "")
+        formattedPhone = "+7 "+formattedPhone.substring(1, 4)+" "+formattedPhone.substring(4,7)+" "+formattedPhone.substring(7, 9)+" "+formattedPhone.substring(9)
+        this.phone = formattedPhone
     }
 }

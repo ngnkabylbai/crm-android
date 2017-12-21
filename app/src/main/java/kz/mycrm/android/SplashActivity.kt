@@ -10,7 +10,7 @@ import android.widget.Toast
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
-import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.ApiUtils
 
 fun Context.splashIntent(): Intent {
     return Intent(this, SplashActivity::class.java)
@@ -26,20 +26,37 @@ class SplashActivity : BaseActivity() {
         setContentView(R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        if (isInternetAvailable()) {
-            viewModel.isAuthenticated().observe(this, Observer { token ->
-                if (token != null) {
-                    startActivity(divisionsIntent()) // for MVP
+
+        viewModel.checkAuthentication().observe(this, Observer { isAuthenticated ->
+            if(isAuthenticated!!) {
+                if(isInternetAvailable()) {
+                    startActivity(divisionsIntent())
                     finish()
                 } else {
-                    Logger.debug("Token wasn't found. Directing to login activity...")
-                    startActivity(loginIntent())
-                    finish()
+                    Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
                 }
-            })
-        } else {
-            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
-        }
+            } else {
+                startActivity(loginIntent())
+                finish()
+            }
+        })
+
+//        if (isInternetAvailable()) {
+//
+//
+////            viewModel.checkAuthentication().observe(this, Observer { token ->
+////                if (token != null) {
+////                    startActivity(divisionsIntent()) // for MVP
+////                    finish()
+////                } else {
+////                    Logger.debug("Token wasn't found. Directing to login activity...")
+////                    startActivity(loginIntent())
+////                    finish()
+////                }
+////            })
+//        } else {
+//            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private fun isInternetAvailable(): Boolean {

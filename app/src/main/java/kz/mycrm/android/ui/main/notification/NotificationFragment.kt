@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.ui.main.MainViewModel
+import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,10 +26,6 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var currentNotificationAdapter: CurrentNotificationAdapter
 
     private val datetimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private var divisionId = 0
-
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_notification, container, false)
     }
@@ -45,27 +41,16 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         rvCurrentNotifications.layoutManager = LinearLayoutManager(activity)
         rvCurrentNotifications.setHasFixedSize(true)
 
-        divisionId = arguments.getInt("division_id")
-//        val order = Order()
-//        val customer = Customer()
-//        customer.name = "Максат"
-//        customer.lastname = "Нуржаусын"
-//        val service = Service()
-//        service.serviceName = "повторное посещение"
-//
-//        order.customer = customer
-//        order.services = listOf(service)
-//        order.start = "xxxx-xx-xx 15:00:00"
-//
-//        currentNotificationAdapter.add(order)
+        val divisionId = arguments.getInt("division_id")
+        viewModel.setDivisionId(divisionId)
 
-//        viewModel.getToDaysNotifications(dateTime).observe(this, Observer { notificationList->
-//            if(notificationList != null && notificationList.isNotEmpty()) {
-//                for(notification in notificationList)
-//                    currentNotificationAdapter.add(notification)
-//            }
-//
-//        })
+        viewModel.getToDaysNotifications().observe(this, Observer { resourceList ->
+            when(resourceList!!.status) {
+                Status.LOADING -> onLoading(resourceList)
+                Status.SUCCESS -> onSuccess(resourceList)
+                Status.ERROR -> onError()
+            }
+        })
 
         swipeRefreshContainer.setOnRefreshListener(this)
         swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
@@ -74,42 +59,43 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 android.R.color.holo_blue_dark)
 
         swipeRefreshContainer.post {
-            loadNotifications()
+            viewModel.startRefresh()
         }
     }
 
     override fun onRefresh() {
-        loadNotifications()
+        viewModel.startRefresh()
     }
 
-    private fun loadNotifications() {
+    private fun onLoading(resourceList: Resource<List<Order>>) {
         swipeRefreshContainer.isRefreshing = true
-
-        var orderArrayList = ArrayList<Order>()
-        viewModel.getToken().observe(this, Observer { token ->
-            viewModel.getDivisionById(divisionId).observe(activity, Observer { division ->
-                if(token?.token != null && division?.staff != null)
-                    viewModel.getToDaysNotifications(token.token, division.staff!!.id).observe(this, Observer { resourceList ->
-                        if (resourceList != null && resourceList.status != Status.ERROR) {
-                            val orderList = resourceList.data
-                            if (orderList != null) {
-                                orderArrayList.clear()
-                                for (order in orderList) {
-                                    orderArrayList.add(order)
-                                }
-                                orderArrayList = getFilteredList(orderArrayList)
-                                currentNotificationAdapter.setListAndNotify(orderArrayList)
-                            }
-                        }
-
-                        if(resourceList?.status == Status.SUCCESS || resourceList?.status == Status.SUCCESS)
-                            swipeRefreshContainer.isRefreshing = false
-                    })
-            })
-        })
+        loadData(resourceList)
     }
 
-    private fun getFilteredList(list: ArrayList<Order>): ArrayList<Order> {
+    private fun onSuccess(resourceList: Resource<List<Order>>) {
+        loadData(resourceList)
+        swipeRefreshContainer.isRefreshing = false
+    }
+
+    private fun onError() {
+
+        swipeRefreshContainer.isRefreshing = false
+    }
+
+    private fun loadData(resourceList: Resource<List<Order>>) {
+        var orderArrayList = ArrayList<Order>()
+        val orderList = resourceList.data
+        if (orderList != null) {
+            orderArrayList.clear()
+            for (order in orderList) {
+                orderArrayList.add(order)
+            }
+            orderArrayList = getFilteredAndSortedList(orderArrayList)
+            currentNotificationAdapter.setListAndNotify(orderArrayList)
+        }
+    }
+
+    private fun getFilteredAndSortedList(list: ArrayList<Order>): ArrayList<Order> {
         val todayStr = datetimeFormat.format(Date())
         val today = datetimeFormat.parse(todayStr)
         val result = ArrayList<Order>()

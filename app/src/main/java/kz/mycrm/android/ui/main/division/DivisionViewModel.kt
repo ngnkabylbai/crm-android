@@ -14,16 +14,26 @@ import kz.mycrm.android.util.Resource
  */
 class DivisionViewModel : ViewModel(){
 
-    private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
     private var userRepository = UserRepository(AppExecutors)
 
-    fun getToken(): LiveData<Token> {
-        Logger.debug("getTokenAsLiveData")
-        return tokenRepository.getToken()
+    private var divisionList: LiveData<Resource<List<Division>>>
+    private val toRefresh =  MutableLiveData<Boolean>()
+
+    init {
+        divisionList = Transformations.switchMap(toRefresh) { _ -> loadUserDivisions()}
     }
 
-    fun loadUserDivisions(accessToken:String): LiveData<Resource<List<Division>>> {
+    private fun loadUserDivisions(): LiveData<Resource<List<Division>>> {
         Logger.debug("loadUserDivisions")
-        return userRepository.requestUserDivisionList(accessToken)
+        return userRepository.requestUserDivisionList()
     }
+
+    fun getResourceDivisionsList(): LiveData<Resource<List<Division>>> {
+        return divisionList
+    }
+
+    fun startRefresh() {
+        toRefresh.value = null
+    }
+
 }

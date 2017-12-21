@@ -15,6 +15,7 @@ import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 
 fun Context.divisionsIntent(): Intent {
@@ -40,6 +41,13 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rvDivisions.layoutManager = LinearLayoutManager(this)
 
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
+        divisionViewModel.getResourceDivisionsList().observe(this, Observer { resourceList ->
+            when(resourceList?.status) {
+                Status.LOADING -> showProgress()
+                Status.SUCCESS -> onSuccess(resourceList)
+                Status.ERROR -> hideProgress()
+            }
+        })
 
         swipeRefreshContainer.setOnRefreshListener(this)
         swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
@@ -48,36 +56,38 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 android.R.color.holo_blue_dark)
 
         swipeRefreshContainer.post {
-            loadDivisions()
+            divisionViewModel.startRefresh()
         }
     }
 
-    private fun loadDivisions() {
+    private fun showProgress() {
         swipeRefreshContainer.isRefreshing = true
+    }
 
-        divisionViewModel.getToken().observe(this, Observer { token ->
-            divisionViewModel.loadUserDivisions(token!!.token).observe(this, Observer { resourceList ->
-                if (resourceList?.data != null && resourceList.status == Status.SUCCESS) {
-                    val list = resourceList.data
-                    Logger.debug("resource" + list.size)
+    private fun hideProgress() {
+        swipeRefreshContainer.isRefreshing = false
+    }
+
+    private fun onSuccess(resourceList: Resource<List<Division>>) {
+        if (resourceList.data != null && resourceList.status == Status.SUCCESS) {
+            val list = resourceList.data
+            Logger.debug("resource" + list.size)
 //                    if (list.size > 1) {
-                    adapter.clear()
-                    for (d in resourceList.data) {
-                        adapter.add(d)
-                    }
+            adapter.clear()
+            for (d in resourceList.data) {
+                adapter.add(d)
+            }
 //                    } else if (list.size == 1) {
 //                        startMain(list[0])
 //                    }
-                    swipeRefreshContainer.isRefreshing = false
-                } else if ((resourceList?.data == null && resourceList?.status == Status.SUCCESS) || resourceList?.status == Status.ERROR) {
-                    startLogin()
-                }
-            })
-        })
+            swipeRefreshContainer.isRefreshing = false
+        } else if ((resourceList.data == null && resourceList.status == Status.SUCCESS) || resourceList.status == Status.ERROR) {
+            startLogin()
+        }
     }
 
     override fun onRefresh() {
-        loadDivisions()
+        divisionViewModel.startRefresh()
     }
 
     private fun startLogin() {

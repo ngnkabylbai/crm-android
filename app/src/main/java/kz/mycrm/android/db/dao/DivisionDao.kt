@@ -12,10 +12,16 @@ import kz.mycrm.android.db.entity.Token
 interface DivisionDao {
 
     @Query("SELECT * FROM division")
-    fun getDivisionsList(): LiveData<List<Division>>
+    fun getDivisionsListLiveData(): LiveData<List<Division>>
+
+    @Query("SELECT * FROM division")
+    fun getDivisionsList(): List<Division>
 
     @Query("SELECT * FROM division WHERE id = :arg0")
-    fun getDivisionById(id: Int): LiveData<Division>
+    fun getDivisionLiveDataById(id: Int): LiveData<Division>
+
+    @Query("SELECT * FROM division WHERE id = :arg0")
+    fun getDivisionById(id: Int): Division
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDivisionsList(division: List<Division>)
