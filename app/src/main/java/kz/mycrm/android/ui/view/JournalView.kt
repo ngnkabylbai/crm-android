@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.view
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.support.v4.view.GestureDetectorCompat
@@ -16,6 +17,7 @@ import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kz.mycrm.android.db.entity.Service
 
 
 /**
@@ -68,6 +70,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     // Order events
     private var mOrderList: ArrayList<Order> = ArrayList()
     private var mOrderEventList: ArrayList<OrderEvent> = ArrayList()
+    private var mOrderEventGroupList: ArrayList<OrderEventGroup> = ArrayList()
     private var mRectStartX: Float = accentRect.width()+2 * mViewPaddingLeft
     private var mOrder5minHeight: Float = mTextMarginTop+accentRect.height()
 
@@ -75,12 +78,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var mOrderEventClickListener: OrderEventClickListener? = null
     private var mGestureDetector: GestureDetectorCompat
 
+    private val animator = ValueAnimator()
+
     private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             if(mOrderEventClickListener != null && !mOrderEventList.isEmpty()) {
                 for(event in mOrderEventList) {
                     if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
-                        mOrderEventClickListener!!.onOrderEventClicked(event.order)
+//                        mOrderEventClickListener!!.onOrderEventClicked(event.order)
+
                         playSoundEffect(SoundEffectConstants.CLICK)
                         return super.onSingleTapConfirmed(e)
                     }
@@ -226,10 +232,16 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The canvas where to draw
      */
     private fun drawEventOrders(canvas: Canvas) {
-        if(mOrderEventList.isEmpty())
+//        if(mOrderEventList.isEmpty())
+//            return
+//        for(orderEvent in mOrderEventList) {
+//            drawOrderEvent(canvas, orderEvent)
+//        }
+
+        if(mOrderEventGroupList.isEmpty())
             return
-        for(orderEvent in mOrderEventList) {
-            drawOrderEvent(canvas, orderEvent)
+        for(orderEventGroup in mOrderEventGroupList) {
+            orderEventGroup.drawOrderEvents(canvas)
         }
     }
 
@@ -497,8 +509,11 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>, status: Status) {
         if(!isSameListWithOrigin(newOrderList, status)) {
             isUpdated = true
-            this.mOrderList = newOrderList
-            loadOrderEventRects(newOrderList)
+            mOrderList = newOrderList
+            mOrderEventList = getOrderEventRects(newOrderList)
+//            mOrderEventGroupList = getOrderEventGroups(mOrderEventList)
+            mOrderEventGroupList = test()
+
             invalidate()
         }
         if(isUpdated && status == Status.SUCCESS) {
@@ -507,19 +522,104 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
     }
 
-    private fun loadOrderEventRects(newOrderList: ArrayList<Order>) {
-        mOrderEventList.clear()
+    private fun test(): ArrayList<OrderEventGroup> {
+        val testOrderList = ArrayList<Order>()
+        val list = ArrayList<Service>()
+        var order = Order()
+        order.id = "1"
+        order.start = "2017-12-21 09:00:00"
+        order.end = "2017-12-21 09:50:00"
+        order.services = list
+        testOrderList.add(order)
+
+        order = Order()
+        order.id = "2"
+        order.start = "2017-12-21 09:05:00"
+        order.end = "2017-12-21 09:20:00"
+        order.services = list
+        testOrderList.add(order)
+
+        order = Order()
+        order.id = "3"
+        order.start = "2017-12-21 09:10:00"
+        order.end = "2017-12-21 09:35:00"
+        order.services = list
+        testOrderList.add(order)
+
+        order = Order()
+        order.id = "4"
+        order.start = "2017-12-21 09:25:00"
+        order.end = "2017-12-21 10:40:00"
+        order.services = list
+        testOrderList.add(order)
+//
+//        order = Order()
+//        order.id = "4"
+//        order.start = "2017-12-21 09:50:00"
+//        order.end = "2017-12-21 10:25:00"
+//        order.services = list
+//        testOrderList.add(order)
+//
+//        order = Order()
+//        order.id = "4"
+//        order.start = "2017-12-21 19:25:00"
+//        order.end = "2017-12-21 19:50:00"
+//        order.services = list
+//        testOrderList.add(order)
+
+        val eventList = getOrderEventRects(testOrderList)
+        return getOrderEventGroups(eventList)
+    }
+
+    private fun getOrderEventRects(newOrderList: ArrayList<Order>): ArrayList<OrderEvent> {
+        val newOrderEventList = ArrayList<OrderEvent>()
         for(order in newOrderList) {
-            val orderLeft = getOrderLeft(order)
             val orderTop = getOrderTop(order)
-            val orderRight = getOrderRight(order)
             val orderBottom = getOrderBottom(order, orderTop)
-            val orderRect = Rect(orderLeft.toInt(), orderTop.toInt(), orderRight.toInt(), orderBottom.toInt())
             if(orderTop >= orderBottom) {
                 continue
             }
-            mOrderEventList.add(OrderEvent(orderRect, order))
+            val orderRect = Rect(0, orderTop.toInt(), 0, orderBottom.toInt())
+            newOrderEventList.add(OrderEvent(orderRect, order))
         }
+        return newOrderEventList
+    }
+
+    private fun getOrderEventGroups(list: ArrayList<OrderEvent>): ArrayList<OrderEventGroup> {
+
+        val newOrderEventGroup = ArrayList<OrderEventGroup>()
+
+        val datetimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        Collections.sort(list, object : Comparator<OrderEvent> {
+            override fun compare(first: OrderEvent, second: OrderEvent): Int {
+                return datetimeFormat.parse(first.order.start).compareTo(datetimeFormat.parse(second.order.start))
+            }
+        })
+
+        mOrderEventGroupList.clear()
+        var currentGroup = ArrayList<OrderEvent>()
+
+        if(list.isEmpty())
+            return newOrderEventGroup
+
+        currentGroup.add(list[0])
+        list[0].isSorted = true
+        var endDate = datetimeFormat.parse(list[0].order.end)
+
+        for(j in 1..(list.size-1)) {
+            val startDate = datetimeFormat.parse(list[j].order.start)
+            if(startDate.after(endDate) || startDate.equals(endDate)) {
+                endDate = datetimeFormat.parse(list[j].order.end)
+                newOrderEventGroup.add(OrderEventGroup(currentGroup))
+                currentGroup = ArrayList()
+            }
+            currentGroup.add(list[j])
+            list[j].isSorted = true
+        }
+        if(currentGroup.isNotEmpty())
+            newOrderEventGroup.add(OrderEventGroup(currentGroup))
+
+        return newOrderEventGroup
     }
 
     /**
@@ -546,7 +646,141 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     /////////////////////////////////////////////////////
     ///                   ORDER EVENT                  //
     /////////////////////////////////////////////////////
-    inner class OrderEvent(var rect: Rect, var order: Order)
+    inner class OrderEvent(var rect: Rect, var order: Order) {
+        var isExpanded = false
+        var isSorted = false
+
+        override fun toString(): String {
+            return "OrderEvent(order=$order, isExpanded=$isExpanded, isSorted=$isSorted)"
+        }
+    }
+
+    /////////////////////////////////////////////////////
+    ///                   ORDER EVENT GROUP            //
+    /////////////////////////////////////////////////////
+    inner class OrderEventGroup(var orderEventList: ArrayList<OrderEvent>) {
+        var isExpanded = true
+        val groupRect = Rect()
+
+        init {
+
+        }
+
+        fun onOrderEventGroupClicked(e: MotionEvent) {
+            if(!orderEventList.isEmpty()) {
+                for(event in orderEventList) {
+                    if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
+                        var rect = Rect()
+                        rect = getBoundedRect("15:20 \u2014 16:20", mOrderTimeTextPaint, rect)
+
+                        val animation =
+                                if(event.isExpanded) {
+                                    ValueAnimator.ofFloat(event.rect.right.toFloat(), (event.rect.left + rect.width()).toFloat())
+                                } else {
+                                    ValueAnimator.ofFloat(event.rect.right.toFloat(), mScreenWidth)
+                                }
+
+                        animation.duration = 1000
+                        animation.addUpdateListener { valueAnimator ->
+                            event.rect.right = (valueAnimator.animatedValue as Float).toInt()
+                            this@JournalView.invalidate()
+                        }
+
+                        event.isExpanded = !event.isExpanded
+
+                        animation.start()
+                        playSoundEffect(SoundEffectConstants.CLICK)
+                    }
+                }
+            }
+        }
+
+        private var expandedOrderWidth = 0
+        private var lessenOrderWidth = (mScreenWidth - mRectStartX)/8
+        private var fullOrderWidth = mScreenWidth - mRectStartX
+
+        private var orderLeft = mRectStartX - lessenOrderWidth
+        private var orderRight = mScreenWidth - lessenOrderWidth*orderEventList.size
+
+        fun drawOrderEvents(canvas: Canvas) {
+            expandedOrderWidth = (fullOrderWidth - lessenOrderWidth*(orderEventList.size-1)).toInt()
+
+            if(expandedOrderWidth < 0)
+                return
+
+            for(orderEvent in orderEventList) {
+                // Order rect and Left Accent
+                orderLeft += lessenOrderWidth
+                orderRight += lessenOrderWidth
+                orderEvent.rect.left = orderLeft.toInt()
+                orderEvent.rect.right = orderRight.toInt()
+
+                val orderBottom = orderEvent.rect.bottom.toFloat()
+                val orderTop = orderEvent.rect.top.toFloat()
+
+                val accentRight = orderLeft + 10f
+
+                canvas.drawRect(orderEvent.rect, mOrderBackgroundPaint)
+                canvas.drawRect(orderLeft, orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
+
+                var textX = orderEvent.rect.left + 30f
+                var textY = 0f
+                val marginTop = 30f
+                var rect = Rect()
+//        var text = orderEvent.order.start?.substring(11, 16) +" - "+ orderEvent.order.end?.substring(11, 16)
+
+                val time = orderEvent.order.start?.substring(11, 16) + orderEvent.order.end?.substring(11, 16) //09:0009:30
+                var text = ""
+
+                try {
+                    if (time.isNotEmpty()) {
+                        text = time.substring(0, 2).toInt().toString() + ":" + time.substring(3, 5) + " \u2014 " +
+                                time.substring(5, 7).toInt() + ":" + time.substring(8)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                rect = getBoundedRect(text, mOrderTimeTextPaint, rect)
+                textY = orderEvent.rect.top + rect.height() + marginTop
+                drawOrderText(orderEvent.rect, text, textX, textY, mOrderTimeTextPaint, canvas)
+
+                text = orderEvent.order.customerName ?: ""
+                rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
+                textY += rect.height() + marginTop
+                drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNamePaint, canvas)
+
+                if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 2f)
+                    continue
+
+                text = orderEvent.order.customerPhone ?: ""
+                rect = getBoundedRect(text, mOrderPatientNumberPaint, rect)
+                textY += rect.height() + marginTop
+                drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNumberPaint, canvas)
+
+                if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 3f)
+                    continue
+
+                if (orderEvent.order.services.isNotEmpty()) {
+                    text = ""
+                    for (s in orderEvent.order.services) {
+                        text += s.serviceName + ", "
+                    }
+
+                    text = text.substring(0, text.length - 2)
+
+                    rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
+                    textX = textX
+                    textY = orderEvent.rect.bottom.toFloat() - rect.height()
+                    drawOrderText(orderEvent.rect, text, textX, textY, mOrderServiceListPaint, canvas)
+                }
+
+            }
+        }
+    }
+
+
+
 
     /////////////////////////////////////////////////////
     ///                   LISTENER                     //
