@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.view
 
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -13,11 +14,11 @@ import android.view.*
 import android.widget.Toast
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.util.Status
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kz.mycrm.android.db.entity.Service
 
 
 /**
@@ -71,8 +72,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var mOrderList: ArrayList<Order> = ArrayList()
     private var mOrderEventList: ArrayList<OrderEvent> = ArrayList()
     private var mOrderEventGroupList: ArrayList<OrderEventGroup> = ArrayList()
-    private var mRectStartX: Float = accentRect.width()+2 * mViewPaddingLeft
-    private var mOrder5minHeight: Float = mTextMarginTop+accentRect.height()
+    private var mRectStartX: Float = accentRect.width() + 2 * mViewPaddingLeft
+    private var mOrder5minHeight: Float = mTextMarginTop + accentRect.height()
 
     // Order Click handling
     private var mOrderEventClickListener: OrderEventClickListener? = null
@@ -80,14 +81,15 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     private val animator = ValueAnimator()
 
+    private var isAnimating = false
+    private var isAnimatingFlag = false
+
     private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            if(mOrderEventClickListener != null && !mOrderEventList.isEmpty()) {
-                for(event in mOrderEventList) {
-                    if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
-//                        mOrderEventClickListener!!.onOrderEventClicked(event.order)
-
-                        playSoundEffect(SoundEffectConstants.CLICK)
+            if (mOrderEventClickListener != null && !mOrderEventGroupList.isEmpty()) {
+                for (eventGroup in mOrderEventGroupList) {
+                    if (e.x > eventGroup.groupRect.left && e.x < eventGroup.groupRect.right && e.y > eventGroup.groupRect.top && e.y < eventGroup.groupRect.bottom) {
+                        eventGroup.onOrderEventGroupClicked(e)
                         return super.onSingleTapConfirmed(e)
                     }
                 }
@@ -108,7 +110,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
         mScreenWidth = displayMetrics.widthPixels.toFloat()
 
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.JournalView, 0 , 0)
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.JournalView, 0, 0)
         try {
             mBackgroundColor = a.getColor(R.styleable.JournalView_backgroundColor, mBackgroundColor)
             mTimeTextColor = a.getColor(R.styleable.JournalView_timeTextColor, mTimeTextColor)
@@ -152,8 +154,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mAccentTimeTextPaint.textSize = mAccentTimeSize.toFloat()
         mAccentTimeTextPaint.getTextBounds("09:00", 0, "09:00".length, accentRect)
 
-        mTextMarginTop = accentRect.height()*2.toFloat()
-        mViewPaddingLeft = mTextMarginTop/2
+        mTextMarginTop = accentRect.height() * 2.toFloat()
+        mViewPaddingLeft = mTextMarginTop / 2
 
         // Time normal
         mNormalTimeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -164,7 +166,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mNormalTimeTextPaint.alpha = 120
 
         // Difference between normal and accented text
-        mHeightDiff = (accentRect.height() - normalRect.height())/2
+        mHeightDiff = (accentRect.height() - normalRect.height()) / 2
         mWidthDiff = accentRect.width() - normalRect.width()
 
         // ORDER
@@ -202,20 +204,20 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mOrderServiceListPaint.alpha = 180
 
         // Left side of first at a row
-        mRectStartX = accentRect.width() + 2*mViewPaddingLeft
+        mRectStartX = accentRect.width() + 2 * mViewPaddingLeft
         // Height of 5 minutes
         mOrder5minHeight = mTextMarginTop + accentRect.height()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        mScreenHeight = 158*mTextMarginTop + 157*accentRect.height()
+        mScreenHeight = 158 * mTextMarginTop + 157 * accentRect.height()
         this.setMeasuredDimension(mScreenWidth.toInt(), mScreenHeight.toInt())
     }
 
     override fun onDraw(canvas: Canvas) {
         // Background
-        canvas.drawRect(0f,0f,canvas.width.toFloat(),canvas.height.toFloat(),mBackgroundPaint)
+        canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), mBackgroundPaint)
 
         // Time texts
         drawTimes(canvas)
@@ -225,6 +227,11 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         // Order events
         drawEventOrders(canvas)
+
+        if (isAnimatingFlag) {
+            isAnimating = false
+            isAnimatingFlag = false
+        }
     }
 
     /**
@@ -238,9 +245,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 //            drawOrderEvent(canvas, orderEvent)
 //        }
 
-        if(mOrderEventGroupList.isEmpty())
+        if (mOrderEventGroupList.isEmpty())
             return
-        for(orderEventGroup in mOrderEventGroupList) {
+        for (orderEventGroup in mOrderEventGroupList) {
             orderEventGroup.drawOrderEvents(canvas)
         }
     }
@@ -272,9 +279,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         var text = ""
 
         try {
-            if(time.isNotEmpty()) {
-                text = time.substring(0, 2).toInt().toString()+":"+ time.substring(3, 5)+ " \u2014 " +
-                            time.substring(5, 7).toInt() +":"+ time.substring(8)
+            if (time.isNotEmpty()) {
+                text = time.substring(0, 2).toInt().toString() + ":" + time.substring(3, 5) + " \u2014 " +
+                        time.substring(5, 7).toInt() + ":" + time.substring(8)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -289,7 +296,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         textY += rect.height() + marginTop
         drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNamePaint, canvas)
 
-        if((orderEvent.rect.bottom-orderEvent.rect.top+1f)/mOrder5minHeight == 2f)
+        if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 2f)
             return
 
         text = orderEvent.order.customerPhone ?: ""
@@ -297,20 +304,20 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         textY += rect.height() + marginTop
         drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNumberPaint, canvas)
 
-        if((orderEvent.rect.bottom-orderEvent.rect.top+1f)/mOrder5minHeight == 3f)
+        if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 3f)
             return
 
-        if(orderEvent.order.services != null) {
+        if (orderEvent.order.services != null) {
             text = ""
-            for(s in orderEvent.order.services!!) {
+            for (s in orderEvent.order.services!!) {
                 text += s.serviceName + ", "
             }
 
-            text = text.substring(0, text.length-2)
+            text = text.substring(0, text.length - 2)
 
             rect = getBoundedRect(text, mOrderPatientNamePaint, rect)
             textX = textX
-            textY = orderEvent.rect.bottom.toFloat() -  rect.height()
+            textY = orderEvent.rect.bottom.toFloat() - rect.height()
             drawOrderText(orderEvent.rect, text, textX, textY, mOrderServiceListPaint, canvas)
         }
     }
@@ -325,8 +332,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @return TOP value
      */
     private fun getOrderTop(order: Order?): Float {
-        if(order == null)
-            return mTextMarginTop/2
+        if (order == null)
+            return mTextMarginTop / 2
         // 2017-12-08 09:00:00
         val timeStart = "09:00:00" // Day starts from 09:00
         val timeEnd = order.start!!.substring(11)
@@ -342,14 +349,14 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             dateEnd = format.parse(timeEnd)
 
             val difference = dateEnd.time - dateStart.time
-            diffIn5minutes = difference/(1000*60) / 5
+            diffIn5minutes = difference / (1000 * 60) / 5
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        if(diffIn5minutes == 0.toLong())
-            return mTextMarginTop/2
-        return mTextMarginTop/2 + diffIn5minutes*mOrder5minHeight
+        if (diffIn5minutes == 0.toLong())
+            return mTextMarginTop / 2
+        return mTextMarginTop / 2 + diffIn5minutes * mOrder5minHeight
     }
 
     /**
@@ -359,9 +366,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param top The top value of the order
      * @return BOTTOM value
      */
-    private fun getOrderBottom(order: Order?, top: Float) : Float {
-        if(order == null)
-            return mTextMarginTop/2
+    private fun getOrderBottom(order: Order?, top: Float): Float {
+        if (order == null)
+            return mTextMarginTop / 2
         // 2017-12-08 09:00
         val timeStart = order.start!!.substring(11)
         val timeEnd = order.end!!.substring(11)
@@ -376,13 +383,13 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             dateEnd = format.parse(timeEnd)
 
             val difference = dateEnd.time - dateStart.time
-            diffIn5minutes = difference/(1000*60) / 5
+            diffIn5minutes = difference / (1000 * 60) / 5
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        if(diffIn5minutes.toInt() == 0)
+        if (diffIn5minutes.toInt() == 0)
             return top
-        return top + diffIn5minutes* mOrder5minHeight - 1f // -1f gives a gap between two orders
+        return top + diffIn5minutes * mOrder5minHeight - 1f // -1f gives a gap between two orders
     }
 
     /**
@@ -410,7 +417,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param rect A rect where the bound should be saved
      * @return The rect with bounds of the text
      */
-    private fun getBoundedRect(text:String, paint: TextPaint, rect: Rect): Rect {
+    private fun getBoundedRect(text: String, paint: TextPaint, rect: Rect): Rect {
         paint.getTextBounds(text, 0, text.length, rect)
         return rect
     }
@@ -424,9 +431,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param paint A paint the text will be drawn
      * @param canvas The canvas where the order is drawn
      */
-    private fun drawOrderText(orderRect: Rect,text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
-        val widthDiff = 2*(textX - orderRect.left)
-        val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat()-widthDiff  , TextUtils.TruncateAt.END)
+    private fun drawOrderText(orderRect: Rect, text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
+        val widthDiff = 2 * (textX - orderRect.left)
+        val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat() - widthDiff, TextUtils.TruncateAt.END)
         canvas.drawText(txt, 0, txt.length, textX, textY, paint)
     }
 
@@ -435,17 +442,17 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The main canvas of the view
      */
     private fun drawLinesAndAxes(canvas: Canvas) {
-        val lineStartX = accentRect.width()+2 * mViewPaddingLeft
+        val lineStartX = accentRect.width() + 2 * mViewPaddingLeft
         val lineEndX = mScreenWidth
 
-        canvas.drawLine(lineStartX, mTextMarginTop/2, lineStartX, mScreenHeight, mNormalSeparatorPaint)
-        canvas.drawLine(lineStartX, mTextMarginTop/2, lineEndX, mTextMarginTop/2, mNormalSeparatorPaint)
+        canvas.drawLine(lineStartX, mTextMarginTop / 2, lineStartX, mScreenHeight, mNormalSeparatorPaint)
+        canvas.drawLine(lineStartX, mTextMarginTop / 2, lineEndX, mTextMarginTop / 2, mNormalSeparatorPaint)
 
-        var yy = mTextMarginTop/2 + mTextMarginTop + accentRect.height()
-        for(i in 1..157) {
+        var yy = mTextMarginTop / 2 + mTextMarginTop + accentRect.height()
+        for (i in 1..157) {
             val path = Path()
-                path.moveTo(lineStartX, yy)
-                path.lineTo(lineEndX, yy)
+            path.moveTo(lineStartX, yy)
+            path.lineTo(lineEndX, yy)
             canvas.drawPath(path, mDashedSeparatorPaint)
 
             yy += mTextMarginTop + accentRect.height()
@@ -458,44 +465,44 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      */
     private fun drawTimes(canvas: Canvas) {
 
-        val marginTop = (mOrder5minHeight-accentRect.height())/2 //
-        var yy = mTextMarginTop/2
-        val start = mTextMarginTop/2
+        val marginTop = (mOrder5minHeight - accentRect.height()) / 2 //
+        var yy = mTextMarginTop / 2
+        val start = mTextMarginTop / 2
         val accentedTime = marginTop + accentRect.height()
-        val normalTime = marginTop+ mHeightDiff + normalRect.height()
+        val normalTime = marginTop + mHeightDiff + normalRect.height()
         var hourCounter = 0
 
-        for(i in 9..21) {
+        for (i in 9..21) {
             // 09:00 ACCENTED
-            yy = start + hourCounter*mOrder5minHeight + accentedTime
+            yy = start + hourCounter * mOrder5minHeight + accentedTime
             canvas.drawText(timeFormat(i, 0), mViewPaddingLeft, yy, mAccentTimeTextPaint)
 
             // 09:15
-            yy = start + (hourCounter+3)*mOrder5minHeight + normalTime
+            yy = start + (hourCounter + 3) * mOrder5minHeight + normalTime
             canvas.drawText(timeFormat(i, 15), (mWidthDiff + mViewPaddingLeft), yy, mNormalTimeTextPaint)
 
             // 09:30 ACCENTED
-            yy = start + (hourCounter+6)*mOrder5minHeight + accentedTime
+            yy = start + (hourCounter + 6) * mOrder5minHeight + accentedTime
             canvas.drawText(timeFormat(i, 30), mViewPaddingLeft, yy, mAccentTimeTextPaint)
 
             // 09:45
-            yy = start + (hourCounter+9)*mOrder5minHeight + normalTime
+            yy = start + (hourCounter + 9) * mOrder5minHeight + normalTime
             canvas.drawText(timeFormat(i, 45), (mWidthDiff + mViewPaddingLeft), yy, mNormalTimeTextPaint)
 
             hourCounter += 12
         }
         // Last Accented hour 22:00
-        yy += 2*marginTop + 2*mOrder5minHeight + accentRect.height()
+        yy += 2 * marginTop + 2 * mOrder5minHeight + accentRect.height()
         canvas.drawText(timeFormat(22, 0), mViewPaddingLeft, yy, mAccentTimeTextPaint)
     }
 
     /**
-    * The function returns a string with right time format
+     * The function returns a string with right time format
      * @param hour The hour of the time
      * @param minute The minute of the time
      * @return The valid time format
-    * */
-    private fun timeFormat(hour:Int, minute:Int): String {
+     * */
+    private fun timeFormat(hour: Int, minute: Int): String {
         return String.format("%2d:%02d", hour, minute)
     }
 
@@ -506,23 +513,24 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param status The status of the new list
      */
     private var isUpdated = true
+
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>, status: Status) {
-        if(!isSameListWithOrigin(newOrderList, status)) {
+        if (!isSameListWithOrigin(newOrderList, status)) {
             isUpdated = true
             mOrderList = newOrderList
             mOrderEventList = getOrderEventRects(newOrderList)
 //            mOrderEventGroupList = getOrderEventGroups(mOrderEventList)
-            mOrderEventGroupList = test()
+            mOrderEventGroupList = getTestOrderEventGroups() // For a test case
 
             invalidate()
         }
-        if(isUpdated && status == Status.SUCCESS) {
+        if (isUpdated && status == Status.SUCCESS) {
             Toast.makeText(context, "Количество записей: " + mOrderEventList.size, Toast.LENGTH_SHORT).show()
             isUpdated = false
         }
     }
 
-    private fun test(): ArrayList<OrderEventGroup> {
+    private fun getTestOrderEventGroups(): ArrayList<OrderEventGroup> {
         val testOrderList = ArrayList<Order>()
         val list = ArrayList<Service>()
         var order = Order()
@@ -530,12 +538,16 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         order.start = "2017-12-21 09:00:00"
         order.end = "2017-12-21 09:50:00"
         order.services = list
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
         testOrderList.add(order)
 
         order = Order()
         order.id = "2"
         order.start = "2017-12-21 09:05:00"
         order.end = "2017-12-21 09:20:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
         order.services = list
         testOrderList.add(order)
 
@@ -543,6 +555,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         order.id = "3"
         order.start = "2017-12-21 09:10:00"
         order.end = "2017-12-21 09:35:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
         order.services = list
         testOrderList.add(order)
 
@@ -550,6 +564,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         order.id = "4"
         order.start = "2017-12-21 09:25:00"
         order.end = "2017-12-21 10:40:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
         order.services = list
         testOrderList.add(order)
 //
@@ -573,10 +589,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     private fun getOrderEventRects(newOrderList: ArrayList<Order>): ArrayList<OrderEvent> {
         val newOrderEventList = ArrayList<OrderEvent>()
-        for(order in newOrderList) {
+        for (order in newOrderList) {
             val orderTop = getOrderTop(order)
             val orderBottom = getOrderBottom(order, orderTop)
-            if(orderTop >= orderBottom) {
+            if (orderTop >= orderBottom) {
                 continue
             }
             val orderRect = Rect(0, orderTop.toInt(), 0, orderBottom.toInt())
@@ -599,16 +615,16 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mOrderEventGroupList.clear()
         var currentGroup = ArrayList<OrderEvent>()
 
-        if(list.isEmpty())
+        if (list.isEmpty())
             return newOrderEventGroup
 
         currentGroup.add(list[0])
         list[0].isSorted = true
         var endDate = datetimeFormat.parse(list[0].order.end)
 
-        for(j in 1..(list.size-1)) {
+        for (j in 1..(list.size - 1)) {
             val startDate = datetimeFormat.parse(list[j].order.start)
-            if(startDate.after(endDate) || startDate.equals(endDate)) {
+            if (startDate.after(endDate) || startDate.equals(endDate)) {
                 endDate = datetimeFormat.parse(list[j].order.end)
                 newOrderEventGroup.add(OrderEventGroup(currentGroup))
                 currentGroup = ArrayList()
@@ -616,7 +632,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             currentGroup.add(list[j])
             list[j].isSorted = true
         }
-        if(currentGroup.isNotEmpty())
+        if (currentGroup.isNotEmpty())
             newOrderEventGroup.add(OrderEventGroup(currentGroup))
 
         return newOrderEventGroup
@@ -628,7 +644,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @return The new list is same with mOrderList or not
      */
     private fun isSameListWithOrigin(newOrderList: ArrayList<Order>, status: Status): Boolean {
-        if(newOrderList.isEmpty() && mOrderList.isEmpty() && status == Status.LOADING)
+        if (newOrderList.isEmpty() && mOrderList.isEmpty() && status == Status.LOADING)
             return true
 
         return newOrderList.any { mOrderList.contains(it) }
@@ -647,11 +663,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     ///                   ORDER EVENT                  //
     /////////////////////////////////////////////////////
     inner class OrderEvent(var rect: Rect, var order: Order) {
-        var isExpanded = false
         var isSorted = false
 
         override fun toString(): String {
-            return "OrderEvent(order=$order, isExpanded=$isExpanded, isSorted=$isSorted)"
+            return "OrderEvent(order=$order, isSorted=$isSorted)"
         }
     }
 
@@ -659,75 +674,71 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     ///                   ORDER EVENT GROUP            //
     /////////////////////////////////////////////////////
     inner class OrderEventGroup(var orderEventList: ArrayList<OrderEvent>) {
-        var isExpanded = true
+
+        private var initializing = true
+        private var expandedEvent: OrderEvent? = null
+
         val groupRect = Rect()
+        private var lessenRect = Rect()
 
         init {
+            lessenRect = getBoundedRect("15:20 \u2014 16:20", mOrderTimeTextPaint, lessenRect)
+
+            groupRect.right = mScreenWidth.toInt()
+            groupRect.left = mRectStartX.toInt()
+            groupRect.top = orderEventList[0].rect.top
+            groupRect.bottom = groupRect.top
+            orderEventList
+                    .filter { it.rect.bottom > groupRect.bottom }
+                    .forEach { groupRect.bottom = it.rect.bottom }
 
         }
 
-        fun onOrderEventGroupClicked(e: MotionEvent) {
-            if(!orderEventList.isEmpty()) {
-                for(event in orderEventList) {
-                    if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
-                        var rect = Rect()
-                        rect = getBoundedRect("15:20 \u2014 16:20", mOrderTimeTextPaint, rect)
-
-                        val animation =
-                                if(event.isExpanded) {
-                                    ValueAnimator.ofFloat(event.rect.right.toFloat(), (event.rect.left + rect.width()).toFloat())
-                                } else {
-                                    ValueAnimator.ofFloat(event.rect.right.toFloat(), mScreenWidth)
-                                }
-
-                        animation.duration = 1000
-                        animation.addUpdateListener { valueAnimator ->
-                            event.rect.right = (valueAnimator.animatedValue as Float).toInt()
-                            this@JournalView.invalidate()
-                        }
-
-                        event.isExpanded = !event.isExpanded
-
-                        animation.start()
-                        playSoundEffect(SoundEffectConstants.CLICK)
-                    }
-                }
-            }
-        }
-
-        private var expandedOrderWidth = 0
-        private var lessenOrderWidth = (mScreenWidth - mRectStartX)/8
+        private var lessenOrderWidth = (mScreenWidth - mRectStartX) / 8
         private var fullOrderWidth = mScreenWidth - mRectStartX
+        private var orderLeft = mRectStartX
 
-        private var orderLeft = mRectStartX - lessenOrderWidth
-        private var orderRight = mScreenWidth - lessenOrderWidth*orderEventList.size
+        private var orderRight = mScreenWidth - lessenOrderWidth * (orderEventList.size - 1)
+        private var expandedOrderWidth = (fullOrderWidth - lessenOrderWidth * (orderEventList.size - 1)).toInt()
 
         fun drawOrderEvents(canvas: Canvas) {
-            expandedOrderWidth = (fullOrderWidth - lessenOrderWidth*(orderEventList.size-1)).toInt()
-
-            if(expandedOrderWidth < 0)
+            if (expandedOrderWidth < 0)
                 return
 
-            for(orderEvent in orderEventList) {
+            expandedEvent = expandedEvent ?: orderEventList[0]
+            for (i in 0..(orderEventList.size - 1)) {
                 // Order rect and Left Accent
-                orderLeft += lessenOrderWidth
-                orderRight += lessenOrderWidth
-                orderEvent.rect.left = orderLeft.toInt()
-                orderEvent.rect.right = orderRight.toInt()
+                val orderEvent = orderEventList[i]
+
+                val curOrderRight: Int
+                val curOrderLeft: Int
+
+                if (isAnimating) {
+                    curOrderRight = orderEvent.rect.right
+                    curOrderLeft = orderEvent.rect.left
+                } else {
+                    curOrderRight = getCurOrderRight(i)
+                    curOrderLeft = getCurOrderLeft(i, curOrderRight)
+                }
+
+                orderEvent.rect.left = curOrderLeft
+                orderEvent.rect.right = curOrderRight
 
                 val orderBottom = orderEvent.rect.bottom.toFloat()
                 val orderTop = orderEvent.rect.top.toFloat()
 
-                val accentRight = orderLeft + 10f
+                val accentRight = curOrderLeft + 10f
 
                 canvas.drawRect(orderEvent.rect, mOrderBackgroundPaint)
-                canvas.drawRect(orderLeft, orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
+                canvas.drawRect(curOrderLeft.toFloat(), orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
+
+//                if(orderEvent != expandedEvent)
+//                    continue
 
                 var textX = orderEvent.rect.left + 30f
                 var textY = 0f
                 val marginTop = 30f
                 var rect = Rect()
-//        var text = orderEvent.order.start?.substring(11, 16) +" - "+ orderEvent.order.end?.substring(11, 16)
 
                 val time = orderEvent.order.start?.substring(11, 16) + orderEvent.order.end?.substring(11, 16) //09:0009:30
                 var text = ""
@@ -774,12 +785,121 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     textY = orderEvent.rect.bottom.toFloat() - rect.height()
                     drawOrderText(orderEvent.rect, text, textX, textY, mOrderServiceListPaint, canvas)
                 }
+            }
+            initializing = false
+        }
 
+        private fun getCurOrderLeft(position: Int, curOrderRight: Int): Int {
+            val result: Float
+
+            if (initializing && position == 0)
+                result = orderLeft
+            else if (initializing && position > 0)
+                result = curOrderRight - lessenOrderWidth
+            else
+                result = orderEventList[position].rect.left.toFloat()
+
+            return result.toInt()
+        }
+
+        private fun getCurOrderRight(position: Int): Int {
+            val result: Float
+
+            if (initializing && position == 0)
+                result = orderRight
+            else if (initializing && position > 0)
+                result = orderRight + position * lessenOrderWidth
+            else
+                result = orderEventList[position].rect.right.toFloat()
+
+            return result.toInt()
+        }
+
+        fun onOrderEventGroupClicked(e: MotionEvent) {
+            if (!orderEventList.isEmpty()) {
+                for (i in 0..(orderEventList.size - 1)) {
+                    val event = orderEventList[i]
+                    if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
+                        if (event == expandedEvent) {
+                            mOrderEventClickListener?.onOrderEventClicked(event.order)
+                        } else if (orderEventList.indexOf(expandedEvent) > i) {
+                            getAnimator(i, event, event.rect.right.toFloat(),
+                                    (event.rect.left + expandedOrderWidth).toFloat()).start()
+                        } else {
+                            getAnimator(i, event, event.rect.left.toFloat(),
+                                    mRectStartX + i * lessenOrderWidth).start()
+                        }
+
+                        playSoundEffect(SoundEffectConstants.CLICK)
+                    }
+                }
             }
         }
+
+
+        /** First of all, If you are compelled to read and understand this... then, I'm so sorry...
+         *
+         *
+         * */
+        private fun getAnimator(position: Int, event: OrderEvent, start: Float, end: Float): Animator {
+            val expanding = ValueAnimator.ofFloat(start, end)
+
+            expanding.duration = 500
+            expanding.addUpdateListener { valueAnimator ->
+                if(orderEventList.indexOf(expandedEvent) < position) {
+                    event.rect.left = (valueAnimator.animatedValue as Float).toInt()
+                    for(i in 0..(orderEventList.size-2)){ // iterating from left to right
+                        val curEvent = orderEventList[i]
+                        val nextEvent = orderEventList[i+1]
+                        if(curEvent == event)
+                            continue
+                        if(curEvent == expandedEvent) {
+                            curEvent.rect.right = (curEvent.rect.left + expandedOrderWidth) - (start - event.rect.left).toInt()
+                            nextEvent.rect.left = curEvent.rect.right
+                            continue
+                        }
+                        curEvent.rect.right = curEvent.rect.left + lessenOrderWidth.toInt()
+                        nextEvent.rect.left = curEvent.rect.right
+                    }
+                }
+                else {
+                    event.rect.right = (valueAnimator.animatedValue as Float).toInt()
+                    for(i in (orderEventList.size-1) downTo 1){ // iterating from right to left
+                        val curEvent = orderEventList[i]
+                        val nextEvent = orderEventList[i-1]
+                        if(curEvent == event)
+                            continue
+                        if(curEvent == expandedEvent) {
+                            curEvent.rect.left = (curEvent.rect.right - expandedOrderWidth) + (event.rect.right - start).toInt()
+                            nextEvent.rect.right = curEvent.rect.left
+                            continue
+                        }
+                        curEvent.rect.left = curEvent.rect.right - lessenOrderWidth.toInt()
+                        nextEvent.rect.right = curEvent.rect.left
+                    }
+                }
+                this@JournalView.invalidate()
+            }
+            expanding.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(p0: Animator?) {
+                }
+
+                override fun onAnimationEnd(p0: Animator?) {
+                    expandedEvent = event
+                    isAnimatingFlag = true
+                }
+
+                override fun onAnimationCancel(p0: Animator?) {
+                }
+
+                override fun onAnimationStart(p0: Animator?) {
+                    isAnimating = true
+                }
+            })
+
+            return expanding
+        }
     }
-
-
 
 
     /////////////////////////////////////////////////////
