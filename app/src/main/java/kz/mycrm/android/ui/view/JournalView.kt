@@ -739,6 +739,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         fun onOrderEventGroupClicked(e: MotionEvent) {
             if (!orderEventList.isEmpty()) {
+                if(isAnimating)
+                    return
                 for (i in 0..(orderEventList.size - 1)) {
                     val event = orderEventList[i]
                     if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
