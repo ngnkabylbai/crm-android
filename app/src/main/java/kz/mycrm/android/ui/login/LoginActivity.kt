@@ -40,7 +40,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
             builder.setNegativeButton(R.string.ok, { dialog, id ->
-                clearError()
+                login.error = null
             })
             showMessage(resources.getString(R.string.error_timeout))
         }
@@ -77,7 +77,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     }
 
     private fun onLoading() {
-        startLoading()
+        progress.visibility = View.VISIBLE
+        loginButton.startAnimation(fadeAnimation(false))
     }
 
     private fun onSuccess() {
@@ -88,7 +89,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     private fun onError() {
         login.error = resources.getString(R.string.error_invalid_password)
         requestFocusToLogin()
-        stopLoading()
+        progress.visibility = View.INVISIBLE
+        loginButton.startAnimation(fadeAnimation(true))
     }
 
     override fun onConnectionTimeout() {
@@ -98,9 +100,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
 
     @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword)
     override fun onClick(v: View?) {
+        login.error = null
         when (v?.id) {
             R.id.loginButton -> {
-                clearError()
                 if (isValidInput()) {
                     viewModel.updateAuthData(login.text.toString(), password.text.toString())
                     viewModel.startRefresh()
@@ -122,18 +124,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     private fun requestFocusToLogin() {
         login.requestFocus()
         login.setSelection(login.text.length)
-    }
-
-    private fun clearError() {
-        login.error = null
-    }
-
-    private fun startLoading() {
-        loginButton.startAnimation(fadeAnimation(false))
-    }
-
-    private fun stopLoading() {
-        loginButton.startAnimation(fadeAnimation(true))
     }
 
     private fun fadeAnimation(fadeIn: Boolean): Animation {
