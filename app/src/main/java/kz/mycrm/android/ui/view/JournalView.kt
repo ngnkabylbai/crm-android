@@ -433,7 +433,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             mOrderList = newOrderList
             mOrderEventList = getOrderEventRects(newOrderList)
 //            mOrderEventGroupList = getOrderEventGroups(mOrderEventList)
-            mOrderEventGroupList = getTestOrderEventGroups() // For a test case
+            mOrderEventGroupList = getTestOrderEventGroups() // USED ONLY FOR TEST CASES, OTHERWISE ONE ABOVE
 
             invalidate()
         }
