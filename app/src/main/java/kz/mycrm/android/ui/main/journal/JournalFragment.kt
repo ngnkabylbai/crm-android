@@ -113,7 +113,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
 
         /** start 2 weeks ago from now */
         val startDate = Calendar.getInstance()
-        startDate.add(Calendar.WEEK_OF_MONTH, -2)
+        startDate.add(Calendar.WEEK_OF_MONTH, -3)
 
         horizontalCalendar = HorizontalCalendar.Builder(activity, R.id.calendarView)
                 .startDate(startDate.time)
