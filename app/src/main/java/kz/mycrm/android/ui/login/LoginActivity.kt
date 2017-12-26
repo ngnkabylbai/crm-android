@@ -16,6 +16,7 @@ import android.view.animation.Animation
 import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
+import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
@@ -50,6 +51,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         setContentView(R.layout.activity_login)
 
         ButterKnife.bind(this)
+
+        nukeTables()
 
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.requestToken().observe(this, Observer { token ->
@@ -144,5 +147,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         animation.fillAfter = true
         return animation
     }
+
+    private fun nukeTables() {
+        MycrmApp.database.NukeDao().nukeToken()
+        MycrmApp.database.NukeDao().nukeOrder()
+        MycrmApp.database.NukeDao().nukeDivision()
+    }
+
 }
 

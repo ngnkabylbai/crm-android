@@ -45,7 +45,11 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             when(resourceList?.status) {
                 Status.LOADING -> showProgress()
                 Status.SUCCESS -> onSuccess(resourceList)
-                Status.ERROR -> hideProgress()
+                Status.ERROR -> {
+                    hideProgress()
+                    startActivity(loginIntent())
+                    finish()
+                }
             }
         })
 
