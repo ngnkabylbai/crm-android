@@ -67,7 +67,12 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 //
 //    }
 
+    fun nukeTables() {
+        MycrmApp.database.NukeDao().nukeOrder()
+    }
+
     private fun getOrders(date:String, divisionId: Int, staffId:Int): LiveData<List<Order>> {
         return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId)
     }
+
 }

@@ -16,6 +16,7 @@ import android.view.animation.Animation
 import butterknife.ButterKnife
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
@@ -52,8 +53,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
 
         ButterKnife.bind(this)
 
-        nukeTables()
-
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.requestToken().observe(this, Observer { token ->
             when(token!!.status) {
@@ -63,8 +62,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
             }
         })
 
-        login.setText("+7 701 381-71-15")
-        password.setText("password")
+        if(BuildConfig.DEBUG) {
+            login.setText("+7 701 381-71-15")
+            password.setText("password")
+        }
 
         builder = AlertDialog.Builder(this)
         builder.create()
@@ -137,12 +138,5 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         animation.fillAfter = true
         return animation
     }
-
-    private fun nukeTables() {
-        MycrmApp.database.NukeDao().nukeToken()
-        MycrmApp.database.NukeDao().nukeOrder()
-        MycrmApp.database.NukeDao().nukeDivision()
-    }
-
 }
 

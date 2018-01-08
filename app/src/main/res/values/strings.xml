@@ -10,6 +10,7 @@
     <string name="error_empty_string">Пожалуйста, заполните все поля</string>
     <string name="error_invalid_password">Неправильный логин или пароль</string>
     <string name="error_timeout">Не удалось установить соединение с сервером. Пожалуйста, попробуйте позже</string>
+    <string name="ok">Хорошо</string>
 
     <!--Main activity-->
     <!--Bottom navigation bar-->
@@ -19,7 +20,6 @@
     <string name="navigation_bar_menu">Меню</string>
     <!--Division fragment-->
     <string name="division_title">Выбор филиала</string>
-
     <!--Notification fragment-->
     <string name="notification_title">Уведомления</string>
     <string name="current_notification">ТЕКУЩИЕ</string>
@@ -31,5 +31,4 @@
     <string name="note">ЗАМЕТКА</string>
     <string name="file">Файлы</string>
     <string name="docs">Документы</string>
-
 </resources>

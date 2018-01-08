@@ -52,4 +52,8 @@ class TokenRepository(private var appExecutors: AppExecutors) {
     fun getCount() : Int {
         return MycrmApp.database.TokenDao().getCount()
     }
+
+    fun nukeTables() {
+        MycrmApp.database.NukeDao().nukeToken()
+    }
 }

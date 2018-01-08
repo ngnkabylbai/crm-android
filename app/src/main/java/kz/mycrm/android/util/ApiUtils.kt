@@ -1,5 +1,6 @@
 package kz.mycrm.android.util
 
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.remote.*
 
 /**
@@ -7,7 +8,7 @@ import kz.mycrm.android.remote.*
  */
 object ApiUtils {
 
-    private val baseUrl: String = "http://test.api.mycrm.kz/v2/"
+    private val baseUrl: String = BuildConfig.DAR_API
 
     fun getTokenService() : TokenService {
         return RetrofitClient.getClient(baseUrl).create(TokenService::class.java)

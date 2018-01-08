@@ -47,4 +47,8 @@ class UserRepository(private var appExecutors: AppExecutors) {
     fun getDivisionById(id: Int): Division {
         return MycrmApp.database.DivisionDao().getDivisionById(id)
     }
+
+    fun nukeTables() {
+        MycrmApp.database.NukeDao().nukeDivision()
+    }
 }

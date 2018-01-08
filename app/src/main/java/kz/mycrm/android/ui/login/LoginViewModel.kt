@@ -23,6 +23,7 @@ class LoginViewModel : ViewModel() {
     private val toRequest = MutableLiveData<Boolean>()
 
     init {
+        tokenRepository.nukeTables()
         token = Transformations.switchMap(toRequest) { _ -> tokenRepository.requestToken(phone, password)}
     }
 

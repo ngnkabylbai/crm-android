@@ -15,12 +15,31 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file(DAR_ECO_RELEASE_STORE_FILE)
+            storePassword DAR_ECO_RELEASE_STORE_PASSWORD
+            keyAlias DAR_ECO_RELEASE_KEY_ALIAS
+            keyPassword DAR_ECO_RELEASE_KEY_PASSWORD
         }
     }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            buildConfigField "String", "DAR_API", '"http://test.api.mycrm.kz/v2/"'
+        }
+
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "DAR_API", '"https://api.mycrm.kz/"'
+        }
+    }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
