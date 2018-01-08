@@ -12,6 +12,7 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
 import android.widget.Toast
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
@@ -432,8 +433,12 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             isUpdated = true
             mOrderList = newOrderList
             mOrderEventList = getOrderEventRects(newOrderList)
-//            mOrderEventGroupList = getOrderEventGroups(mOrderEventList)
-            mOrderEventGroupList = getTestOrderEventGroups() // USED ONLY FOR TEST CASES, OTHERWISE ONE ABOVE
+
+            mOrderEventGroupList = if(BuildConfig.DEBUG) {
+                getTestOrderEventGroups()
+            } else {
+                getOrderEventGroups(mOrderEventList)
+            }
 
             invalidate()
         }
