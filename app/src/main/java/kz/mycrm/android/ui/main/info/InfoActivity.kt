@@ -43,6 +43,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
 
         ButterKnife.bind(this)
         rv = findViewById(R.id.service_list)
+        rv.isNestedScrollingEnabled = false
         rv.setHasFixedSize(true)
         lm = LinearLayoutManager(this)
 
