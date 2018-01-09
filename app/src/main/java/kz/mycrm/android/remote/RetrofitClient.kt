@@ -13,18 +13,19 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitClient {
 
+    private val baseUrl: String = BuildConfig.DAR_API
     private var listener: OnConnectionTimeoutListener? = null
     private var retrofit: Retrofit? = null
 
-    fun getClient(baseUrl: String): Retrofit {
-        return retrofit ?: createClient(baseUrl)
+    fun getClient(): Retrofit {
+        return retrofit ?: createClient()
     }
 
     fun setConnectionTimeoutListener(listener: OnConnectionTimeoutListener) {
         this.listener = listener
     }
 
-    private fun createClient(baseUrl: String) : Retrofit {
+    private fun createClient() : Retrofit {
         val httpClient = OkHttpClient.Builder()
         if(BuildConfig.DEBUG) {
             val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.api(message) })

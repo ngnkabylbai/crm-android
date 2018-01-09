@@ -12,7 +12,7 @@ import retrofit2.http.Query
  */
 interface JournalService {
 
-    @GET("user/schedule")
+    @GET("v2/user/schedule")
     fun requestJournal(@Query("date")date: String,
                         @Query("division_id")id: Int, @Query("staff")staff: IntArray, @Query("expand")expand: String): LiveData<ApiResponse<List<StaffJournal>>>
 

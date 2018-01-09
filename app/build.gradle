@@ -29,7 +29,7 @@ android {
         debug {
             minifyEnabled false
             debuggable true
-            buildConfigField "String", "DAR_API", '"http://test.api.mycrm.kz/v2/"'
+            buildConfigField "String", "DAR_API", '"http://test.api.mycrm.kz/"'
         }
 
         rc {

@@ -11,7 +11,7 @@ import retrofit2.http.Query
  */
 interface OrderService {
 
-    @GET("order")
+    @GET("v2/order")
     fun requestAllOrders(@Query("staff_id")staffId: String,
                          @Query("expand")expand:String): LiveData<ApiResponse<List<Order>>>
 

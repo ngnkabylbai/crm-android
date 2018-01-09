@@ -10,7 +10,7 @@ import retrofit2.http.*
  */
 interface TokenService {
 
-    @POST("user/login")
+    @POST("v2/user/login")
     @FormUrlEncoded
     fun requestToken(@Field("username") login:String, @Field("password")password:String): LiveData<ApiResponse<Token>>
 
