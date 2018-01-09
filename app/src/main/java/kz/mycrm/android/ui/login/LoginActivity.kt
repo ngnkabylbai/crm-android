@@ -63,8 +63,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         })
 
         if(BuildConfig.DEBUG) {
-            login.setText("+7 701 381-71-15")
-            password.setText("password")
+//            login.setText("+7 701 381-71-15")
+//            password.setText("password")
+            login.setText("+7 707 830-69-24")
+            password.setText("yeruuh")
         }
 
         builder = AlertDialog.Builder(this)

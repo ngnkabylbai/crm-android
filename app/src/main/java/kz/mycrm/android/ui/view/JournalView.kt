@@ -434,7 +434,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             mOrderList = newOrderList
             mOrderEventList = getOrderEventRects(newOrderList)
 
-            mOrderEventGroupList = if(BuildConfig.DEBUG) {
+            mOrderEventGroupList = if(BuildConfig.MOCK) {
                 getTestOrderEventGroups()
             } else {
                 getOrderEventGroups(mOrderEventList)

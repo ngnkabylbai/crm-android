@@ -30,6 +30,7 @@ android {
             minifyEnabled false
             debuggable true
             buildConfigField "String", "DAR_API", '"http://test.api.mycrm.kz/"'
+            buildConfigField "Boolean", "MOCK", 'true'
         }
 
         rc {
@@ -37,6 +38,7 @@ android {
             debuggable true
             signingConfig signingConfigs.release
             buildConfigField "String", "DAR_API", '"https://api.mycrm.kz/"'
+            buildConfigField "Boolean", "MOCK", 'false'
         }
 
         release {
@@ -44,6 +46,7 @@ android {
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "DAR_API", '"https://api.mycrm.kz/"'
+            buildConfigField "Boolean", "MOCK", 'false'
         }
     }
 
