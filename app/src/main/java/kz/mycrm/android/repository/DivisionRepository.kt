@@ -11,10 +11,7 @@ import kz.mycrm.android.util.Resource
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-class UserRepository(private var appExecutors: AppExecutors) {
-
-    private val tokenRepository = TokenRepository(AppExecutors)
-    private val token = tokenRepository.getToken()
+class DivisionRepository(private var appExecutors: AppExecutors) {
 
     fun requestUserDivisionList(): LiveData<Resource<List<Division>>> {
         return object : NetworkBoundResource<List<Division>, List<Division>>(appExecutors) {
@@ -49,6 +46,6 @@ class UserRepository(private var appExecutors: AppExecutors) {
     }
 
     fun nukeTables() {
-        MycrmApp.database.NukeDao().nukeDivision()
+        MycrmApp.database.DivisionDao().nukeDivision()
     }
 }

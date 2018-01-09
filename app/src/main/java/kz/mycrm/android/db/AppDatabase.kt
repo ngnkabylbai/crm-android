@@ -20,5 +20,4 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun OrderDao(): OrderDao
     abstract fun OrderPaymentDao(): OrderPaymentDao
     abstract fun ServiceDao(): ServiceDao
-    abstract fun NukeDao() : NukeDao
 }

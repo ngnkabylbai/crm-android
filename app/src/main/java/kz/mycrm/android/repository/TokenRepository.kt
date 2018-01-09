@@ -54,6 +54,6 @@ class TokenRepository(private var appExecutors: AppExecutors) {
     }
 
     fun nukeTables() {
-        MycrmApp.database.NukeDao().nukeToken()
+        MycrmApp.database.TokenDao().nukeToken()
     }
 }

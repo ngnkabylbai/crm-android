@@ -23,4 +23,7 @@ interface TokenDao {
 
     @Query("SELECT COUNT(*) FROM token")
     fun getCount() : Int
+
+    @Query("DELETE FROM token")
+    fun nukeToken()
 }

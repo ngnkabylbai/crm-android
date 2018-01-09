@@ -6,7 +6,7 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.repository.NotificationRepository
-import kz.mycrm.android.repository.UserRepository
+import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -16,7 +16,7 @@ import kz.mycrm.android.util.Resource
 class NotificationViewModel: ViewModel() {
 
     private val notificationRepository = NotificationRepository(AppExecutors)
-    private val userRepository = UserRepository(AppExecutors)
+    private val userRepository = DivisionRepository(AppExecutors)
 
     private val orderList: LiveData<Resource<List<Order>>>
     private val toRefresh = MutableLiveData<Boolean>()

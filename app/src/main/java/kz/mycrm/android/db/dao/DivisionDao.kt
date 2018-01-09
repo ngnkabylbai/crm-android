@@ -25,4 +25,7 @@ interface DivisionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDivisionsList(division: List<Division>)
+
+    @Query("DELETE FROM division")
+    fun nukeDivision()
 }

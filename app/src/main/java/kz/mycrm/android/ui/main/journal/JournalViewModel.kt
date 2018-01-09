@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.repository.JournalRepository
-import kz.mycrm.android.repository.UserRepository
+import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -17,7 +17,7 @@ import kz.mycrm.android.util.Resource
 class JournalViewModel: ViewModel() {
 
     private var journalRepository = JournalRepository(AppExecutors)
-    private var userRepository = UserRepository(AppExecutors)
+    private var userRepository = DivisionRepository(AppExecutors)
 
     private var divisionId = 0
     private var staffId = intArrayOf(0)

@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Token
+import kz.mycrm.android.repository.DivisionRepository
+import kz.mycrm.android.repository.JournalRepository
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
@@ -15,6 +17,8 @@ import kz.mycrm.android.util.Resource
 class LoginViewModel : ViewModel() {
 
     private var tokenRepository = TokenRepository(AppExecutors)
+    private var divisionRepository = DivisionRepository(AppExecutors)
+    private var journalRepository = JournalRepository(AppExecutors)
 
     private val token: LiveData<Resource<Token>>
     private lateinit var phone: String
@@ -24,9 +28,10 @@ class LoginViewModel : ViewModel() {
 
     init {
         tokenRepository.nukeTables()
+        divisionRepository.nukeTables()
+        journalRepository.nukeTables()
         token = Transformations.switchMap(toRequest) { _ -> tokenRepository.requestToken(phone, password)}
     }
-
 
     fun startRefresh() {
         toRequest.value = null
