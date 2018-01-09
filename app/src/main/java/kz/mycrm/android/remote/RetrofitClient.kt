@@ -1,5 +1,6 @@
 package kz.mycrm.android.remote
 
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.util.LiveDataCallAdapterFactory
 import kz.mycrm.android.util.Logger
 import okhttp3.OkHttpClient
@@ -16,31 +17,32 @@ object RetrofitClient {
     private var retrofit: Retrofit? = null
 
     fun getClient(baseUrl: String): Retrofit {
-
-        if(retrofit == null) {
-            val httpClient = OkHttpClient.Builder()
-            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.api(message) })
-//            val logger = HttpLoggingInterceptor()
-            logger.level = HttpLoggingInterceptor.Level.BODY
-            httpClient.addInterceptor(TokenInterceptor())
-            httpClient.addInterceptor(logger)
-            //        httpClient.interceptors().add(Interceptor { chain -> onOnIntercept(chain) })
-            //        httpClient.connectTimeout(30, TimeUnit.SECONDS)
-            //        httpClient.readTimeout(30, TimeUnit.SECONDS)
-
-            retrofit = Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                    .build()
-        }
-
-        return retrofit!!
+        return retrofit ?: createClient(baseUrl)
     }
 
     fun setConnectionTimeoutListener(listener: OnConnectionTimeoutListener) {
         this.listener = listener
+    }
+
+    private fun createClient(baseUrl: String) : Retrofit {
+        val httpClient = OkHttpClient.Builder()
+        if(BuildConfig.DEBUG) {
+            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.api(message) })
+//            val logger = HttpLoggingInterceptor()
+            logger.level = HttpLoggingInterceptor.Level.BODY
+            httpClient.addInterceptor(logger)
+        }
+        httpClient.addInterceptor(TokenInterceptor())
+        //        httpClient.interceptors().add(Interceptor { chain -> onOnIntercept(chain) })
+        //        httpClient.connectTimeout(30, TimeUnit.SECONDS)
+        //        httpClient.readTimeout(30, TimeUnit.SECONDS)
+
+        return Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                .build()
     }
 
 //    private fun onOnIntercept(chain: Interceptor.Chain): Response {
