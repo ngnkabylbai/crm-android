@@ -41,6 +41,8 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
     private lateinit var dateFormat: SimpleDateFormat
     private val spinnerItems = ArrayList<String>()
     private val divisionList = ArrayList<Division>()
+    private var initDivision = false
+    private var initCalendar = false
 
     private lateinit var adapter: ArrayAdapter<String>
 
@@ -70,6 +72,9 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
             }
         })
 
+        initDivision = false
+        initCalendar = false
+
         setupCalendar(view)
         setupSpinner()
 
@@ -94,7 +99,11 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 mDivisionId = divisionList[position].id
                 divisionSpinner.setSelection(position)
-                viewModel.refreshData(mDate, mDivisionId, mStaffId)
+                if(initDivision) {
+                    viewModel.refreshData(mDate, mDivisionId, mStaffId)
+                } else {
+                    initDivision = true
+                }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
@@ -104,7 +113,7 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
     }
 
     private fun setupCalendar(view: View) {
-        dateFormat = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
+        dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         mDate = dateFormat.format(Date())
         validDate()
         /** end after 2 weeks from now */
@@ -127,11 +136,15 @@ class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Date, position: Int) {
                 mDate = formatDate(date)
-                viewModel.refreshData(mDate, mDivisionId, mStaffId)
+                if(initCalendar) {
+                    viewModel.refreshData(mDate, mDivisionId, mStaffId)
+                } else {
+                    initCalendar = true
+                }
             }
 
         }
-        view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(false, true) })
+        view.findViewById<View>(R.id.toDay).setOnClickListener({ horizontalCalendar.goToday(true, true) })
 
     }
 
