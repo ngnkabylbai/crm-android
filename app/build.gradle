@@ -32,6 +32,13 @@ android {
             buildConfigField "String", "DAR_API", '"http://test.api.mycrm.kz/v2/"'
         }
 
+        rc {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.release
+            buildConfigField "String", "DAR_API", '"https://api.mycrm.kz/"'
+        }
+
         release {
             minifyEnabled false
             signingConfig signingConfigs.release

@@ -7,7 +7,7 @@ import android.util.Log
  */
 object Logger {
 
-    fun debug(msg: String) {
-        Log.d("DBG", msg)
+    fun debug(msg: Any) {
+        Log.d("DBG", "$msg")
     }
 }

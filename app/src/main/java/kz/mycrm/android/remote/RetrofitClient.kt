@@ -1,44 +1,40 @@
 package kz.mycrm.android.remote
 
 import kz.mycrm.android.util.LiveDataCallAdapterFactory
-import okhttp3.Interceptor
+import kz.mycrm.android.util.Logger
 import okhttp3.OkHttpClient
-import okhttp3.Response
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by NKabylbay on 11/11/2017.
  */
 object RetrofitClient {
 
-    private lateinit var httpClient: OkHttpClient.Builder
     private var listener: OnConnectionTimeoutListener? = null
     private var retrofit: Retrofit? = null
 
     fun getClient(baseUrl: String): Retrofit {
 
-        httpClient = OkHttpClient.Builder()
-            val logger = HttpLoggingInterceptor()
+        if(retrofit == null) {
+            val httpClient = OkHttpClient.Builder()
+            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.debug(message) })
+//            val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BODY
-        httpClient.addInterceptor(logger)
-        httpClient.addInterceptor(HttpInterceptor())
-//        httpClient.interceptors().add(Interceptor { chain -> onOnIntercept(chain) })
-//        httpClient.connectTimeout(30, TimeUnit.SECONDS)
-//        httpClient.readTimeout(30, TimeUnit.SECONDS)
+            httpClient.addInterceptor(TokenInterceptor())
+            httpClient.addInterceptor(logger)
+            //        httpClient.interceptors().add(Interceptor { chain -> onOnIntercept(chain) })
+            //        httpClient.connectTimeout(30, TimeUnit.SECONDS)
+            //        httpClient.readTimeout(30, TimeUnit.SECONDS)
 
-        if(retrofit == null)
             retrofit = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build())
                     .addCallAdapterFactory(LiveDataCallAdapterFactory())
                     .build()
+        }
 
         return retrofit!!
     }
