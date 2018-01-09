@@ -19,7 +19,7 @@ object RetrofitClient {
 
         if(retrofit == null) {
             val httpClient = OkHttpClient.Builder()
-            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.debug(message) })
+            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message -> Logger.api(message) })
 //            val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BODY
             httpClient.addInterceptor(TokenInterceptor())

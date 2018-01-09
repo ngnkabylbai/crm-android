@@ -10,4 +10,8 @@ object Logger {
     fun debug(msg: Any) {
         Log.d("DBG", "$msg")
     }
+
+    fun api(msg: Any) {
+        Log.d("API", "$msg")
+    }
 }
