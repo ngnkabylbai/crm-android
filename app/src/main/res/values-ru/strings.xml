@@ -31,4 +31,6 @@
     <string name="note">ЗАМЕТКА</string>
     <string name="file">Файлы</string>
     <string name="docs">Документы</string>
+    <!--Journal fragment-->
+    <string name="event_count">Количество записей</string>
 </resources>

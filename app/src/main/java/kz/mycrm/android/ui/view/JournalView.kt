@@ -427,23 +427,22 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      */
     private var isUpdated = true
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>, status: Status) {
-        var mOrderEventList: ArrayList<OrderEvent>? = null
 
         if (!isSameListWithOrigin(newOrderList, status)) {
             isUpdated = true
             mOrderList = newOrderList
-            mOrderEventList = getOrderEventRects(newOrderList)
 
             mOrderEventGroupList = if(BuildConfig.MOCK) {
                 getTestOrderEventGroups()
             } else {
+                val mOrderEventList = getOrderEventRects(newOrderList)
                 getOrderEventGroups(mOrderEventList)
             }
 
             invalidate()
         }
         if (isUpdated && status == Status.SUCCESS) {
-            Toast.makeText(context, "Количество записей: " + mOrderEventList!!.size, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, resources.getString(R.string.event_count)+": "+mOrderEventGroupList.map{it.getGroupSize()}.sum(), Toast.LENGTH_SHORT).show()
             isUpdated = false
         }
     }
@@ -600,7 +599,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     /////////////////////////////////////////////////////
     ///                   ORDER EVENT GROUP            //
     /////////////////////////////////////////////////////
-    inner class OrderEventGroup(var orderEventList: ArrayList<OrderEvent>) {
+    inner class OrderEventGroup(private var orderEventList: ArrayList<OrderEvent>) {
 
         private var isInitializing = true // if the group is drawn for the first time
         private var expandedEvent: OrderEvent? = null // reference to the expanded event
@@ -833,6 +832,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             })
 
             return expanding
+        }
+
+        fun getGroupSize(): Int {
+            return orderEventList.size
         }
     }
 
