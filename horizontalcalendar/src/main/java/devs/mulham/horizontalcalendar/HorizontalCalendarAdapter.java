@@ -109,12 +109,12 @@ class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarA
             holder.selectionView.setVisibility(View.INVISIBLE);
         }
 
-        holder.txtDayNumber.setText(DateFormat.format(horizontalCalendar.getFormatDayNumber(), day).toString());
+        holder.txtDayNumber.setText(DateFormat.format(horizontalCalendar.getFormatDayNumber(), day).toString().toLowerCase());
         holder.txtDayNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP,
                 horizontalCalendar.getTextSizeDayNumber());
 
         if (horizontalCalendar.isShowDayName()) {
-            holder.txtDayName.setText(DateFormat.format(horizontalCalendar.getFormatDayName(), day));
+            holder.txtDayName.setText(DateFormat.format(horizontalCalendar.getFormatDayName(), day).toString().toLowerCase());
             holder.txtDayName.setTextSize(TypedValue.COMPLEX_UNIT_SP,
                     horizontalCalendar.getTextSizeDayName());
         } else {
