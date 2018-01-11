@@ -14,7 +14,6 @@ class Order : Comparable<Order> {
 
     companion object {
         val datetimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val compareDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     }
 
     @PrimaryKey
@@ -267,6 +266,6 @@ class Order : Comparable<Order> {
     }
 
     override fun compareTo(other: Order): Int {
-        return compareDateFormat.parse(this.datetime).compareTo(compareDateFormat.parse(other.datetime))
+        return datetimeFormat.parse(this.datetime).compareTo(datetimeFormat.parse(other.datetime))
     }
 }

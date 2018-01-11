@@ -25,7 +25,6 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var currentNotificationAdapter: CurrentNotificationAdapter
 
-    private val datetimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_notification, container, false)
     }
@@ -96,11 +95,11 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun getFilteredAndSortedList(list: ArrayList<Order>): ArrayList<Order> {
-        val todayStr = datetimeFormat.format(Date())
-        val today = datetimeFormat.parse(todayStr)
+        val todayStr = Order.datetimeFormat.format(Date())
+        val today = Order.datetimeFormat.parse(todayStr)
         val result = ArrayList<Order>()
         for(order in list) {
-            val date = datetimeFormat.parse(order.datetime)
+            val date = Order.datetimeFormat.parse(order.datetime)
             if(date.equals(today) || date.after(today)) {
                 result.add(order)
             }
