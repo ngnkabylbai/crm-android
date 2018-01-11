@@ -345,7 +345,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The canvas where the order is drawn
      */
     private fun drawOrderText(orderRect: Rect, text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
-        val widthDiff = 2 * (textX - orderRect.left)
+        val widthDiff = 3 * (textX - orderRect.left)
         val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat() - widthDiff, TextUtils.TruncateAt.END)
         canvas.drawText(txt, 0, txt.length, textX, textY, paint)
     }
@@ -485,20 +485,33 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         order.customerPhone = "+7 456 312 21 45"
         order.services = list
         testOrderList.add(order)
-//
-//        order = Order()
-//        order.id = "4"
-//        order.start = "2017-12-21 09:50:00"
-//        order.end = "2017-12-21 10:25:00"
-//        order.services = list
-//        testOrderList.add(order)
-//
-//        order = Order()
-//        order.id = "4"
-//        order.start = "2017-12-21 19:25:00"
-//        order.end = "2017-12-21 19:50:00"
-//        order.services = list
-//        testOrderList.add(order)
+
+        order = Order()
+        order.id = "5"
+        order.start = "2017-12-21 11:00:00"
+        order.end = "2017-12-21 12:00:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
+        order.services = list
+        testOrderList.add(order)
+
+        order = Order()
+        order.id = "6"
+        order.start = "2017-12-21 11:00:00"
+        order.end = "2017-12-21 11:30:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
+        order.services = list
+        testOrderList.add(order)
+
+        order = Order()
+        order.id = "7"
+        order.start = "2017-12-21 12:00:00"
+        order.end = "2017-12-21 12:30:00"
+        order.customerName = "Artur Abdalimov"
+        order.customerPhone = "+7 456 312 21 45"
+        order.services = list
+        testOrderList.add(order)
 
         val eventList = getOrderEventRects(testOrderList)
         return getOrderEventGroups(eventList)
@@ -613,10 +626,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             groupRect.left = mRectStartX.toInt()
             groupRect.top = orderEventList[0].rect.top
             groupRect.bottom = groupRect.top
-            orderEventList
-                    .filter { it.rect.bottom > groupRect.bottom }
-                    .forEach { groupRect.bottom = it.rect.bottom }
-
+            for(event in orderEventList) {
+                if(event.rect.bottom > groupRect.bottom)
+                    groupRect.bottom = event.rect.bottom
+            }
         }
 
         private var lessenOrderWidth = (mScreenWidth - mRectStartX) / 8
@@ -625,8 +638,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         private var orderRight = mScreenWidth - lessenOrderWidth * (orderEventList.size - 1)
         private var expandedOrderWidth = (fullOrderWidth - lessenOrderWidth * (orderEventList.size - 1)).toInt()
-
         var rect = Rect()
+
         fun drawOrderEvents(canvas: Canvas) {
             if (expandedOrderWidth < 0)
                 return
@@ -642,6 +655,9 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 if (isAnimating) {
                     curOrderRight = orderEvent.rect.right
                     curOrderLeft = orderEvent.rect.left
+                } else if(orderEventList.size == 2) {
+                    curOrderLeft = (mRectStartX +(fullOrderWidth/2)*i).toInt() + i*1
+                    curOrderRight = (mRectStartX +(fullOrderWidth/2)*(i+1)).toInt()
                 } else {
                     curOrderRight = getCurOrderRight(i)
                     curOrderLeft = getCurOrderLeft(i, curOrderRight)
@@ -747,6 +763,10 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 for (i in 0..(orderEventList.size - 1)) {
                     val event = orderEventList[i]
                     if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
+                        if(orderEventList.size == 2){
+                            mOrderEventClickListener?.onOrderEventClicked(event.order)
+                            return
+                        }
                         if (event == expandedEvent) {
                             mOrderEventClickListener?.onOrderEventClicked(event.order)
                         } else if (orderEventList.indexOf(expandedEvent) > i) {

@@ -14,8 +14,9 @@ import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
-import java.text.SimpleDateFormat
 import java.util.*
+
+
 
 /**
  * Created by lab on 11/25/17.
@@ -97,6 +98,13 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun getFilteredAndSortedList(list: ArrayList<Order>): ArrayList<Order> {
         val todayStr = Order.datetimeFormat.format(Date())
         val today = Order.datetimeFormat.parse(todayStr)
+            val cal = Calendar.getInstance()
+            cal.time = today
+            cal.set(Calendar.HOUR_OF_DAY, 0)
+            cal.set(Calendar.MINUTE, 0)
+            cal.set(Calendar.SECOND, 0)
+            cal.set(Calendar.MILLISECOND, 0)
+        today.time = cal.timeInMillis
         val result = ArrayList<Order>()
         for(order in list) {
             val date = Order.datetimeFormat.parse(order.datetime)
