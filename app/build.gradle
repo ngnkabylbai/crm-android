@@ -81,17 +81,9 @@ dependencies {
     // Http logging
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
-    // Butterknife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
-
     // Support
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
-
-    // Stetho
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
     // HorizontalCalendarView
     implementation project(":horizontalcalendar")

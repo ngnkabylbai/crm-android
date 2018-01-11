@@ -8,9 +8,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import butterknife.ButterKnife
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_info.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
@@ -23,7 +20,7 @@ fun Context.infoIntent(): Intent {
     return Intent(this, InfoActivity::class.java)
 }
 
-class InfoActivity : AppCompatActivity(), View.OnClickListener {
+class InfoActivity : AppCompatActivity() {
 
     private lateinit var rv:RecyclerView
     private lateinit var lm:LinearLayoutManager
@@ -41,7 +38,6 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
 
-        ButterKnife.bind(this)
         rv = findViewById(R.id.service_list)
         rv.isNestedScrollingEnabled = false
         rv.setHasFixedSize(true)
@@ -73,10 +69,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
             }
             Logger.debug("order = " + order?.services.toString())
         })
-    }
 
-    @OnClick(R.id.closeActivity)
-    override fun onClick(view: View?){
-        finish()
+        closeActivity.setOnClickListener { finish() }
     }
 }

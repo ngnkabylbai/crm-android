@@ -13,11 +13,8 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import butterknife.ButterKnife
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.BuildConfig
-import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
@@ -51,8 +48,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        ButterKnife.bind(this)
-
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.requestToken().observe(this, Observer { token ->
             when(token!!.status) {
@@ -61,6 +56,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                 Status.ERROR -> onError()
             }
         })
+
+        loginButton.setOnClickListener(this)
+        password.setOnClickListener(this)
+        forgotPassword.setOnClickListener(this)
 
         if(BuildConfig.DEBUG) {
 //            login.setText("+7 701 381-71-15")
@@ -101,7 +100,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         msg.sendToTarget()
     }
 
-    @OnClick(R.id.loginButton, R.id.password, R.id.forgotPassword)
     override fun onClick(v: View?) {
         login.error = null
         when (v?.id) {
