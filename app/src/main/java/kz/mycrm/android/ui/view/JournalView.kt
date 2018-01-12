@@ -345,7 +345,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param canvas The canvas where the order is drawn
      */
     private fun drawOrderText(orderRect: Rect, text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
-        val widthDiff = 3 * (textX - orderRect.left)
+        val widthDiff = (2.5 * (textX - orderRect.left)).toInt()
         val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat() - widthDiff, TextUtils.TruncateAt.END)
         canvas.drawText(txt, 0, txt.length, textX, textY, paint)
     }
