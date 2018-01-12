@@ -5,7 +5,8 @@
     <color name="colorAccent">#33a8de</color>
 
     <color name="primaryBackgroundColor">@color/white</color>
-    <color name="divisionBackgroundColor">#F1F2F4</color>
+    <color name="divisionBackgroundColor">#E8EDF0</color>
+    <color name="notificationBackgroundColor">@color/divisionBackgroundColor</color>
     <color name="white">#ffff</color>
     <color name="black">#000</color>
 

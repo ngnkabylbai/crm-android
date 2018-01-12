@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryBackgroundColor"
-    android:paddingLeft="44dp"
-    android:paddingRight="44dp"
+    android:paddingLeft="220dp"
+    android:paddingRight="220dp"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -16,24 +16,21 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@mipmap/ic_logo2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="180dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".15" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="80dp"
         android:theme="@style/TextLabel"
         app:errorEnabled="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintVertical_bias="0.076">
+        app:layout_constraintTop_toBottomOf="@+id/logo">
 
         <kz.mycrm.android.ui.view.LoginEditTextView
             android:id="@+id/login"
@@ -44,8 +41,7 @@
             android:inputType="phone"
             android:maxLength="16"
             android:text="+7 707 777-77-77"
-            android:textIsSelectable="false"
-            android:textSize="@dimen/login_text_input_size" />
+            android:textIsSelectable="false" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -54,11 +50,10 @@
         android:layout_height="wrap_content"
         android:theme="@style/TextLabel"
         app:errorEnabled="true"
-        app:layout_constraintVertical_bias="0.07"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginLayout"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/loginLayout">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/password"
@@ -94,8 +89,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/login_text_input_size"
-        app:layout_constraintVertical_bias="0.13"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLayout" />

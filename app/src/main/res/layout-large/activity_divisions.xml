@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/divisionBackgroundColor"
-    android:paddingTop="44dp">
+    android:paddingTop="44dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -13,8 +15,7 @@
         android:layout_height="wrap_content"
         android:text="@string/division_title"
         android:textColor="@color/black"
-        android:textSize="25sp"
-        android:paddingLeft="10dp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 

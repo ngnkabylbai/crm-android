@@ -30,7 +30,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="40dp"
                         android:layout_marginLeft="10dp"
-                        android:paddingLeft="10dp"
                         android:text="Журнал"
                         android:textColor="#000"
                         android:textSize="14sp"
@@ -94,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            
             <TextView
                 android:visibility="visible"
                 android:id="@+id/dateView"
@@ -129,8 +128,12 @@
             android:id="@+id/journal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:normalTimeSize="13sp"
-            app:accentTimeSize="15sp"
+            app:normalTimeSize="15sp"
+            app:accentTimeSize="17sp"
+            app:orderTimeTextSize="13sp"
+            app:orderPatientNameSize="18sp"
+            app:orderPatientNumberSize="17sp"
+            app:orderServiceListSize="16sp"
             app:backgroundColor="#e5eff9"
             app:orderBackgroundColor="#1058cc"
             app:orderLeftAccentColor="#1058cc"
