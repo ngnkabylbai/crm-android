@@ -44,8 +44,7 @@
             android:inputType="phone"
             android:maxLength="16"
             android:text="+7 707 777-77-77"
-            android:textIsSelectable="false"
-            android:textSize="@dimen/login_text_input_size" />
+            android:textIsSelectable="false"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -66,7 +65,6 @@
             android:layout_height="40dp"
             android:hint="@string/hint_password"
             android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            android:textSize="@dimen/login_text_input_size"
             android:maxLength="30"
             android:background="@drawable/login_edit_background"
             android:inputType="textPassword"
@@ -78,8 +76,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/action_forgot_password"
-        android:textSize="@dimen/login_text_action_size"
-        android:layout_marginBottom="@dimen/login_hint_margin_bottom"
         android:textColor="@color/login_textColor"
         app:layout_constraintEnd_toEndOf="@id/passwordLayout"
         app:layout_constraintTop_toTopOf="@id/passwordLayout"
@@ -93,7 +89,6 @@
         android:text="@string/action_login"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/login_text_input_size"
         app:layout_constraintVertical_bias="0.13"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
