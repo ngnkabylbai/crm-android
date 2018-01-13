@@ -87,4 +87,7 @@ dependencies {
 
     // HorizontalCalendarView
     implementation project(":horizontalcalendar")
+
+    // Soft Keyboard listener
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }

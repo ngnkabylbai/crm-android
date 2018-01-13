@@ -11,6 +11,7 @@
     <string name="error_invalid_password">Неправильный логин или пароль</string>
     <string name="error_timeout">Не удалось установить соединение с сервером. Пожалуйста, попробуйте позже</string>
     <string name="ok">Хорошо</string>
+    <string name="authorize">Чтобы пользоваться приложением, авторизуйтесь</string>
 
     <!--Main activity-->
     <!--Bottom navigation bar-->

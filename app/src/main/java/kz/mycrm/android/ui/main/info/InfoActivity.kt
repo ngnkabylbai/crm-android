@@ -67,7 +67,7 @@ class InfoActivity : AppCompatActivity() {
                 rv.layoutManager = lm
                 rv.adapter = adapter
             }
-            Logger.debug("order = " + order?.services.toString())
+            Logger.debug("Started InfoActivity: ${order?.services.toString()}")
         })
 
         closeActivity.setOnClickListener { finish() }

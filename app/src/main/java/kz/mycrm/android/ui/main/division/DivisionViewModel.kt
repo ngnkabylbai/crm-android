@@ -22,7 +22,7 @@ class DivisionViewModel : ViewModel(){
     }
 
     private fun loadUserDivisions(): LiveData<Resource<List<Division>>> {
-        Logger.debug("loadUserDivisions")
+        Logger.debug("Loading UserDivisions...")
         return userRepository.requestUserDivisionList()
     }
 

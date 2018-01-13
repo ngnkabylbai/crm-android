@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.support.v7.app.AlertDialog
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -22,6 +23,10 @@ import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+
+
 
 
 /**
@@ -34,7 +39,11 @@ fun Context.loginIntent(): Intent {
 
 class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutListener {
 
+
     private lateinit var viewModel: LoginViewModel
+    private var screenHeight = 0
+    var isClosed = false
+
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
             builder.setNegativeButton(R.string.ok, { dialog, id ->
@@ -76,6 +85,23 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         layoutTransition.setDuration(100)
         loginParentLayout.layoutTransition = layoutTransition
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        screenHeight = displayMetrics.heightPixels
+        Logger.debug("Screen HEIGHT: $screenHeight")
+
+
+        KeyboardVisibilityEvent.setEventListener(this) { isOpen ->
+            if(isOpen) {
+                Logger.debug("SoftKeyboard is UP")
+                if(screenHeight <= 800)
+                    hintText.visibility = View.GONE
+            } else {
+                Logger.debug("SoftKeyboard is DOWN")
+                    hintText.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun onLoading() {

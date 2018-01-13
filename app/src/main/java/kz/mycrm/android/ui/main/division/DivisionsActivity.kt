@@ -75,7 +75,7 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     private fun onSuccess(resourceList: Resource<List<Division>>) {
         if (resourceList.data != null && resourceList.status == Status.SUCCESS) {
             val list = resourceList.data
-            Logger.debug("resource" + list.size)
+            Logger.debug("Division count: ${list.size}")
 //                    if (list.size > 1) {
             adapter.clear()
             for (d in resourceList.data) {
