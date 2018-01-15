@@ -43,13 +43,9 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
         divisionViewModel.getResourceDivisionsList().observe(this, Observer { resourceList ->
             when(resourceList?.status) {
-                Status.LOADING -> showProgress()
+                Status.LOADING -> swipeRefreshContainer.isRefreshing = true
                 Status.SUCCESS -> onSuccess(resourceList)
-                Status.ERROR -> {
-                    hideProgress()
-                    startActivity(loginIntent())
-                    finish()
-                }
+                Status.ERROR -> startLogin()
             }
         })
 
@@ -64,16 +60,8 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         }
     }
 
-    private fun showProgress() {
-        swipeRefreshContainer.isRefreshing = true
-    }
-
-    private fun hideProgress() {
-        swipeRefreshContainer.isRefreshing = false
-    }
-
     private fun onSuccess(resourceList: Resource<List<Division>>) {
-        if (resourceList.data != null && resourceList.status == Status.SUCCESS) {
+        if (resourceList.data != null) {
             val list = resourceList.data
             Logger.debug("Division count: ${list.size}")
 //                    if (list.size > 1) {
@@ -85,7 +73,7 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 //                        startMain(list[0])
 //                    }
             swipeRefreshContainer.isRefreshing = false
-        } else if ((resourceList.data == null && resourceList.status == Status.SUCCESS) || resourceList.status == Status.ERROR) {
+        } else {
             startLogin()
         }
     }
