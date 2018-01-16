@@ -8,7 +8,9 @@ import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.repository.NotificationRepository
 import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.util.AppExecutors
+import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.Resource
+import java.util.*
 
 /**
  * Created by lab on 11/25/17.
@@ -22,6 +24,8 @@ class NotificationViewModel: ViewModel() {
     private val toRefresh = MutableLiveData<Boolean>()
     private var divisionId = 0
     private lateinit var staffId:String
+    private val today = Constants.orderDateTimeFormat.format(Date())
+
 
     init {
         orderList = Transformations.switchMap(toRefresh) { _-> requestNotificationList()}
@@ -33,7 +37,7 @@ class NotificationViewModel: ViewModel() {
     }
 
     private fun requestNotificationList(): LiveData<Resource<List<Order>>> {
-        return notificationRepository.requestAllOrders(staffId)
+        return notificationRepository.requestAllOrders(staffId, today)
     }
 
     fun setDivisionId(divisionId: Int) {

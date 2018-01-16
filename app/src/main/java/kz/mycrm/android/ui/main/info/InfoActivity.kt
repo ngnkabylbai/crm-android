@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_info.*
 import kz.mycrm.android.R
-import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.util.Logger
 import java.text.SimpleDateFormat
@@ -27,7 +26,6 @@ class InfoActivity : AppCompatActivity() {
     private lateinit var adapter:ServiceAdapter
 
     private var serviceList:List<Service>? = null
-    private val dateFormat = Order.datetimeFormat
     private val textDateFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
     private lateinit var viewModel:InfoViewModel
@@ -47,20 +45,12 @@ class InfoActivity : AppCompatActivity() {
 
         val intent: Intent = intent
 
-        viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order->
+        viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order ->
             clientName.text = order?.customerName
             clientPhone.text = order?.customerPhone
             clientNotes.text = order?.note
 
-            var strDate = ""
-            try {
-                val date = dateFormat.parse(order?.datetime)
-                strDate = textDateFormat.format(date)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            infoTime.text = strDate.toLowerCase()
+            textDateFormat.format(order?.datetime)
 
             if (order != null){
                 adapter = ServiceAdapter(order.services, this)

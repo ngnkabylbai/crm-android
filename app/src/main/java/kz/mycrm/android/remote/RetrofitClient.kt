@@ -1,6 +1,9 @@
 package kz.mycrm.android.remote
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kz.mycrm.android.BuildConfig
+import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.LiveDataCallAdapterFactory
 import kz.mycrm.android.util.Logger
 import okhttp3.OkHttpClient
@@ -38,11 +41,15 @@ object RetrofitClient {
         //        httpClient.connectTimeout(30, TimeUnit.SECONDS)
         //        httpClient.readTimeout(30, TimeUnit.SECONDS)
 
+        val gson = GsonBuilder()
+                .setDateFormat(Constants.orderDateTimeFormat.toPattern())
+                .create()
+
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                .client(httpClient.build())
                 .build()
     }
 

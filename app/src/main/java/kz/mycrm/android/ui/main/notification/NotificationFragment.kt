@@ -14,8 +14,6 @@ import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
-import java.util.*
-
 
 
 /**
@@ -69,52 +67,23 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun onLoading(resourceList: Resource<List<Order>>) {
         swipeRefreshContainer.isRefreshing = true
-        loadData(resourceList)
+        currentNotificationAdapter.setListAndNotify(getOrderList(resourceList.data))
     }
 
     private fun onSuccess(resourceList: Resource<List<Order>>) {
-        loadData(resourceList)
+        currentNotificationAdapter.setListAndNotify(getOrderList(resourceList.data))
         swipeRefreshContainer.isRefreshing = false
     }
 
     private fun onError() {
-
         swipeRefreshContainer.isRefreshing = false
     }
 
-    private fun loadData(resourceList: Resource<List<Order>>) {
-        var orderArrayList = ArrayList<Order>()
-        val orderList = resourceList.data
-        if (orderList != null) {
-            orderArrayList.clear()
-            for (order in orderList) {
-                orderArrayList.add(order)
-            }
-            orderArrayList = getFilteredAndSortedList(orderArrayList)
-            currentNotificationAdapter.setListAndNotify(orderArrayList)
+    private fun getOrderList(list:List<Order>?): ArrayList<Order> {
+        if(list == null) {
+            return ArrayList()
         }
-    }
-
-    private fun getFilteredAndSortedList(list: ArrayList<Order>): ArrayList<Order> {
-        val todayStr = Order.datetimeFormat.format(Date())
-        val today = Order.datetimeFormat.parse(todayStr)
-            val cal = Calendar.getInstance()
-            cal.time = today
-            cal.set(Calendar.HOUR_OF_DAY, 0)
-            cal.set(Calendar.MINUTE, 0)
-            cal.set(Calendar.SECOND, 0)
-            cal.set(Calendar.MILLISECOND, 0)
-        today.time = cal.timeInMillis
-        val result = ArrayList<Order>()
-        for(order in list) {
-            val date = Order.datetimeFormat.parse(order.datetime)
-            if(date.equals(today) || date.after(today)) {
-                result.add(order)
-            }
-        }
-
-        Collections.sort(result)
-        return result
+        return ArrayList(list)
     }
 }
 

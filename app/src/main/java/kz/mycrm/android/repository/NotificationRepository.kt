@@ -13,7 +13,7 @@ import kz.mycrm.android.util.Resource
  */
 class NotificationRepository (private var appExecutors: AppExecutors){
 
-    fun requestAllOrders(staffId: String): LiveData<Resource<List<Order>>> {
+    fun requestAllOrders(staffId: String, thisDate:String): LiveData<Resource<List<Order>>> {
         return object : NetworkBoundResource<List<Order>, List<Order>> (appExecutors) {
 
             override fun saveCallResult(item: List<Order>) {
@@ -26,7 +26,7 @@ class NotificationRepository (private var appExecutors: AppExecutors){
             }
 
             override fun loadFromDb(): LiveData<List<Order>> {
-                return MycrmApp.database.OrderDao().getAllOrdersList()
+                return MycrmApp.database.OrderDao().getAfter(thisDate)
             }
 
             override fun createCall(): LiveData<ApiResponse<List<Order>>> {

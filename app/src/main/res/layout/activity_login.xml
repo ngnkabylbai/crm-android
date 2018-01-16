@@ -76,7 +76,7 @@
             android:layout_height="40dp"
             android:hint="@string/hint_password"
             android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            android:maxLength="30"
+            android:paddingRight="120dp"
             android:background="@drawable/login_edit_background"
             android:inputType="textPassword"
             android:textIsSelectable="false" />

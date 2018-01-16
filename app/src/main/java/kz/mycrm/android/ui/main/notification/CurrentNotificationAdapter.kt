@@ -1,7 +1,6 @@
 package kz.mycrm.android.ui.main.notification
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,6 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
 
     private var notificationList: ArrayList<Order> = ArrayList()
 
-    private val fromFormat = Order.datetimeFormat
     private val targetFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
 
@@ -46,14 +44,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
         } else if(holder is ViewItemHolder) {
             val notification = notificationList[position-1]
             holder.name.text = notification.title
-
-            try {
-                val date = fromFormat.parse(notification.datetime)
-                holder.time.text = targetFormat.format(date).toLowerCase()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
+            holder.time.text = targetFormat.format(notification.datetime).toLowerCase()
             holder.type.text = "Визит".toUpperCase()
         }
     }

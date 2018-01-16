@@ -3,7 +3,7 @@ package kz.mycrm.android.db.entity
 import android.arch.persistence.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.text.SimpleDateFormat
+import kz.mycrm.android.util.TimestampConverter
 import java.util.*
 
 /**
@@ -11,10 +11,6 @@ import java.util.*
  */
 @Entity(tableName = "mOrder")
 class Order : Comparable<Order> {
-
-    companion object {
-        val datetimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    }
 
     @PrimaryKey
     @ColumnInfo(name="order_id")
@@ -85,7 +81,8 @@ class Order : Comparable<Order> {
     @ColumnInfo(name="datetime")
     @SerializedName("datetime")
     @Expose
-    var datetime: String? = null
+    @TypeConverters(TimestampConverter::class)
+    lateinit var datetime: Date
 
     @ColumnInfo(name="note")
     @SerializedName("note")
@@ -266,6 +263,6 @@ class Order : Comparable<Order> {
     }
 
     override fun compareTo(other: Order): Int {
-        return datetimeFormat.parse(this.datetime).compareTo(datetimeFormat.parse(other.datetime))
+        return datetime.compareTo(other.datetime)
     }
 }

@@ -29,6 +29,9 @@ interface OrderDao {
     @Query("SELECT * FROM mOrder WHERE order_id = :arg0")
     fun getOrderById(id: String): LiveData<Order>
 
+    @Query("SELECT * FROM mOrder WHERE datetime>Date(:arg0) ORDER BY datetime")
+    fun getAfter(date: String): LiveData<List<Order>>
+
     @Query("DELETE FROM mOrder")
     fun nukeOrder()
 }
