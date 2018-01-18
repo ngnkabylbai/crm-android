@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_info.*
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.util.Logger
@@ -46,18 +47,22 @@ class InfoActivity : AppCompatActivity() {
         val intent: Intent = intent
 
         viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order ->
-            clientName.text = order?.customerName
-            clientPhone.text = order?.customerPhone
-            clientNotes.text = order?.note
 
-            textDateFormat.format(order?.datetime)
+            val mOrder = if(BuildConfig.DEBUG) { viewModel.getTestOrder() }
+                            else { order }
 
-            if (order != null){
-                adapter = ServiceAdapter(order.services, this)
+            clientName.text = mOrder?.customerName
+            clientPhone.text = mOrder?.customerPhone
+            clientNotes.text = mOrder?.note
+
+            textDateFormat.format(mOrder?.datetime)
+
+            if (mOrder != null){
+                adapter = ServiceAdapter(mOrder.services, this)
                 rv.layoutManager = lm
                 rv.adapter = adapter
             }
-            Logger.debug("Started InfoActivity: ${order?.services.toString()}")
+            Logger.debug("Started InfoActivity: ${mOrder?.services.toString()}")
         })
 
         closeActivity.setOnClickListener { finish() }
