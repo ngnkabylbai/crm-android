@@ -42,7 +42,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
 
     private lateinit var viewModel: LoginViewModel
     private var screenHeight = 0
-    var isClosed = false
+    private var screenWidth = 0
 
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
@@ -89,6 +89,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         screenHeight = displayMetrics.heightPixels
+        screenWidth = displayMetrics.widthPixels
+        Logger.debug("Screen WIDTH: $screenWidth")
         Logger.debug("Screen HEIGHT: $screenHeight")
 
 

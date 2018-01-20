@@ -5,8 +5,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.support.v4.view.GestureDetectorCompat
-import android.text.TextPaint
-import android.text.TextUtils
+import android.text.*
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -26,6 +25,8 @@ import kotlin.collections.ArrayList
  * Created by Nurbek Kabylbay on 24.11.2017.
  */
 class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+
+    private val displayMetrics = DisplayMetrics()
 
     // Paints of main elements and background
     private lateinit var mBackgroundPaint: Paint
@@ -90,6 +91,8 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     private var isAnimating = false
     private var isAnimatingFlag = false
+    private var mAnimatingEventGroup: OrderEventGroup? = null
+
 
     private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
@@ -112,8 +115,6 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     init {
 
         mGestureDetector = GestureDetectorCompat(context, mGestureListener)
-
-        val displayMetrics = DisplayMetrics()
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
         mScreenWidth = displayMetrics.widthPixels.toFloat()
 
@@ -344,10 +345,14 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param paint A paint the text will be drawn
      * @param canvas The canvas where the order is drawn
      */
-    private fun drawOrderText(orderRect: Rect, text: String, textX: Float, textY: Float, paint: TextPaint, canvas: Canvas) {
-        val widthDiff = (2.5 * (textX - orderRect.left)).toInt()
-        val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat() - widthDiff, TextUtils.TruncateAt.END)
-        canvas.drawText(txt, 0, txt.length, textX, textY, paint)
+    private fun drawOrderText(layout: DynamicLayout, textX: Float, textY: Float, canvas: Canvas) {
+        canvas.save()
+        canvas.translate(textX, textY)
+        layout.draw(canvas)
+        canvas.restore()
+
+//        val txt = TextUtils.ellipsize(text, mOrderTimeTextPaint, orderRect.width().toFloat() - widthDiff, TextUtils.TruncateAt.END)
+//        canvas.drawText(txt, 0, txt.length, textX, textY, paint)
     }
 
     /**
@@ -638,7 +643,6 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         private var orderRight = mScreenWidth - lessenOrderWidth * (orderEventList.size - 1)
         private var expandedOrderWidth = (fullOrderWidth - lessenOrderWidth * (orderEventList.size - 1)).toInt()
-        var rect = Rect()
 
         fun drawOrderEvents(canvas: Canvas) {
             if (expandedOrderWidth < 0)
@@ -655,10 +659,12 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 if (isAnimating) {
                     curOrderRight = orderEvent.rect.right
                     curOrderLeft = orderEvent.rect.left
-                } else if(orderEventList.size == 2) {
-                    curOrderLeft = (mRectStartX +(fullOrderWidth/2)*i).toInt() + i*1
-                    curOrderRight = (mRectStartX +(fullOrderWidth/2)*(i+1)).toInt()
-                } else {
+                }
+// else if(orderEventList.size == 2) {
+//                    curOrderLeft = (mRectStartX +(fullOrderWidth/2)*i).toInt() + i*1
+//                    curOrderRight = (mRectStartX +(fullOrderWidth/2)*(i+1)).toInt()
+//                }
+                    else {
                     curOrderRight = getCurOrderRight(i)
                     curOrderLeft = getCurOrderLeft(i, curOrderRight)
                 }
@@ -668,17 +674,21 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
                 val orderBottom = orderEvent.rect.bottom.toFloat()
                 val orderTop = orderEvent.rect.top.toFloat()
+                val orderLeft = orderEvent.rect.left.toFloat()
 
                 val accentRight = curOrderLeft + 10f
 
                 canvas.drawRect(orderEvent.rect, mOrderBackgroundPaint)
                 canvas.drawRect(curOrderLeft.toFloat(), orderTop, accentRight, orderBottom, mOrderLeftAccentPaint)
 
-//                if(orderEvent != expandedEvent)
-//                    continue
+                if(this == mAnimatingEventGroup)
+                    continue
 
-                var textX = orderEvent.rect.left + 30f
-                var textY = 0f
+                if(orderEvent != expandedEvent)
+                    continue
+
+                var textY = orderTop + marginTop
+                var textX = orderLeft + 3*marginTop
                 val marginTop = 30f
 
                 val time = orderEvent.order.start?.substring(11, 16) + orderEvent.order.end?.substring(11, 16) //09:0009:30
@@ -693,38 +703,54 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     e.printStackTrace()
                 }
 
-                mOrderTimeTextPaint.getTextBounds(text, 0,text.length, rect)
-                textY = orderEvent.rect.top + rect.height() + marginTop
-                drawOrderText(orderEvent.rect, text, textX, textY, mOrderTimeTextPaint, canvas)
+                val timeDynamicLayout = DynamicLayout(text.trim(), mOrderTimeTextPaint,
+                        orderEvent.rect.width() - marginTop.toInt(),
+                        Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true)
 
+                drawOrderText(timeDynamicLayout, textX, textY, canvas)
+
+                textY = orderTop+timeDynamicLayout.height+marginTop/2
+                textX = orderLeft + marginTop
                 text = orderEvent.order.customerName ?: ""
-                mOrderPatientNamePaint.getTextBounds(text, 0,text.length, rect)
-                textY += rect.height() + marginTop/2
-                drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNamePaint, canvas)
 
-                if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 2f)
+                val nameDynamicLayout = DynamicLayout(text.trim(), mOrderPatientNamePaint,
+                        orderEvent.rect.width() - marginTop.toInt(),
+                        Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true)
+
+
+                if(textY + nameDynamicLayout.height > (orderBottom-marginTop/2))
                     continue
+                drawOrderText(nameDynamicLayout, textX, textY, canvas)
 
+                textY = orderTop+timeDynamicLayout.height+nameDynamicLayout.height+marginTop
+                textX = orderLeft + marginTop
                 text = orderEvent.order.customerPhone ?: ""
-                mOrderPatientNumberPaint.getTextBounds(text, 0,text.length, rect)
-                textY += rect.height() + marginTop
-                drawOrderText(orderEvent.rect, text, textX, textY, mOrderPatientNumberPaint, canvas)
 
-                if ((orderEvent.rect.bottom - orderEvent.rect.top + 1f) / mOrder5minHeight == 3f)
+                val phoneDynamicLayout = DynamicLayout(text.trim(), mOrderPatientNamePaint,
+                        orderEvent.rect.width() - marginTop.toInt(),
+                        Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true)
+
+                if(textY + phoneDynamicLayout.height > (orderBottom-marginTop/2))
                     continue
+                drawOrderText(phoneDynamicLayout, textX, textY, canvas)
 
                 if (orderEvent.order.services.isNotEmpty()) {
                     text = ""
                     for (s in orderEvent.order.services) {
                         text += s.serviceName + ", "
                     }
-
                     text = text.substring(0, text.length - 2)
 
-                    mOrderPatientNamePaint.getTextBounds(text, 0,text.length, rect)
-                    textX = textX
-                    textY = orderEvent.rect.bottom.toFloat() - rect.height()
-                    drawOrderText(orderEvent.rect, text, textX, textY, mOrderServiceListPaint, canvas)
+                    val serviceDynamicLayout = DynamicLayout(text.trim(), mOrderServiceListPaint,
+                            orderEvent.rect.width() - marginTop.toInt(),
+                            Layout.Alignment.ALIGN_NORMAL, 1f, 1f, true)
+
+                    textY = orderBottom - serviceDynamicLayout.height.toFloat() - marginTop/2
+                    textX = orderLeft + marginTop
+
+                    if(textY + phoneDynamicLayout.height > (orderBottom-marginTop/2))
+                        continue
+                    drawOrderText(serviceDynamicLayout, textX, textY, canvas)
                 }
             }
             isInitializing = false
@@ -763,18 +789,21 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 for (i in 0..(orderEventList.size - 1)) {
                     val event = orderEventList[i]
                     if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
-                        if(orderEventList.size == 2){
-                            mOrderEventClickListener?.onOrderEventClicked(event.order)
-                            return
-                        }
+//                        if(orderEventList.size == 2){
+//                            mOrderEventClickListener?.onOrderEventClicked(event.order)
+//                            return
+//                        }
                         if (event == expandedEvent) {
                             mOrderEventClickListener?.onOrderEventClicked(event.order)
+                            mAnimatingEventGroup = null
                         } else if (orderEventList.indexOf(expandedEvent) > i) {
                             getAnimator(i, event, event.rect.right.toFloat(),
                                     (event.rect.left + expandedOrderWidth).toFloat()).start()
+                            mAnimatingEventGroup = this
                         } else {
                             getAnimator(i, event, event.rect.left.toFloat(),
                                     mRectStartX + i * lessenOrderWidth).start()
+                            mAnimatingEventGroup = this
                         }
 
                         playSoundEffect(SoundEffectConstants.CLICK)
@@ -840,6 +869,7 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 override fun onAnimationEnd(p0: Animator?) {
                     expandedEvent = event
                     isAnimatingFlag = true
+                    mAnimatingEventGroup = null
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {

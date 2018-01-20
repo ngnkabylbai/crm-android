@@ -48,7 +48,7 @@ class InfoActivity : AppCompatActivity() {
 
         viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order ->
 
-            val mOrder = if(BuildConfig.DEBUG) { viewModel.getTestOrder() }
+            val mOrder = if(BuildConfig.MOCK) { viewModel.getTestOrder() }
                             else { order }
 
             clientName.text = mOrder?.customerName
