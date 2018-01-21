@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.main.division
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -62,6 +63,7 @@ class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<Divi
             val intent = itemView.context.mainIntent()
             intent.putExtra("division_id", division.id)
             itemView.context.startActivity(intent)
+            (itemView.context as Activity).finish()
         }
     }
 }
