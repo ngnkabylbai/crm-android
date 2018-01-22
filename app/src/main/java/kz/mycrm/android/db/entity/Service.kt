@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName
  */
 
 @Entity
-class Service {
+class Service() {
 
    @PrimaryKey
    @ColumnInfo(name = "service_id")
@@ -59,6 +59,17 @@ class Service {
    @SerializedName("discount")
    @Expose
    var discount: String? = null
+
+   constructor(id: String, serviceName: String): this() {
+      this.id = id
+      this.serviceName = serviceName
+   }
+
+   constructor(id: String, serviceName: String, price: String): this() {
+      this.id = id
+      this.serviceName = serviceName
+      this.price = price
+   }
 
    override fun equals(other: Any?): Boolean {
       if (this === other) return true

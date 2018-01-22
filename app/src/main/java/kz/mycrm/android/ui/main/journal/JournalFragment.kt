@@ -19,7 +19,7 @@ import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.ui.main.info.infoIntent
-import kz.mycrm.android.ui.view.JournalView
+import kz.mycrm.android.ui.view.journal.OrderEventClickListener
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
@@ -30,7 +30,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by Nurbek Kabylbay on 23.11.2017.
  */
-class JournalFragment : Fragment(), JournalView.OrderEventClickListener {
+class JournalFragment : Fragment(), OrderEventClickListener {
 
     private lateinit var viewModel: JournalViewModel
     private lateinit var horizontalCalendar: HorizontalCalendar

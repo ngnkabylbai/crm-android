@@ -17,19 +17,15 @@ class InfoViewModel: ViewModel() {
     }
 
     fun getTestOrder(): Order {
-        val mOrder = Order()
-        mOrder.id = "1"
-        mOrder.start = "2017-12-21 09:00:00"
-        mOrder.end = "2017-12-21 09:50:00"
-        mOrder.datetime = Constants.orderDateTimeFormat.parse(mOrder.start)
-        mOrder.customerName = "Artur Abdalimov"
-        mOrder.customerPhone = "+7 456 312 21 45"
+        val mOrder = Order("1","2017-12-21 09:00:00","2017-12-21 09:50:00",
+                Constants.orderDateTimeFormat.parse("2017-12-21 09:00:00"),
+                "Иванов Иван Иванович", "+7 456 312 21 45")
 
-        val service = Service()
-        service.id = "1"
-        service.serviceName = "Первичный осмотр"
-        service.price = "450"
-        mOrder.services = arrayListOf(service)
+        val list = ArrayList<Service>()
+            list.add(Service("1","Первичный осмотр", "450"))
+            list.add(Service("2","Вторичный осмотр", "450"))
+            list.add(Service("3","Еще один осмотр", "450"))
+        mOrder.services = list
 
         return mOrder
     }

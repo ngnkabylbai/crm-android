@@ -124,12 +124,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <kz.mycrm.android.ui.view.JournalView
+        <kz.mycrm.android.ui.view.journal.JournalView
             android:id="@+id/journal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:normalTimeSize="13sp"
-            app:accentTimeSize="15sp"
+            app:normalTimeSize="10sp"
+            app:accentTimeSize="12sp"
             app:backgroundColor="#e5eff9"
             app:orderBackgroundColor="#1058cc"
             app:orderLeftAccentColor="#1058cc"

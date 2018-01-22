@@ -10,7 +10,7 @@ import java.util.*
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
 @Entity(tableName = "mOrder")
-class Order : Comparable<Order> {
+class Order() : Comparable<Order> {
 
     @PrimaryKey
     @ColumnInfo(name="order_id")
@@ -183,6 +183,16 @@ class Order : Comparable<Order> {
     @SerializedName("referrer_id")
     @Expose
     var referrerId: String? = null
+
+    constructor(id: String, start: String, end: String, datetime: Date, customerName: String,
+                customerPhone: String) : this() {
+        this.id = id
+        this.start = start
+        this.end = end
+        this.datetime = datetime
+        this.customerName = customerName
+        this.customerPhone = customerPhone
+    }
 
     override fun toString(): String {
         return "Order(id='$id', staffId=$staffId, customer=$customer, end=$end, start=$start)"
