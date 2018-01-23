@@ -19,6 +19,8 @@ class TimestampConverter {
                 return Constants.orderDateTimeFormat.parse(value)
             } catch (e: ParseException) {
                 e.printStackTrace()
+            } catch (e: NumberFormatException) {
+                e.printStackTrace()
             }
         return Date()
     }
