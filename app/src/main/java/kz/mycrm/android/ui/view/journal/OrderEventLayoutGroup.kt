@@ -266,7 +266,7 @@ class OrderEventLayoutGroup(private var orderEventLayoutList: ArrayList<OrderEve
     private fun getAnimator(position: Int, eventLayout: OrderEventLayout, start: Float, end: Float): Animator {
         val expanding = ValueAnimator.ofFloat(start, end)
 
-        expanding.duration = 500
+        expanding.duration = 680
         expanding.addUpdateListener { valueAnimator ->
             if(orderEventLayoutList.indexOf(expandedEventLayout) < position) {
                 eventLayout.rect.left = (valueAnimator.animatedValue as Float).toInt()
