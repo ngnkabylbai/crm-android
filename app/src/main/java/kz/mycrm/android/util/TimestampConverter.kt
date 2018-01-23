@@ -18,8 +18,10 @@ class TimestampConverter {
             try {
                 return Constants.orderDateTimeFormat.parse(value)
             } catch (e: ParseException) {
+                Logger.exception("TimestampConverter: ParseException")
                 e.printStackTrace()
             } catch (e: NumberFormatException) {
+                Logger.exception("TimestampConverter: NumberFormatException")
                 e.printStackTrace()
             }
         return Date()

@@ -14,4 +14,8 @@ object Logger {
     fun api(msg: Any) {
         Log.d("API", "$msg")
     }
+
+    fun exception(msg: Any) {
+        Log.d("EXP", "$msg")
+    }
 }

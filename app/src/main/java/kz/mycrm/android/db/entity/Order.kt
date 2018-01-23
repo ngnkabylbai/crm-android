@@ -122,7 +122,7 @@ class Order() : Comparable<Order> {
     @ColumnInfo(name="status")
     @SerializedName("status")
     @Expose
-    var status: String? = null
+    var status: Int = 0
 
     @ColumnInfo(name="products_discount")
     @SerializedName("products_discount")
