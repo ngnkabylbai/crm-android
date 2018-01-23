@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import kz.mycrm.android.ui.BaseActivity
+import kz.mycrm.android.ui.intro.IntroActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.ApiUtils
@@ -27,9 +28,13 @@ class SplashActivity : BaseActivity() {
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
 
+        startActivityForResult(Intent(this, IntroActivity::class.java), 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.checkAuthentication().observe(this, Observer { isAuthenticated ->
-            if(isAuthenticated!!) {
-                if(isInternetAvailable()) {
+            if (isAuthenticated!!) {
+                if (isInternetAvailable()) {
                     startActivity(divisionsIntent())
                     finish()
                 } else {
@@ -41,22 +46,22 @@ class SplashActivity : BaseActivity() {
             }
         })
 
-//        if (isInternetAvailable()) {
-//
-//
-////            viewModel.checkAuthentication().observe(this, Observer { token ->
-////                if (token != null) {
-////                    startActivity(divisionsIntent()) // for MVP
-////                    finish()
-////                } else {
-////                    Logger.debug("Token wasn't found. Directing to login activity...")
-////                    startActivity(loginIntent())
-////                    finish()
-////                }
-////            })
-//        } else {
-//            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
-//        }
+        if (isInternetAvailable()) {
+
+
+//            viewModel.checkAuthentication().observe(this, Observer { token ->
+//                if (token != null) {
+//                    startActivity(divisionsIntent()) // for MVP
+//                    finish()
+//                } else {
+//                    Logger.debug("Token wasn't found. Directing to login activity...")
+//                    startActivity(loginIntent())
+//                    finish()
+//                }
+//            })
+        } else {
+            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun isInternetAvailable(): Boolean {

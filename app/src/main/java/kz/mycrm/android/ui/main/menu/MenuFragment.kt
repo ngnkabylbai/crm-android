@@ -23,8 +23,8 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         logout.setOnClickListener {
-            activity.startActivity(activity.loginIntent())
-            activity.finish()
+            activity!!.startActivity(context!!.loginIntent())
+            activity!!.finish()
         }
     }
 }

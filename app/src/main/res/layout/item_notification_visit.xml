@@ -8,12 +8,12 @@
     app:cardCornerRadius="3dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="13dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="10dp" >
+        android:padding="13dp" >
 
         <TextView
             android:id="@+id/notification_type"
@@ -22,7 +22,7 @@
             android:padding="5dp"
             android:textStyle="bold"
             android:background="@drawable/notif_visit_background"
-            android:text="НАПОМИНАНИЕ"
+            android:text="ВИЗИТ"
             android:textSize="11sp"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:id="@+id/notification_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12 января, 9:00"
+            android:text="17:30"
             android:textStyle="bold"
             android:textColor="@color/bottom_nav_active"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Джубаева Р +7 708 864 94 22 Анестезия:Инъекционная, Лечение пульпита и периодонтита:Пломбирование зуба при лечении осложнённого кариеса с неполной реставрацией коронки;- с пломбированием одного канала, Временная пломба дентин, Установка штифта из стекловолокна"
+            android:text="Через пол часа консультация у Александра Сидорова"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"

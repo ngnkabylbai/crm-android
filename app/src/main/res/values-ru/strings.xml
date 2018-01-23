@@ -34,4 +34,13 @@
     <string name="docs">Документы</string>
     <!--Journal fragment-->
     <string name="event_count">Количество записей</string>
+
+    <!-- Intro -->
+    <string name="intro1_title">Онлайн система управления клиникой или стоматологией</string>
+    <string name="intro1_desc">Работаем везде, где есть интернет. Поможем структурировать и хранить информацию о клиентах, сотрудниках и компании.</string>
+    <string name="intro2_title">Предупредим врача о предстоящей записи </string>
+    <string name="intro2_desc">Удобные уведомления напомнят врачу о предстоящих записях или о том, что нужно заполнить карточку клиента</string>
+    <string name="intro3_title">Осталось только авторизоваться</string>
+    <string name="intro3_desc">Чтобы начать работать с приложением, авторизуйтесь, используя ваш логин и пароль</string>
+
 </resources>

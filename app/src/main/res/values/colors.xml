@@ -22,4 +22,7 @@
 
     <color name="bottom_nav_active">#0090ff</color>
     <color name="bottom_nav_inactive">#747474</color>
+
+    <color name="intro_backgorund_start">#1bafd4</color>
+    <color name="intro_backgorund_end">#1f85d3</color>
 </resources>

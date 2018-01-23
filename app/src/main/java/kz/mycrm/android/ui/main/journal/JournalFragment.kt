@@ -56,7 +56,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         journal.setOnEventClickListener(this)
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
 
-        mDivisionId = arguments.getInt("division_id")
+        mDivisionId = arguments!!.getInt("division_id")
         val division = viewModel.getDivisionById(mDivisionId)
             mDivisionId = division.id
             mStaffId = intArrayOf(division.staff?.id?.toInt() ?: 0)
@@ -64,7 +64,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
 
-        viewModel.getOrderLis().observe(activity, Observer {orders ->
+        viewModel.getOrderLis().observe(this, Observer {orders ->
             when(orders!!.status) {
                 Status.LOADING -> onLoading(orders)
                 Status.SUCCESS -> onSuccess(orders)
@@ -184,7 +184,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
 
     override fun onOrderEventClicked(order: Order) {
         super.onOrderEventClicked(order)
-        val intent: Intent = activity.infoIntent()
+        val intent: Intent = activity!!.infoIntent()
             intent.putExtra("id", order.id)
         startActivity(intent)
         Logger.debug("Event clicked:" + order.toString())

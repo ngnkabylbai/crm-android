@@ -32,7 +32,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
                         ViewHeaderHolder(view)
                     }
                     else -> {
-                        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_notification, parent, false)
+                        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_notification_visit, parent, false)
                         ViewItemHolder(view)
                     }
              }
