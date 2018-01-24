@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.intro.IntroActivity
@@ -20,20 +21,24 @@ fun Context.splashIntent(): Intent {
 class SplashActivity : BaseActivity() {
 
     private lateinit var viewModel: SplashViewModel
+    private var startMain = false
 
     //    TODO: Refactor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
+        viewModel.checkAuthentication().observe(this, Observer { isAuthenticated ->
+            run {
+                startMain = isAuthenticated!!
+            }
+        })
 
         startActivityForResult(Intent(this, IntroActivity::class.java), 1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        viewModel.checkAuthentication().observe(this, Observer { isAuthenticated ->
-            if (isAuthenticated!!) {
+            if (startMain) {
                 if (isInternetAvailable()) {
                     startActivity(divisionsIntent())
                     finish()
@@ -44,24 +49,22 @@ class SplashActivity : BaseActivity() {
                 startActivity(loginIntent())
                 finish()
             }
-        })
-
-        if (isInternetAvailable()) {
-
-
-//            viewModel.checkAuthentication().observe(this, Observer { token ->
-//                if (token != null) {
-//                    startActivity(divisionsIntent()) // for MVP
-//                    finish()
-//                } else {
-//                    Logger.debug("Token wasn't found. Directing to login activity...")
-//                    startActivity(loginIntent())
-//                    finish()
-//                }
-//            })
-        } else {
-            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
-        }
+//        if (isInternetAvailable()) {
+//
+//
+////            viewModel.checkAuthentication().observe(this, Observer { token ->
+////                if (token != null) {
+////                    startActivity(divisionsIntent()) // for MVP
+////                    finish()
+////                } else {
+////                    Logger.debug("Token wasn't found. Directing to login activity...")
+////                    startActivity(loginIntent())
+////                    finish()
+////                }
+////            })
+//        } else {
+//            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private fun isInternetAvailable(): Boolean {

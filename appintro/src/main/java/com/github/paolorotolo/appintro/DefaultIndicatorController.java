@@ -46,6 +46,7 @@ class DefaultIndicatorController implements IndicatorController {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
+            params.setMargins(0,0, 15, 0);
             mDotLayout.addView(dot, params);
             mDots.add(dot);
         }
