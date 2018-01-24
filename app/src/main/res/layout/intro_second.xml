@@ -1,182 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/intro_background"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="30dp"
-    android:paddingBottom="20dp">
+    android:paddingBottom="64dp"
+    android:paddingTop="56dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/visit"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        app:cardCornerRadius="6dp"
-        android:elevation="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/remind">
+        android:layout_centerInParent="true">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:padding="13dp" >
-
-            <TextView
-                android:id="@+id/notification_type_visit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textStyle="bold"
-                android:background="@drawable/notif_visit_background"
-                android:text="ВИЗИТ"
-                android:textSize="11sp"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/notification_time_visit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="17:30"
-                android:textStyle="bold"
-                android:textColor="@color/bottom_nav_active"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/notification_name_visit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Через пол часа консультация у Александра Сидорова"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_type_visit" />
-
-            <TextView
-                android:id="@+id/notification_link_visit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/go_to_map"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_name_visit" />
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
-
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/remind"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        app:cardCornerRadius="6dp"
-        android:layout_marginBottom="13dp"
-        android:elevation="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/title">
-
-        <android.support.constraint.ConstraintLayout
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:padding="13dp" >
+            android:paddingTop="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
-            <TextView
-                android:id="@+id/notification_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textStyle="bold"
-                android:background="@drawable/notif_remind_background"
-                android:text="НАПОМИНАНИЕ"
-                android:textSize="11sp"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <android.support.v7.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/visit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="6dp"
+                    android:elevation="15dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/notification_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Сегодня"
-                android:textStyle="bold"
-                android:textColor="@color/orange"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:padding="8dp" >
 
-            <TextView
-                android:id="@+id/notification_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Заполнить медкарту Кусаинова Амангельды"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_type" />
+                        <TextView
+                            android:id="@+id/notification_type_visit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:textStyle="bold"
+                            android:background="@drawable/notif_visit_background"
+                            android:text="ВИЗИТ"
+                            android:textSize="9sp"
+                            android:textColor="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/notification_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/go_to_map"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_name" />
+                        <TextView
+                            android:id="@+id/notification_time_visit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom ="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="17:30"
+                            android:textColor="@color/bottom_nav_active"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@+id/notification_type_visit"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/notification_type_visit" />
+
+                        <TextView
+                            android:id="@+id/notification_name_visit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Через пол часа консультация у Александра Сидорова"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/notification_type_visit" />
+
+                        <TextView
+                            android:id="@+id/notification_link_visit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/go_to_map"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="18sp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/notification_name_visit" />
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/remind"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="6dp"
+                    android:layout_marginBottom="13dp"
+                    android:elevation="15dp"
+                    app:layout_constraintTop_toBottomOf="@id/visit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:id="@+id/notification_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:textStyle="bold"
+                            android:background="@drawable/notif_remind_background"
+                            android:text="НАПОМИНАНИЕ"
+                            android:textSize="9sp"
+                            android:textColor="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/notification_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Сегодня"
+                            android:textColor="@color/orange"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@+id/notification_type"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/notification_type" />
+
+                        <TextView
+                            android:id="@+id/notification_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Заполнить медкарту Кусаинова Амангельды"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/notification_type" />
+
+                        <TextView
+                            android:id="@+id/notification_link"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/go_to_map"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/notification_name" />
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/intro1_title"
+                    android:textColor="@color/white"
+                    android:textSize="23sp"
+                    android:layout_marginTop="16dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/remind" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/intro1_desc"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textSize="13sp"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="parent"/>
         </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
-
-
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/intro2_title"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="13dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/description"/>
-
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/intro2_desc"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:layout_marginBottom="95dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-</android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</RelativeLayout>
