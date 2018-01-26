@@ -11,7 +11,16 @@
     <string name="error_invalid_password">Неправильный логин или пароль</string>
     <string name="error_timeout">Не удалось установить соединение с сервером. Пожалуйста, попробуйте позже</string>
     <string name="ok">Хорошо</string>
-    <string name="authorize">Чтобы пользоваться приложением, авторизуйтесь</string>
+    <string name="hint_authorize">Чтобы пользоваться приложением, авторизуйтесь</string>
+    <string name="hint_forgot">Введите номер телефона, мы отправим код подтверждения и вы сможете создать новый пароль</string>
+    <string name="hint_approved">Ваш номер подтвержден. Придумайте и запомните новый пароль</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_approve">Подтвердить</string>
+    <string name="hint_resend_code">Отправить код повторно:</string>
+    <string name="hint_layout_password_code">Код подтверждения</string>
+    <string name="hint_layout_login_enter_new_password">Введите новый пароль</string>
+    <string name="hint_layout_password_reenter_new_password">Повторите пароль</string>
+    <string name="hint_save_and_login">Сохранить и войти</string>
 
     <!--Main activity-->
     <!--Bottom navigation bar-->

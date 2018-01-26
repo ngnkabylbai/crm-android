@@ -1,6 +1,5 @@
 package kz.mycrm.android.ui.login
 
-import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -14,6 +13,7 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
@@ -23,11 +23,7 @@ import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-
-
-
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -37,12 +33,18 @@ fun Context.loginIntent(): Intent {
     return Intent(this, LoginActivity::class.java)
 }
 
+enum class LoginState {
+    Default, PhoneEnter, ApproveCode, NewPass, Loading, NewPassDone
+}
+
 class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutListener {
 
 
     private lateinit var viewModel: LoginViewModel
     private var screenHeight = 0
     private var screenWidth = 0
+    private var activityState = LoginState.Default
+    private var smallScreen = false;
 
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
@@ -81,10 +83,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         builder.create()
         RetrofitClient.setConnectionTimeoutListener(this)
 
-        val layoutTransition = loginParentLayout.layoutTransition ?: LayoutTransition()
-        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-        layoutTransition.setDuration(100)
-        loginParentLayout.layoutTransition = layoutTransition
+//        val layoutTransition = loginParentLayout.layoutTransition ?: LayoutTransition()
+//        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+//        layoutTransition.setDuration(400)
+//        loginParentLayout.layoutTransition = layoutTransition
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -93,27 +95,78 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         Logger.debug("Screen WIDTH: $screenWidth")
         Logger.debug("Screen HEIGHT: $screenHeight")
 
+        if(screenHeight <= 800)
+            smallScreen = true
 
         KeyboardVisibilityEvent.setEventListener(this) { isOpen ->
             if(isOpen) {
                 Logger.debug("SoftKeyboard is UP")
-                if(screenHeight <= 800)
-                    hintText.visibility = View.GONE
+                invalidateHintText()
             } else {
                 Logger.debug("SoftKeyboard is DOWN")
                     hintText.visibility = View.VISIBLE
             }
         }
+
+        forgotPassword.setOnClickListener {
+            hideKeyboard()
+            setEnterPhoneState()
+        }
+        logo.setOnClickListener { setDefaultState() }
+    }
+
+    private fun setDefaultState() {
+        invalidateHintText()
+        newPasswordLayout.visibility = View.INVISIBLE
+        loginLayout.visibility = View.VISIBLE
+        requestFocusToLogin()
+        forgotPassword.visibility = View.VISIBLE
+        hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_authorize)))
+        loginButton.text = resources.getText(R.string.action_login)
+        passwordLayoutParent.visibility = View.VISIBLE
+        password.setText("")
+        resenText.visibility = View.INVISIBLE
+        activityState = LoginState.Default
+    }
+
+    private fun setEnterPhoneState() {
+        invalidateHintText()
+        hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_forgot)))
+        loginButton.text = resources.getText(R.string.action_send)
+        passwordLayoutParent.visibility = View.INVISIBLE
+        activityState = LoginState.ApproveCode
+    }
+
+    private fun setApproveState() {
+        invalidateHintText()
+        loginButton.text = resources.getText(R.string.action_approve)
+        forgotPassword.visibility = View.INVISIBLE
+        passwordLayoutParent.visibility = View.VISIBLE
+        activityState = LoginState.NewPass
+        resenText.visibility = View.VISIBLE
+    }
+
+    private fun setNewPassState() {
+        invalidateHintText()
+        loginButton.text = resources.getText(R.string.action_approve)
+        forgotPassword.visibility = View.INVISIBLE
+        loginLayout.visibility = View.INVISIBLE
+        newPasswordLayout.visibility = View.VISIBLE
+        newPassword.requestFocus()
+        passwordLayoutParent.visibility = View.VISIBLE
+        activityState = LoginState.NewPassDone
     }
 
     private fun onLoading() {
         progress.visibility = View.VISIBLE
         loginButton.startAnimation(fadeAnimation(false))
+        activityState = LoginState.Loading
     }
 
     private fun onSuccess() {
         startActivity(divisionsIntent())
         finish()
+        activityState = LoginState.Loading
     }
 
     private fun onError() {
@@ -123,21 +176,23 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         loginButton.startAnimation(fadeAnimation(true))
     }
 
-    override fun onConnectionTimeout() {
-        val msg = mHandler.obtainMessage()
-        msg.sendToTarget()
-    }
-
     override fun onClick(v: View?) {
         login.error = null
-        when (v?.id) {
-            R.id.loginButton -> {
-                if (isValidInput()) {
-                    viewModel.updateAuthData(login.text.toString(), password.text.toString())
-                    viewModel.startRefresh()
+        when (activityState) {
+            LoginState.Loading -> return
+            LoginState.Default -> {
+                    if (isValidInput()) {
+                        viewModel.updateAuthData(login.text.toString(), password.text.toString())
+                        viewModel.startRefresh()
+                    }
                 }
+            LoginState.PhoneEnter -> { setEnterPhoneState() } // send request
+            LoginState.ApproveCode -> { setApproveState() } // get new password and renew
+            LoginState.NewPass -> { setNewPassState() } // login
+            LoginState.NewPassDone -> {
+                setDefaultState()
+                password.requestFocus()
             }
-            R.id.forgotPassword -> Logger.debug("Forgot pass clicked")
         }
     }
 
@@ -161,10 +216,45 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
             else
                 AlphaAnimation(1.0f, 0f)
 
-        animation.duration = 250
+        animation.duration = 100
         animation.isFillEnabled = true
         animation.fillAfter = true
         return animation
+    }
+
+    private fun getTextAnim(text: String): AlphaAnimation {
+        val anim = AlphaAnimation(1.0f, 0.0f)
+        anim.duration = 200
+        anim.repeatCount = 1
+        anim.repeatMode = Animation.REVERSE
+
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationEnd(animation: Animation?) { }
+            override fun onAnimationStart(animation: Animation?) { }
+            override fun onAnimationRepeat(animation: Animation?) {
+                hintText.text = text
+            }
+        })
+
+        return anim
+    }
+
+    private fun invalidateHintText() {
+        if(smallScreen)
+            hintText.visibility = View.GONE
+    }
+
+    private fun hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        }
+    }
+
+    override fun onConnectionTimeout() {
+        val msg = mHandler.obtainMessage()
+        msg.sendToTarget()
     }
 }
 
