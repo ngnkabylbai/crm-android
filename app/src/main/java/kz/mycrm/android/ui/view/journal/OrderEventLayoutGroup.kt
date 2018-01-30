@@ -6,6 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.text.TextUtils
 import android.view.*
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -54,12 +56,10 @@ class OrderEventLayoutGroup(private var orderEventLayoutList: ArrayList<OrderEve
             if (journalView.isAnimating) {
                 curOrderRight = orderEventLayout.rect.right
                 curOrderLeft = orderEventLayout.rect.left
-            }
-// else if(orderEventLayoutList.size == 2) {
-//                    curOrderLeft = (mRectStartX +(fullOrderWidth/2)*i).toInt() + i*1
-//                    curOrderRight = (mRectStartX +(fullOrderWidth/2)*(i+1)).toInt()
-//                }
-            else {
+            }  else if(orderEventLayoutList.size == 2) {
+                    curOrderLeft = (orderLeft +(fullOrderWidth/2)*i).toInt() + i*1
+                    curOrderRight = (orderLeft +(fullOrderWidth/2)*(i+1)).toInt()
+            } else {
                 curOrderRight = getCurOrderRight(i)
                 curOrderLeft = getCurOrderLeft(i, curOrderRight)
             }
@@ -80,16 +80,19 @@ class OrderEventLayoutGroup(private var orderEventLayoutList: ArrayList<OrderEve
             if(this == journalView.mAnimatingEventLayoutGroup)
                 continue
 
-            if(orderEventLayout != expandedEventLayout)
+            if(orderEventLayout != expandedEventLayout && orderEventLayoutList.size != 2 )
                 continue
 
             if (!orderEventLayout.isInitialized) {
                 // TODO: Create proper layout params !?
-                val p = LinearLayout.LayoutParams(expandedOrderWidth-40, ViewGroup.LayoutParams.WRAP_CONTENT)
+                val p = if(orderEventLayoutList.size == 2)
+                        LinearLayout.LayoutParams(expandedOrderWidth/2-40, WRAP_CONTENT)
+                    else
+                        LinearLayout.LayoutParams(expandedOrderWidth-40, ViewGroup.LayoutParams.WRAP_CONTENT)
+
                 orderEventLayout.timeTextView.layoutParams = p
                 orderEventLayout.nameTextView.layoutParams = p
                 orderEventLayout.phoneTextView.layoutParams = p
-                p.gravity = Gravity.BOTTOM
                 orderEventLayout.serviceTextView.layoutParams = p
 
                 val time = orderEventLayout.order.start?.substring(11, 16) + orderEventLayout.order.end?.substring(11, 16) //09:0009:30
@@ -180,8 +183,8 @@ class OrderEventLayoutGroup(private var orderEventLayoutList: ArrayList<OrderEve
     }
 
     private fun measureAndLayout(orderEventLayout: OrderEventLayout) {
-        orderEventLayout.measure(orderEventLayout.rect.width(), orderEventLayout.rect.height())
-        orderEventLayout.layout(0,0, orderEventLayout.rect.width(), orderEventLayout.rect.height())
+            orderEventLayout.measure(orderEventLayout.rect.width(), orderEventLayout.rect.height())
+            orderEventLayout.layout(0,0, orderEventLayout.rect.width(), orderEventLayout.rect.height())
     }
 
     private fun getMaxLineNumber(view: TextView): Int {
@@ -230,10 +233,10 @@ class OrderEventLayoutGroup(private var orderEventLayoutList: ArrayList<OrderEve
             for (i in 0..(orderEventLayoutList.size - 1)) {
                 val event = orderEventLayoutList[i]
                 if (e.x > event.rect.left && e.x < event.rect.right && e.y > event.rect.top && e.y < event.rect.bottom) {
-//                        if(orderEventLayoutList.size == 2){
-//                            mOrderEventClickListener?.onOrderEventClicked(event.order)
-//                            return
-//                        }
+                        if(orderEventLayoutList.size == 2){
+                            journalView.mOrderEventClickListener?.onOrderEventClicked(event.order)
+                            return
+                        }
                     if (event == expandedEventLayout) {
                         journalView.mOrderEventClickListener?.onOrderEventClicked(event.order)
                         journalView.mAnimatingEventLayoutGroup = null

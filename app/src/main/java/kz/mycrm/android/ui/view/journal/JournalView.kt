@@ -423,12 +423,12 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         testOrderList[3].end = "2017-12-21 10:40:00"
 
         testOrderList[4].start = "2017-12-21 11:00:00"
-        testOrderList[4].end = "2017-12-21 12:00:00"
+        testOrderList[4].end = "2017-12-21 11:30:00"
 
         testOrderList[5].start = "2017-12-21 11:00:00"
-        testOrderList[5].end = "2017-12-21 11:30:00"
+        testOrderList[5].end = "2017-12-21 11:15:00"
 
-        testOrderList[6].start = "2017-12-21 12:00:00"
+        testOrderList[6].start = "2017-12-21 11:30:00"
         testOrderList[6].end = "2017-12-21 12:30:00"
 
         val eventList = getOrderEventRects(testOrderList)
