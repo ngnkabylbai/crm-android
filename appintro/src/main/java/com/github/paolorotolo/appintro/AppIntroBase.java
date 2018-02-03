@@ -100,6 +100,9 @@ public abstract class AppIntroBase extends AppCompatActivity implements
         checkButton(skipButton, "skip");
         checkButton(backButton, "back");
 
+        showSkipButton(true);
+        isWizardMode = true;
+
         FrameLayout frameLayout = findViewById(R.id.bottomContainer);
         if (frameLayout != null && isRtl()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -497,25 +500,18 @@ public abstract class AppIntroBase extends AppCompatActivity implements
         if (progressButtonEnabled) {
 
             if ((!isRtl() && pager.getCurrentItem() == slidesNumber - 1) || (isRtl() && pager.getCurrentItem() == 0)) {
-                setButtonState(nextButton, true); // TODO: changed
+                setButtonState(nextButton, false);
                 setButtonState(doneButton, true);
-                if (isWizardMode) {
-                    setButtonState(backButton, showBackButtonWithDone);
-                } else {
-                    setButtonState(skipButton, true); // TODO: changed
-                }
-
+                setButtonState(skipButton, false);
+                setButtonState(backButton, true);
             } else {
                 setButtonState(nextButton, true);
                 setButtonState(doneButton, false);
-                if (isWizardMode) {
-                    if (pager.getCurrentItem() == 0) {
-                        setButtonState(backButton, false);
-                    } else {
-                        setButtonState(backButton, isWizardMode);
-                    }
+                setButtonState(skipButton, true);
+                if (pager.getCurrentItem() == 0) {
+                    setButtonState(backButton, false);
                 } else {
-                    setButtonState(skipButton, skipButtonEnabled);
+                    setButtonState(backButton, true);
                 }
             }
         } else {
@@ -987,9 +983,7 @@ public abstract class AppIntroBase extends AppCompatActivity implements
             // Check if changing to the next slide is allowed
             if (isSlideChangingAllowed) {
                 // Changing slide is handled by permission result
-                if(pager.getCurrentItem()+1 == slidesNumber){ // TODO: added
-                    onDonePressed(fragments.get(slidesNumber-1));
-                } else if (!checkAndRequestPermissions()) {
+                if (!checkAndRequestPermissions()) {
                     changeSlide(false);
                 }
             } else {

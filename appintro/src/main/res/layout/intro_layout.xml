@@ -39,6 +39,7 @@
             android:textColor="#fff"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -65,37 +66,47 @@
                 android:id="@+id/indicator_container"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="19dp"
+                android:layout_gravity="center"
                 android:layoutDirection="ltr"/>
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/next"-->
-                <!--style="@style/AppIntroButtonStyleCompat"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="end"-->
-                <!--android:layout_marginEnd="8dp"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:minWidth="100dp"-->
-                <!--android:visibility="gone"-->
-                <!--app:srcCompat="@drawable/ic_navigate_next_white"-->
-                <!--tools:ignore="ContentDescription" />-->
-
-            <TextView
+            <ImageButton
                 android:id="@+id/next"
                 style="@style/AppIntroButtonStyleCompat"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/app_intro_next_button"
-                android:textAllCaps="false"
-                android:textColor="#fff"
                 android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:minWidth="100dp"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_navigate_next_white"
                 tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/back"
+                style="@style/AppIntroButtonStyleCompat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:minWidth="100dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_navigate_before_white"
+                tools:ignore="ContentDescription" />
+
+            <Button
+                android:id="@+id/done"
+                style="@style/AppIntroButtonStyleCompat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:minWidth="100dp"
+                android:visibility="gone"
+                android:text="@string/app_intro_done_button"
+                android:textColor="@android:color/white" />
 
         </FrameLayout>
     </LinearLayout>
