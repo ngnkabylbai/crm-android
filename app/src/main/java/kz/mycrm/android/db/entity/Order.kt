@@ -195,7 +195,7 @@ class Order() : Comparable<Order> {
     }
 
     override fun toString(): String {
-        return "Order(id='$id', staffId=$staffId, customer=$customer, end=$end, start=$start)"
+        return "Order(id='$id', status=$status, staffId=$staffId, customer=${customer?.name}, end=$end, start=$start)"
     }
 
     override fun equals(other: Any?): Boolean {
