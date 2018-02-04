@@ -18,12 +18,14 @@
         android:gravity="center"
         android:animateLayoutChanges="true"
         android:fitsSystemWindows="true">
+
         <ImageView
             android:id="@+id/logoImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
+            android:visibility="gone"
             android:layout_marginStart="8dp"
             android:background="@mipmap/ic_logo2"/>
 
@@ -31,11 +33,10 @@
             android:id="@+id/hintTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hint_authorize"
+            android:text="@string/hint_forgot"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"/>
-        <!--</LinearLayout>-->
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/loginLayout"
@@ -46,64 +47,35 @@
             app:errorEnabled="true"
             android:visibility="visible"
             android:hint="@string/hint_login">
-
             <kz.mycrm.android.ui.view.LoginEditTextView
                 android:id="@+id/loginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/login_edit_background"
                 android:inputType="phone"
+                android:enabled="false"
                 android:textColorHint="@color/placeholder"
                 android:maxLength="16"
                 android:text="+7 707 777-77-77"
                 android:textIsSelectable="false"/>
         </android.support.design.widget.TextInputLayout>
 
-
-        <RelativeLayout
-            android:id="@+id/passwordLayoutParent"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/codeLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/reenterPasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_password"
-                android:theme="@style/TextLabel"
-                app:errorEnabled="true"
-                android:layout_centerInParent="true">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/login_edit_background"
-                    android:inputType="textPassword"
-                    android:paddingRight="100dp"
-                    android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                    android:textIsSelectable="false" />
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/forgotPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="12sp"
-                android:paddingBottom="8dp"
-                android:text="@string/action_forgot_password"
-                android:textColor="@color/login_textColor" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/resendTextLayout"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hint_resend_code"
-            android:visibility="gone"
-            android:textColor="@color/login_textColor" />
+            android:hint="@string/hint_layout_password_code"
+            android:theme="@style/TextLabel"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/codeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/login_edit_background"
+                android:inputType="textPassword"
+                android:paddingRight="100dp"
+                android:textIsSelectable="false" />
+        </android.support.design.widget.TextInputLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -115,26 +87,26 @@
                 android:layout_height="44dp"
                 android:background="@drawable/login_button_background"
                 android:textAllCaps="false"
+                android:text="@string/action_approve"
                 android:layout_centerInParent="true"
                 android:textColor="@color/white" />
 
-        <TextSwitcher
-            android:id="@+id/loginButtonTextSwitcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            android:layout_centerInParent="true" />
+            <TextSwitcher
+                android:id="@+id/loginButtonTextSwitcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                android:layout_centerInParent="true" />
 
-        <ProgressBar
-            android:id="@+id/loginProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:translationZ="2dp"
-            android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/progress"/>
+            <ProgressBar
+                android:id="@+id/loginProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:translationZ="2dp"
+                android:layout_centerInParent="true"
+                android:indeterminateDrawable="@drawable/progress"/>
+
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>

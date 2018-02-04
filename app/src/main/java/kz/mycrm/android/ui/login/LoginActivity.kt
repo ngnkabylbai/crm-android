@@ -12,8 +12,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.DisplayMetrics
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login2.*
 import kz.mycrm.android.BuildConfig
@@ -29,7 +27,7 @@ import android.view.Gravity
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.ViewSwitcher
-
+import kz.mycrm.android.ui.forgot.forgotPasswordIntent
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -39,24 +37,18 @@ fun Context.loginIntent(): Intent {
     return Intent(this, LoginActivity::class.java)
 }
 
-enum class LoginState {
-    Login, PhoneEnter, ApproveCode, NewPass, Loading
-}
-
-class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutListener {
-
+class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
 
     private lateinit var viewModel: LoginViewModel
     private var screenHeight = 0
     private var screenWidth = 0
-    private var activityState = LoginState.Login
     private var smallScreen = false
     private var keyboardIsOpen = false
 
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
             builder.setNegativeButton(R.string.ok, { dialog, id ->
-                login.error = null
+                loginEditText.error = null
             })
             showMessage(resources.getString(R.string.error_timeout))
         }
@@ -75,17 +67,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
                 Status.ERROR -> onError()
             }
         })
-
-        loginButton.setOnClickListener(this)
-        password.setOnClickListener(this)
-        forgotPassword.setOnClickListener(this)
-
-        if(BuildConfig.DEBUG) {
-//            login.setText("+7 701 381-71-15")
-//            password.setText("password")
-            login.setText("+7 707 830-69-24")
-            password.setText("yeruuh")
-        }
 
         builder = AlertDialog.Builder(this)
         builder.create()
@@ -106,13 +87,37 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
             invalidateLogo()
         }
 
+        loginButton.setOnClickListener {
+            loginEditText.error = null
+            if (isValidInput()) {
+                viewModel.updateAuthData(loginEditText.text.toString(), password.text.toString())
+                viewModel.startRefresh()
+            } else {
+                loginEditText.error = resources.getString(R.string.error_empty_string)
+                requestFocusToLogin()
+            }
+        }
+
         forgotPassword.setOnClickListener {
-            setEnterPhoneState()
+            val intent = forgotPasswordIntent()
+            intent.putExtra("screen_height", screenHeight)
+            startActivity(intent)
         }
 
         loginButtonTextSwitcher.inAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
         loginButtonTextSwitcher.setFactory(mFactory)
-        setDefaultState()
+
+        loginButtonTextSwitcher.setCurrentText(getString(R.string.action_login))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(BuildConfig.DEBUG) {
+//            login.setText("+7 701 381-71-15")
+//            password.setText("password")
+            loginEditText.setText("+7 707 830-69-24")
+            password.setText("yeruuh")
+        }
     }
 
     private fun obtainScreenSize() {
@@ -124,136 +129,38 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         Logger.debug("Screen HEIGHT: $screenHeight")
     }
 
-    private fun setDefaultState() {
-        activityState = LoginState.Login
-        invalidateLogo()
-        newPasswordLayout.visibility = View.GONE
-        loginLayout.visibility = View.VISIBLE
-        requestFocusToLogin()
-        forgotPassword.visibility = View.VISIBLE
-        hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_authorize)))
-        passwordLayoutParent.visibility = View.VISIBLE
-        password.setText("")
-        resenText.visibility = View.GONE
-        loginButtonTextSwitcher.setCurrentText(getButtonText())
-    }
-
-    private fun setEnterPhoneState() {
-        activityState = LoginState.PhoneEnter
-        invalidateLogo()
-        hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_forgot)))
-        passwordLayoutParent.visibility = View.GONE
-        loginButtonTextSwitcher.setText(getButtonText())
-    }
-
-    private fun setApproveState() {
-        activityState = LoginState.ApproveCode
-        invalidateLogo()
-        forgotPassword.visibility = View.GONE
-        loginButtonTextSwitcher.setText(getButtonText())
-        passwordLayoutParent.visibility = View.VISIBLE
-        resenText.visibility = View.VISIBLE
-    }
-
-    private fun setNewPassState() {
-        activityState = LoginState.NewPass
-        invalidateLogo()
-        loginButtonTextSwitcher.setText(getButtonText())
-        hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_approved)))
-        forgotPassword.visibility = View.GONE
-        loginLayout.visibility = View.GONE
-        newPasswordLayout.visibility = View.VISIBLE
-        newPassword.requestFocus()
-        passwordLayoutParent.visibility = View.VISIBLE
-    }
-
     private fun onLoading() {
-        progress.visibility = View.VISIBLE
-        loginButtonTextSwitcher.setText(getButtonText())
-        activityState = LoginState.Loading
-    }
-
-    private fun getButtonText(): String {
-        return when (activityState) {
-            LoginState.Loading -> ""
-            LoginState.Login -> resources.getString(R.string.action_login)
-            LoginState.PhoneEnter -> resources.getString(R.string.action_send)
-            LoginState.ApproveCode -> resources.getString(R.string.action_approve)
-            LoginState.NewPass -> resources.getString(R.string.action_save_and_login)
-        }
+        loginProgressBar.visibility = View.VISIBLE
+        loginButtonTextSwitcher.setText(getText(R.string.empty_string))
     }
 
     private fun onSuccess() {
         startActivity(divisionsIntent())
         finish()
-        activityState = LoginState.Loading
     }
 
     private fun onError() {
-        login.error = resources.getString(R.string.error_invalid_password)
+        loginEditText.error = resources.getString(R.string.error_invalid_password_or_login)
         requestFocusToLogin()
-        progress.visibility = View.GONE
-        loginButtonTextSwitcher.setText(getButtonText())
-    }
-
-    override fun onClick(v: View?) {
-        login.error = null
-        when (activityState) {
-            LoginState.Loading -> return
-            LoginState.Login -> {
-                    if (isValidInput()) {
-                        activityState = LoginState.Loading
-                        loginButtonTextSwitcher.setText(getButtonText())
-                        viewModel.updateAuthData(login.text.toString(), password.text.toString())
-                        viewModel.startRefresh()
-                    }
-                }
-            LoginState.PhoneEnter -> { setApproveState() } // send request
-            LoginState.ApproveCode -> { setNewPassState() } // get new password and renew
-            LoginState.NewPass -> {
-                password.requestFocus()
-                setDefaultState()
-            } // login
-        }
+        loginProgressBar.visibility = View.GONE
+        loginButtonTextSwitcher.setText(getText(R.string.action_login))
     }
 
     private fun isValidInput(): Boolean {
-        if (login.text.length != 16 || password.text.isEmpty()) {
-            login.error = resources.getString(R.string.error_empty_string)
-            requestFocusToLogin()
-            return false
-        }
-        return true
+        return loginEditText.text.length == 16 && !password.text.isEmpty()
     }
 
     private fun requestFocusToLogin() {
-        login.requestFocus()
-        login.setSelection(login.text.length)
-    }
-
-    private fun getTextAnim(text: String): AlphaAnimation {
-        val anim = AlphaAnimation(1.0f, 0.0f)
-        anim.duration = 200
-        anim.repeatCount = 1
-        anim.repeatMode = Animation.REVERSE
-
-        anim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationEnd(animation: Animation?) { }
-            override fun onAnimationStart(animation: Animation?) { }
-            override fun onAnimationRepeat(animation: Animation?) {
-                hintText.text = text
-            }
-        })
-
-        return anim
+        loginEditText.requestFocus()
+        loginEditText.setSelection(loginEditText.text.length)
     }
 
     private fun invalidateLogo() {
         if(keyboardIsOpen) {
             if(smallScreen)
-                logo.visibility = View.GONE
+                logoImageView.visibility = View.GONE
         } else {
-            logo.visibility = View.VISIBLE
+            logoImageView.visibility = View.VISIBLE
         }
     }
 
@@ -279,5 +186,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
             return view
         }
     }
+
 }
 
