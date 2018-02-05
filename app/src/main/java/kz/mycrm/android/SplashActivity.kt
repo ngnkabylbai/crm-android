@@ -12,6 +12,8 @@ import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.intro.IntroActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 class SplashActivity : BaseActivity() {
 
@@ -22,6 +24,8 @@ class SplashActivity : BaseActivity() {
     //    TODO: Refactor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Fabric.with(this, Crashlytics())
 
         sharedPref = getSharedPreferences(getString(R.string.app_mycrm_shared_key), Context.MODE_PRIVATE)
 

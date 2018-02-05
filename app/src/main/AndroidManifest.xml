@@ -39,6 +39,9 @@
             android:screenOrientation="portrait"/>
         <activity android:name="kz.mycrm.android.ui.main.division.DivisionsActivity"
             android:screenOrientation="portrait"/>
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="c98e5391023a36058fdea03c017c4443fb3207df" />
     </application>
 
 </manifest>
