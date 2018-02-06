@@ -12,6 +12,7 @@ object ApiUtils {
     private var userService: UserService? = null
     private var journalService: JournalService? = null
     private var orderService: OrderService? = null
+    private var appVersionService: AppVersionService? = null
 
     fun getTokenService() : TokenService {
         return tokenService ?: RetrofitClient.getClient().create(TokenService::class.java)
@@ -27,5 +28,9 @@ object ApiUtils {
 
     fun getOrderService(): OrderService {
         return orderService ?: RetrofitClient.getClient().create(OrderService::class.java)
+    }
+
+    fun getAppVersionService(): AppVersionService {
+        return appVersionService ?: RetrofitClient.getClient().create(AppVersionService::class.java)
     }
 }
