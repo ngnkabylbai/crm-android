@@ -1,6 +1,5 @@
 package kz.mycrm.android.util
 
-import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.remote.*
 
 /**
@@ -12,6 +11,7 @@ object ApiUtils {
     private var userService: UserService? = null
     private var journalService: JournalService? = null
     private var orderService: OrderService? = null
+    private var renewPasswordService: RenewPasswordService? = null
 
     fun getTokenService() : TokenService {
         return tokenService ?: RetrofitClient.getClient().create(TokenService::class.java)
@@ -27,5 +27,9 @@ object ApiUtils {
 
     fun getOrderService(): OrderService {
         return orderService ?: RetrofitClient.getClient().create(OrderService::class.java)
+    }
+
+    fun getRenewPasswordService(): RenewPasswordService {
+        return renewPasswordService ?: RetrofitClient.getClient().create(RenewPasswordService::class.java)
     }
 }

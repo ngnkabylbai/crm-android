@@ -72,8 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/login_edit_background"
-                android:inputType="textPassword"
-                android:paddingRight="100dp"
+                android:inputType="text"
                 android:textIsSelectable="false" />
         </android.support.design.widget.TextInputLayout>
 

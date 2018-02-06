@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.forgot
+package kz.mycrm.android.ui.forgot.password
 
 import android.content.Context
 import android.content.Intent
@@ -9,10 +9,10 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_forgot_main.*
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.forgot.fragment.PhoneApproveFragment
-import kz.mycrm.android.ui.forgot.fragment.PhoneEnterFragment
-import kz.mycrm.android.ui.forgot.fragment.PhoneRenewFragment
-import kz.mycrm.android.ui.forgot.listener.LoadNextFragmentListener
+import kz.mycrm.android.ui.forgot.password.fragment.approve.PhoneApproveFragment
+import kz.mycrm.android.ui.forgot.password.fragment.enter.PhoneEnterFragment
+import kz.mycrm.android.ui.forgot.password.fragment.renew.PhoneRenewFragment
+import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
 
 /**
  * Created by Nurbek Kabylbay on 30.01.2018.
@@ -27,6 +27,9 @@ class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
     private val fragmentCount = 3
     private val enterFragmentPosition = 0
     private val approveFragmentPosition = 1
+    private val renewFragmentPosition = 2
+
+    private lateinit var phone: String
 
     private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
 
@@ -39,27 +42,31 @@ class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
     }
 
     override fun onBackPressed() {
-        if (viewPager.currentItem == 0)
+        if (viewPager.currentItem == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed()
-        else
+        } else {
             // Otherwise, select the previous step.
             viewPager.currentItem = viewPager.currentItem - 1
+        }
     }
 
 
-    override fun loadNextFragment() {
-        if(viewPager.currentItem == fragmentCount)
+    override fun loadNextFragment(value: String) {
+        if(viewPager.currentItem == fragmentCount) {
             finish()
-        else{
-            if (viewPager.currentItem == 0) {
-                val enterFragment = viewPagerAdapter.getItem(enterFragmentPosition)
-                val approveFragment = viewPagerAdapter.getItem(approveFragmentPosition)
-
-                val loginText = (enterFragment as PhoneEnterFragment).getLogin()
-                (approveFragment as PhoneApproveFragment).setLogin(loginText)
+        } else {
+            if (viewPager.currentItem == enterFragmentPosition) {
+                // passing login into approve fragment
+                this.phone = value
+                (viewPagerAdapter.getItem(approveFragmentPosition) as PhoneApproveFragment).setLogin(value)
+            } else if(viewPager.currentItem == approveFragmentPosition) {
+                // passing code into renew fragment
+                (viewPagerAdapter.getItem(renewFragmentPosition) as PhoneRenewFragment).setCode(value)
+                (viewPagerAdapter.getItem(renewFragmentPosition) as PhoneRenewFragment).setPhone(phone)
             }
+
             viewPager.currentItem = viewPager.currentItem + 1 // load next fragment
         }
     }

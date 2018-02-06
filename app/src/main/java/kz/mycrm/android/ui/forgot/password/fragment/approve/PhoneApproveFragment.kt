@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.forgot.fragment
+package kz.mycrm.android.ui.forgot.password.fragment.approve
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_forgot_approve_phone.*
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.forgot.ForgotPassActivity
-import kz.mycrm.android.ui.forgot.listener.LoadNextFragmentListener
+import kz.mycrm.android.ui.forgot.password.ForgotPassActivity
+import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
 
 /**
  * Created by Nurbek Kabylbay on 31.01.2018.
@@ -27,11 +27,17 @@ class PhoneApproveFragment: Fragment() {
         loaderCallback = context as ForgotPassActivity
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loginButton.setOnClickListener { loaderCallback?.loadNextFragment() }
+        loginButton.setOnClickListener {
+            if(codeEditText.text.isEmpty()) {
+                codeEditText.error = "Заполните поле"
+            } else {
+                val code = codeEditText.text.toString()
+                loaderCallback?.loadNextFragment(code)
+            }
+        }
     }
 
     fun setLogin(login: String) {

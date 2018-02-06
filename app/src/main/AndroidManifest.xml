@@ -39,7 +39,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name="kz.mycrm.android.ui.main.division.DivisionsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ui.forgot.ForgotPassActivity"
+        <activity android:name=".ui.forgot.password.ForgotPassActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
     </application>
 

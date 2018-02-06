@@ -1,4 +1,4 @@
-package kz.mycrm.android.ui.forgot.fragment
+package kz.mycrm.android.ui.forgot.password.fragment.enter
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_forgot_enter_phone.*
 import kz.mycrm.android.R
-import kz.mycrm.android.ui.forgot.ForgotPassActivity
-import kz.mycrm.android.ui.forgot.listener.LoadNextFragmentListener
+import kz.mycrm.android.ui.forgot.password.ForgotPassActivity
+import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
 
 /**
  * Created by Nurbek Kabylbay on 31.01.2018.
@@ -17,6 +17,7 @@ import kz.mycrm.android.ui.forgot.listener.LoadNextFragmentListener
 class PhoneEnterFragment: Fragment() {
 
     private var loaderCallback: LoadNextFragmentListener? = null
+    private lateinit var viewModel: PhoneEnterViewModel
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -30,20 +31,20 @@ class PhoneEnterFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = PhoneEnterViewModel()
+
         loginButton.setOnClickListener {
-            if(isValidInput())
-                loaderCallback?.loadNextFragment()
-            else
+            if(isValidInput()) {
+                val phone = loginEditText.text.toString()
+                viewModel.requestSmsCode(phone)
+                loaderCallback?.loadNextFragment(phone)
+            } else {
                 loginEditText.error = resources.getString(R.string.error_invalid_login)
+            }
         }
     }
 
     private fun isValidInput(): Boolean {
         return loginEditText.text.length == 16
-    }
-
-    // Used to get text of loginEditText to pass the value into the next fragment
-    fun getLogin(): String {
-        return loginEditText.text.toString()
     }
 }

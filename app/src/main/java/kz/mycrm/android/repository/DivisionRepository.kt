@@ -33,7 +33,7 @@ class DivisionRepository(private var appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
-    fun getDivisionsListLiveData(): LiveData<List<Division>> {
+    private fun getDivisionsListLiveData(): LiveData<List<Division>> {
         return MycrmApp.database.DivisionDao().getDivisionsListLiveData()
     }
 

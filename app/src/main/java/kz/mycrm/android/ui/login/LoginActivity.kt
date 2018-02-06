@@ -27,7 +27,7 @@ import android.view.Gravity
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.ViewSwitcher
-import kz.mycrm.android.ui.forgot.forgotPasswordIntent
+import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -90,7 +90,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         loginButton.setOnClickListener {
             loginEditText.error = null
             if (isValidInput()) {
-                viewModel.updateAuthData(loginEditText.text.toString(), password.text.toString())
+                viewModel.updateAuthData(loginEditText.text.toString(), reEnterPasswordEditText.text.toString())
                 viewModel.startRefresh()
             } else {
                 loginEditText.error = resources.getString(R.string.error_empty_string)
@@ -116,7 +116,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
 //            login.setText("+7 701 381-71-15")
 //            password.setText("password")
             loginEditText.setText("+7 707 830-69-24")
-            password.setText("yeruuh")
+            reEnterPasswordEditText.setText("yeruuh")
         }
     }
 
@@ -147,7 +147,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
     }
 
     private fun isValidInput(): Boolean {
-        return loginEditText.text.length == 16 && !password.text.isEmpty()
+        return loginEditText.text.length == 16 && !reEnterPasswordEditText.text.isEmpty()
     }
 
     private fun requestFocusToLogin() {
