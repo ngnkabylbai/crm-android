@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.login
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -44,6 +45,9 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
     private var screenWidth = 0
     private var smallScreen = false
     private var keyboardIsOpen = false
+
+    private val forgotPasswordRequestCode = 1
+
 
     private val mHandler = object: Handler(Looper.getMainLooper()) {
         override fun handleMessage(message: Message) {
@@ -101,13 +105,19 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         forgotPassword.setOnClickListener {
             val intent = forgotPasswordIntent()
             intent.putExtra("screen_height", screenHeight)
-            startActivity(intent)
+            startActivityForResult(intent, forgotPasswordRequestCode)
         }
 
         loginButtonTextSwitcher.inAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
         loginButtonTextSwitcher.setFactory(mFactory)
 
         loginButtonTextSwitcher.setCurrentText(getString(R.string.action_login))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode == Activity.RESULT_OK) {
+            onSuccess()
+        }
     }
 
     override fun onResume() {

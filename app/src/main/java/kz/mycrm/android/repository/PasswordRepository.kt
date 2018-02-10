@@ -24,6 +24,13 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
         return object : NetworkBoundResource<Token, Token> (appExecutors) {
             override fun saveCallResult(item: Token) {
                 Logger.debug("Renew password new token:" + item.token)
+                val tokenCount = MycrmApp.database.TokenDao().getCount()
+
+                if(tokenCount == 0) {
+                    MycrmApp.database.TokenDao().insertToken(item)
+                } else {
+                    MycrmApp.database.TokenDao().updateToken(item)
+                }
             }
 
             override fun shouldFetch(data: Token?): Boolean {
@@ -31,7 +38,7 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun loadFromDb(): LiveData<Token> {
-                return getToken()
+                return MycrmApp.database.TokenDao().getTokenLiveData()
             }
 
             override fun createCall(): LiveData<ApiResponse<Token>> {
@@ -53,7 +60,24 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
         })
     }
 
-    private fun getToken(): LiveData<Token> {
-        return MycrmApp.database.TokenDao().getTokenLiveData()
+    fun requestCodeValidation(phone: String, code: String): LiveData<Resource<Array<String>>> {
+        return object : NetworkBoundResource<Array<String>,Array<String>> (appExecutors) {
+            override fun saveCallResult(item: Array<String>) {
+                Logger.debug("Code validation response:" + item)
+            }
+
+            override fun shouldFetch(data: Array<String>?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<Array<String>> {
+                return MycrmApp.database.DummyObjectDao().getDummyString()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<Array<String>>> {
+                return ApiUtils.getRenewPasswordService().requestCodeValidation(phone, code)
+            }
+
+        }.asLiveData()
     }
 }

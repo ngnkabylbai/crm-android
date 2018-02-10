@@ -22,7 +22,7 @@ fun Context.forgotPasswordIntent(): Intent {
     return Intent(this, ForgotPassActivity::class.java)
 }
 
-class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
+class ForgotPassActivity : AppCompatActivity(), LoadNextFragmentListener {
 
     private val fragmentCount = 3
     private val enterFragmentPosition = 0
@@ -44,7 +44,7 @@ class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
     override fun onBackPressed() {
         if (viewPager.currentItem == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
+            // Back button. This calls setSuccess() on this activity and pops the back stack.
             super.onBackPressed()
         } else {
             // Otherwise, select the previous step.
@@ -163,7 +163,7 @@ class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
 //
 //    private fun onSuccess() {
 //        startActivity(divisionsIntent())
-//        finish()
+//        setSuccess()
 //    }
 //
 //    private fun onError() {
@@ -210,7 +210,7 @@ class ForgotPassActivity: AppCompatActivity(), LoadNextFragmentListener {
 //                setNewPassState()
 //            } // get new password and renew
 //            LoginState.NewPass -> {
-//                finish()
+//                setSuccess()
 //            } // login
 //        }
 //    }

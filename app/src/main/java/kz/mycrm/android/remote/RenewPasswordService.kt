@@ -23,4 +23,10 @@ interface RenewPasswordService {
     fun requestRenewPassword(@Field("username")phone: String, @Field("code")code: String,
                              @Field("password")password: String): LiveData<ApiResponse<Token>>
 
+
+    @POST("v2/user/validate-code")
+    @FormUrlEncoded
+    fun requestCodeValidation(@Field("username")phone: String,
+                              @Field("code")code: String): LiveData<ApiResponse<Array<String>>>
+
 }

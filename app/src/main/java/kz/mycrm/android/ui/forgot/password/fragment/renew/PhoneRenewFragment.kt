@@ -1,8 +1,10 @@
 package kz.mycrm.android.ui.forgot.password.fragment.renew
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -37,8 +39,7 @@ class PhoneRenewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this).get(RenewViewModel::class.java)
-        viewModel.getNewToken().observe(this, Observer { newToken ->
-            when(newToken!!.status) {
+        viewModel.getNewToken().observe(this, Observer { newToken -> when(newToken!!.status) {
                 Status.LOADING -> startProgress()
                 Status.SUCCESS -> onSuccess(newToken.data)
                 Status.ERROR -> onError()
@@ -78,9 +79,11 @@ class PhoneRenewFragment: Fragment() {
     }
 
     private fun onSuccess(newToken: Token?) {
-        Logger.debug("Received new token:" + (newToken?.token ?: "null"))
-        activity!!.finish()
         endProgress()
+        Logger.debug("Received new token:" + (newToken?.token ?: "null"))
+        val resultIntent = Intent()
+        activity!!.setResult(Activity.RESULT_OK, resultIntent)
+        activity!!.finish()
     }
 
     private fun onError() {

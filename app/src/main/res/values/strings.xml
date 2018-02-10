@@ -27,6 +27,9 @@
     <string name="hint_layout_login_enter_new_password">Введите новый пароль</string>
     <string name="hint_layout_password_reenter_new_password">Повторите пароль</string>
     <string name="action_save_and_login">Сохранить и войти</string>
+    <string name="error_invalid_login_or_code">Неправильный логин или код</string>
+
+
 
     <!--Main activity-->
     <!--Bottom navigation bar-->
