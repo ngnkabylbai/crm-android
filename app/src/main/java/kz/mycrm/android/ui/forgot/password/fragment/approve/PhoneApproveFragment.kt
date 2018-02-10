@@ -13,18 +13,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.ViewSwitcher
 import kotlinx.android.synthetic.main.fragment_forgot_approve_phone.*
-import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
-import kz.mycrm.android.db.entity.OtpInfo
 import kz.mycrm.android.ui.forgot.password.ForgotPassActivity
 import kz.mycrm.android.ui.forgot.password.listener.FragmentLifecycle
 import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
-import java.util.*
 
 /**
  * Created by Nurbek Kabylbay on 31.01.2018.
@@ -88,6 +84,7 @@ class PhoneApproveFragment: Fragment(), FragmentLifecycle {
 
     private fun onError() {
         codeEditText.error = getString(R.string.error_invalid_login_or_code)
+        codeEditText.requestFocus()
         endProgress()
     }
 
