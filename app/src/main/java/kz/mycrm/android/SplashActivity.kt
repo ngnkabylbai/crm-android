@@ -79,11 +79,11 @@ class SplashActivity : BaseActivity() {
 ////            viewModel.checkAuthentication().observe(this, Observer { token ->
 ////                if (token != null) {
 ////                    startActivity(divisionsIntent()) // for MVP
-////                    finish()
+////                    setSuccess()
 ////                } else {
 ////                    Logger.debug("Token wasn't found. Directing to login activity...")
 ////                    startActivity(loginIntent())
-////                    finish()
+////                    setSuccess()
 ////                }
 ////            })
 //        } else {

@@ -43,9 +43,6 @@ class LoginViewModel : ViewModel() {
 
     fun updateAuthData(newPhone: String, newPassword: String) {
         this.password = newPassword
-
-        var formattedPhone = newPhone.replace("[^\\d]".toRegex(), "")
-        formattedPhone = "+7 "+formattedPhone.substring(1, 4)+" "+formattedPhone.substring(4,7)+" "+formattedPhone.substring(7, 9)+" "+formattedPhone.substring(9)
-        this.phone = formattedPhone
+        this.phone = newPhone.replace('-', ' ')
     }
 }

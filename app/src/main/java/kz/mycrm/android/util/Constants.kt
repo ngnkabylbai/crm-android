@@ -16,4 +16,5 @@ object Constants {
     val orderStatusCanceled = 4
     val orderStatusWaiting = 5
 
+    val millisToRefreshOtp = 90000L
 }

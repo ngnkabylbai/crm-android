@@ -4,6 +4,7 @@
     <string name="app_mycrm_shared_intro" />
     <string name="app_mycrm_shared_intro_shown">Shown</string>
     <string name="app_mycrm_shared_intro_default">Not Shown</string>
+    <string name="empty_string">""</string>
 
     <!-- Login activity -->
     <string name="hint_login">Телефон</string>
@@ -12,19 +13,21 @@
     <string name="action_login">Войти</string>
     <string name="action_forgot_password">Забыли пароль?</string>
     <string name="error_empty_string">Пожалуйста, заполните все поля</string>
-    <string name="error_invalid_password">Неправильный логин или пароль</string>
+    <string name="error_invalid_password_or_login">Неправильный логин или пароль</string>
     <string name="error_timeout">Не удалось установить соединение с сервером. Пожалуйста, попробуйте позже</string>
+    <string name="error_invalid_login">Пожалуйста, введите валидный номер</string>
     <string name="ok">Хорошо</string>
     <string name="hint_authorize">Чтобы пользоваться приложением, авторизуйтесь</string>
     <string name="hint_forgot">Введите номер телефона, мы отправим код подтверждения и вы сможете создать новый пароль</string>
     <string name="hint_approved">Ваш номер подтвержден. Придумайте и запомните новый пароль</string>
     <string name="action_send">Отправить</string>
     <string name="action_approve">Подтвердить</string>
-    <string name="hint_resend_code">Отправить код повторно:</string>
+    <string name="hint_resend_code">Отправить код повторно</string>
     <string name="hint_layout_password_code">Код подтверждения</string>
     <string name="hint_layout_login_enter_new_password">Введите новый пароль</string>
     <string name="hint_layout_password_reenter_new_password">Повторите пароль</string>
     <string name="action_save_and_login">Сохранить и войти</string>
+    <string name="error_invalid_login_or_code">Неправильный логин или код</string>
 
     <!--Main activity-->
     <!--Bottom navigation bar-->

@@ -7,7 +7,7 @@
     android:background="@drawable/intro_background">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/logoImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@mipmap/logo3"
@@ -21,8 +21,8 @@
         android:text="Пропустить"
         android:textSize="17sp"
         android:textColor="#fff"
-        app:layout_constraintTop_toTopOf="@id/logo"
-        app:layout_constraintBottom_toBottomOf="@id/logo"
+        app:layout_constraintTop_toTopOf="@id/logoImageView"
+        app:layout_constraintBottom_toBottomOf="@id/logoImageView"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
