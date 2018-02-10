@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_forgot_main.*
 import kz.mycrm.android.R
@@ -13,6 +14,9 @@ import kz.mycrm.android.ui.forgot.password.fragment.approve.PhoneApproveFragment
 import kz.mycrm.android.ui.forgot.password.fragment.enter.PhoneEnterFragment
 import kz.mycrm.android.ui.forgot.password.fragment.renew.PhoneRenewFragment
 import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
+import kz.mycrm.android.ui.forgot.password.listener.FragmentLifecycle
+
+
 
 /**
  * Created by Nurbek Kabylbay on 30.01.2018.
@@ -33,12 +37,32 @@ class ForgotPassActivity : AppCompatActivity(), LoadNextFragmentListener {
 
     private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
 
+    private val onPageChangeListener = object : ViewPager.OnPageChangeListener {
+        private var currentPosition = 0
+
+        override fun onPageSelected(newPosition: Int) {
+            val fragmentToShow = viewPagerAdapter.getItem(newPosition) as FragmentLifecycle
+            fragmentToShow.onResumeFragment()
+
+            val fragmentToHide = viewPagerAdapter.getItem(currentPosition) as FragmentLifecycle
+            fragmentToHide.onPauseFragment()
+
+            currentPosition = newPosition
+        }
+
+        override fun onPageScrollStateChanged(state: Int) { }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_main)
 
         viewPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         viewPager.adapter = viewPagerAdapter
+        viewPager.addOnPageChangeListener(onPageChangeListener)
     }
 
     override fun onBackPressed() {

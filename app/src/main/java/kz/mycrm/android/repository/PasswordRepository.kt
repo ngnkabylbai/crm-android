@@ -4,15 +4,18 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.api.ApiResponse
+import kz.mycrm.android.db.entity.OtpInfo
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
+import kz.mycrm.android.util.Constants.millisToRefreshOtp
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 /**
  * Created by Nurbek Kabylbay on 05.02.2018.
@@ -49,6 +52,12 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
     }
 
     fun requestSmsCode(phone: String) {
+        val isNeededToRefresh = (getMillisToRefreshOtp(phone) == millisToRefreshOtp)
+
+        if(isNeededToRefresh) {
+            val newOtpInfo = OtpInfo(phone, Date().time)
+            MycrmApp.database.OtpInfoDao().insertOtpInfo(newOtpInfo)
+
         ApiUtils.getRenewPasswordService().requestSmsCode(phone).enqueue(object: Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 Logger.api("Request SMS: SUCCESS")
@@ -58,6 +67,8 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
                 Logger.api("Request SMS: FAILURE")
             }
         })
+        }
+
     }
 
     fun requestCodeValidation(phone: String, code: String): LiveData<Resource<Array<String>>> {
@@ -79,5 +90,18 @@ class PasswordRepository(private var appExecutors: AppExecutors) {
             }
 
         }.asLiveData()
+    }
+
+    fun getMillisToRefreshOtp(phone: String): Long {
+        val nowMillis = Date().time
+        val lastOtpInfo = MycrmApp.database.OtpInfoDao().getLastInfo(phone)
+
+        return if(lastOtpInfo == null) {
+                    millisToRefreshOtp
+                } else if((nowMillis - lastOtpInfo.lastSentTime) >= millisToRefreshOtp) {
+                    millisToRefreshOtp
+                } else {
+                    millisToRefreshOtp - (nowMillis - lastOtpInfo.lastSentTime)
+                }
     }
 }

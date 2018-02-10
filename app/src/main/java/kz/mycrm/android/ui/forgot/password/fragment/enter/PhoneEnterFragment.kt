@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_forgot_enter_phone.*
 import kz.mycrm.android.R
 import kz.mycrm.android.ui.forgot.password.ForgotPassActivity
+import kz.mycrm.android.ui.forgot.password.listener.FragmentLifecycle
 import kz.mycrm.android.ui.forgot.password.listener.LoadNextFragmentListener
 
 /**
  * Created by Nurbek Kabylbay on 31.01.2018.
  */
-class PhoneEnterFragment: Fragment() {
+class PhoneEnterFragment: Fragment(), FragmentLifecycle {
 
     private var loaderCallback: LoadNextFragmentListener? = null
     private lateinit var viewModel: PhoneEnterViewModel
@@ -38,6 +39,7 @@ class PhoneEnterFragment: Fragment() {
                 val phone = loginEditText.text.toString()
                 viewModel.requestSmsCode(phone)
                 loaderCallback?.loadNextFragment(phone)
+
             } else {
                 loginEditText.error = resources.getString(R.string.error_invalid_login)
             }
@@ -46,5 +48,13 @@ class PhoneEnterFragment: Fragment() {
 
     private fun isValidInput(): Boolean {
         return loginEditText.text.length == 16
+    }
+
+    override fun onPauseFragment() {
+
+    }
+
+    override fun onResumeFragment() {
+
     }
 }

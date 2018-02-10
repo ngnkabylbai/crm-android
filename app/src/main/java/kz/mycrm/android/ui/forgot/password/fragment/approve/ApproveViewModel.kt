@@ -4,9 +4,12 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import kz.mycrm.android.MycrmApp
+import kz.mycrm.android.db.entity.OtpInfo
 import kz.mycrm.android.repository.PasswordRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
+import java.util.*
 
 /**
  * Created by Nurbek Kabylbay on 08.02.2018.
@@ -33,5 +36,15 @@ class ApproveViewModel: ViewModel() {
         this.phone = phone.replace('-', ' ')
         this.code = code
         this.toRequest.value = null
+    }
+
+    fun requestOtpMillis(phone: String): Long {
+        val formattedPhone = phone.replace('-', ' ')
+        return passwordRepository.getMillisToRefreshOtp(formattedPhone)
+    }
+
+    fun requestSmsCode(phone: String) {
+        val formattedPhone = phone.replace('-', ' ')
+        passwordRepository.requestSmsCode(formattedPhone)
     }
 }

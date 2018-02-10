@@ -22,7 +22,7 @@
     <string name="hint_approved">Ваш номер подтвержден. Придумайте и запомните новый пароль</string>
     <string name="action_send">Отправить</string>
     <string name="action_approve">Подтвердить</string>
-    <string name="hint_resend_code">Отправить код повторно:</string>
+    <string name="hint_resend_code">Отправить код повторно</string>
     <string name="hint_layout_password_code">Код подтверждения</string>
     <string name="hint_layout_login_enter_new_password">Введите новый пароль</string>
     <string name="hint_layout_password_reenter_new_password">Повторите пароль</string>

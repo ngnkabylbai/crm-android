@@ -18,13 +18,14 @@ import android.widget.ViewSwitcher
 import kotlinx.android.synthetic.main.fragment_forgot_password_renew.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Token
+import kz.mycrm.android.ui.forgot.password.listener.FragmentLifecycle
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Status
 
 /**
  * Created by Nurbek Kabylbay on 31.01.2018.
  */
-class PhoneRenewFragment: Fragment() {
+class PhoneRenewFragment: Fragment(), FragmentLifecycle {
 
     private lateinit var code: String
     private lateinit var phone: String
@@ -107,6 +108,14 @@ class PhoneRenewFragment: Fragment() {
 
     fun setPhone(phone: String) {
         this.phone = phone
+    }
+
+    override fun onPauseFragment() {
+
+    }
+
+    override fun onResumeFragment() {
+
     }
 
     private val mFactory = object : ViewSwitcher.ViewFactory {

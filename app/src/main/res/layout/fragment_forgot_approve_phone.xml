@@ -76,6 +76,31 @@
                 android:textIsSelectable="false" />
         </android.support.design.widget.TextInputLayout>
 
+        <LinearLayout
+            android:id="@+id/resendTextLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/resendTextHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_resend_code"
+                android:textColor="@color/login_textColor" />
+
+            <TextView
+                android:id="@+id/resendTextSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="89"
+                android:textColor="@color/login_textColor" />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
