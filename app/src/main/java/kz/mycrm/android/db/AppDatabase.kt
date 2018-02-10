@@ -12,7 +12,7 @@ import kz.mycrm.android.util.MyTypeConverters
  */
 @Database(entities = arrayOf(Token::class, Division::class,
         Customer::class, Order::class, OrderPayment::class,
-        Service::class, DummyString::class, OtpInfo::class), version =  4)
+        Service::class, DummyString::class, OtpInfo::class, AppVersion::class), version =  5)
 @TypeConverters(MyTypeConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun TokenDao(): TokenDao
