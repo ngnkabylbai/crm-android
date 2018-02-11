@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -12,11 +13,15 @@ import android.support.v7.app.AppCompatActivity
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.AppVersion
+import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.journal.JournalFragment
 import kz.mycrm.android.ui.main.menu.MenuFragment
 import kz.mycrm.android.ui.main.notification.NotificationFragment
+import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 
 
@@ -24,7 +29,7 @@ fun Context.mainIntent(): Intent {
     return Intent(this, MainActivity::class.java)
 }
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var viewModel: MainViewModel
 
@@ -39,12 +44,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.getAppVersion().observe(this, Observer { appVersion ->
-            when(appVersion?.status) {
-                Status.SUCCESS -> onSuccess(appVersion.data)
-                else -> { }
-            }
-        })
 
 
         bottomNavigation.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
@@ -86,7 +85,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onSuccess(appVersion: AppVersion?) {
-
-    }
 }

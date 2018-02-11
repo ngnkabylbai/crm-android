@@ -1,19 +1,26 @@
 package kz.mycrm.android
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+import kz.mycrm.android.db.entity.AppVersion
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.intro.IntroActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
+import kz.mycrm.android.util.Constants
+import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Resource
+import kz.mycrm.android.util.Status
 
 class SplashActivity : BaseActivity() {
 
@@ -30,16 +37,43 @@ class SplashActivity : BaseActivity() {
         sharedPref = getSharedPreferences(getString(R.string.app_mycrm_shared_key), Context.MODE_PRIVATE)
 
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        viewModel.checkAuthentication().observe(this, Observer { isAuthenticated ->
+        viewModel.getAppVersion().observe(this, Observer { appVersion ->
+            when(appVersion?.status) {
+                Status.LOADING -> {}
+                Status.SUCCESS -> onResponse(appVersion)
+                Status.ERROR -> viewModel.checkAuthentication()
+            }
+        })
+        viewModel.getAuthentication().observe(this, Observer { isAuthenticated ->
             run {
                 startMain = isAuthenticated!!
+                invalidate()
             }
         })
 
-        if(BuildConfig.DEBUG || wasIntroShown()) {
-            startActivityForResult(Intent(this, IntroActivity::class.java), 1)
+        viewModel.checkAppVersion()
+    }
+
+    private fun invalidate() {
+        if(BuildConfig.DEBUG || !wasIntroShown()) {
+            startActivityForResult(Intent(this, IntroActivity::class.java), Constants.introRequestCode)
         } else {
             loadNextActivity()
+        }
+    }
+
+    private fun onResponse(appVersion: Resource<AppVersion>) {
+        Logger.debug("AppVersion got:" + appVersion.data?.version)
+        if(appVersion.data != null && BuildConfig.VERSION_NAME == appVersion.data.version) {
+            viewModel.checkAuthentication()
+        } else {
+            try {
+                redirectToMarket()
+            } catch (e: ActivityNotFoundException) {
+                e.printStackTrace()
+            } finally {
+
+            }
         }
     }
 
@@ -71,12 +105,20 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        saveState()
-        loadNextActivity()
+        when(requestCode) {
+            Constants.introRequestCode -> {
+                saveState()
+                loadNextActivity()
+            }
+            Constants.marketRequestCode -> {
+                viewModel.checkAppVersion()
+            }
+        }
+
 //        if (isInternetAvailable()) {
 //
 //
-////            viewModel.checkAuthentication().observe(this, Observer { token ->
+////            viewModel.getAuthentication().observe(this, Observer { token ->
 ////                if (token != null) {
 ////                    startActivity(divisionsIntent()) // for MVP
 ////                    setSuccess()

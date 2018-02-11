@@ -15,13 +15,9 @@ import kz.mycrm.android.util.Resource
 class MainViewModel :ViewModel() {
 
     private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
-    private val appInfoRepository: AppInfoRepository = AppInfoRepository(AppExecutors)
 
     fun requestTokenFromDB() : LiveData<Token> {
-        return tokenRepository.getToken()
+        return tokenRepository.getTokenLiveData()
     }
 
-    fun getAppVersion() : LiveData<Resource<AppVersion>> {
-        return appInfoRepository.requestAppVersion()
-    }
 }

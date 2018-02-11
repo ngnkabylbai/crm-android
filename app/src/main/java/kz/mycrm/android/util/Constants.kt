@@ -17,4 +17,7 @@ object Constants {
     val orderStatusWaiting = 5
 
     val millisToRefreshOtp = 90000L
+
+    val introRequestCode = 1
+    val marketRequestCode = 2
 }

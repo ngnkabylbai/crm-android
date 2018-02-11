@@ -28,7 +28,7 @@ class TokenRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun loadFromDb(): LiveData<Token> {
-                return getToken()
+                return getTokenLiveData()
             }
 
             override fun createCall(): LiveData<ApiResponse<Token>> {
@@ -37,8 +37,12 @@ class TokenRepository(private var appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
-    fun getToken(): LiveData<Token> {
+    fun getTokenLiveData(): LiveData<Token> {
         return MycrmApp.database.TokenDao().getTokenLiveData()
+    }
+
+    fun getToken(): Token? {
+        return MycrmApp.database.TokenDao().getToken()
     }
 
     private fun insertToken(token: Token) {

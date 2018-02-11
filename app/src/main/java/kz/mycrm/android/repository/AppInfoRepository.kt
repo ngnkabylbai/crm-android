@@ -18,7 +18,7 @@ class AppInfoRepository(private val appExecutors: AppExecutors) {
     fun requestAppVersion(): LiveData<Resource<AppVersion>> {
         return object : NetworkBoundResource<AppVersion, AppVersion>(appExecutors) {
             override fun saveCallResult(item: AppVersion) {
-                Logger.debug("App version: " + item.version)
+                MycrmApp.database.AppInfoDao().insertAppVersionInfo(item)
             }
 
             override fun shouldFetch(data: AppVersion?): Boolean {
