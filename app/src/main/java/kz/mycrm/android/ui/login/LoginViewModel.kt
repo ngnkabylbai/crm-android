@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.repository.JournalRepository
+import kz.mycrm.android.repository.NotificationRepository
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
@@ -19,6 +20,7 @@ class LoginViewModel : ViewModel() {
     private var tokenRepository = TokenRepository(AppExecutors)
     private var divisionRepository = DivisionRepository(AppExecutors)
     private var journalRepository = JournalRepository(AppExecutors)
+    private var notificationRepository = NotificationRepository(AppExecutors)
 
     private val token: LiveData<Resource<Token>>
     private lateinit var phone: String
@@ -44,5 +46,9 @@ class LoginViewModel : ViewModel() {
     fun updateAuthData(newPhone: String, newPassword: String) {
         this.password = newPassword
         this.phone = newPhone.replace('-', ' ')
+    }
+
+    fun sendNotificationToken() {
+        notificationRepository.sendNotificationKey()
     }
 }

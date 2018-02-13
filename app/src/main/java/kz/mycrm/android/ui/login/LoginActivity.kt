@@ -145,6 +145,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
     }
 
     private fun onSuccess() {
+        viewModel.sendNotificationToken()
         startActivity(divisionsIntent())
         finish()
     }

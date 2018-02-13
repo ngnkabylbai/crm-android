@@ -13,6 +13,7 @@ object ApiUtils {
     private var orderService: OrderService? = null
     private var appVersionService: AppVersionService? = null
     private var renewPasswordService: RenewPasswordService? = null
+    private var notificationService: NotificationService? = null
 
     fun getTokenService() : TokenService {
         return tokenService ?: RetrofitClient.getClient().create(TokenService::class.java)
@@ -36,5 +37,9 @@ object ApiUtils {
 
     fun getRenewPasswordService(): RenewPasswordService {
         return renewPasswordService ?: RetrofitClient.getClient().create(RenewPasswordService::class.java)
+    }
+
+    fun getNotificationService(): NotificationService {
+        return notificationService ?: RetrofitClient.getClient().create(NotificationService::class.java)
     }
 }
