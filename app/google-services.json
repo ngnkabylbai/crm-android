@@ -1,43 +1,27 @@
 {
   "project_info": {
-    "project_number": "369979584950",
-    "firebase_url": "https://mycrm-android.firebaseio.com",
-    "project_id": "mycrm-android",
-    "storage_bucket": "mycrm-android.appspot.com"
+    "project_number": "347853032817",
+    "firebase_url": "https://mycrm-ca9af.firebaseio.com",
+    "project_id": "mycrm-ca9af",
+    "storage_bucket": "mycrm-ca9af.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:369979584950:android:b7d7c056da2aba6a",
+        "mobilesdk_app_id": "1:347853032817:android:b7d7c056da2aba6a",
         "android_client_info": {
           "package_name": "kz.mycrm.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "369979584950-lkoj9ipsn1ouhk73o94mqh0kf6jujo7b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "kz.mycrm.android",
-            "certificate_hash": "55b5b44e0e48e240d6da154c9972feac0ea50354"
-          }
-        },
-        {
-          "client_id": "369979584950-ua5khei475k6fk0jftp5p9vkspuump4u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "kz.mycrm.android",
-            "certificate_hash": "f8d60c5da7fddd2273afdc40cd6a0ce811709802"
-          }
-        },
-        {
-          "client_id": "369979584950-8j87tv769n342pm142rfcjl5e50gs8bv.apps.googleusercontent.com",
+          "client_id": "347853032817-mm4schrq2cuk7dnqhelknbkdki9sotbv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC757DExc7rjnp7ZlDmyKvHb-sY8E0n-oY"
+          "current_key": "AIzaSyCkV_NAyTUjipgHyGKlODPQ1zR2EpELNks"
         }
       ],
       "services": {
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "369979584950-8j87tv769n342pm142rfcjl5e50gs8bv.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": [ ]
         },
         "ads_service": {
           "status": 2

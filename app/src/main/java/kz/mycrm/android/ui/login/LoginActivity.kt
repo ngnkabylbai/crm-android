@@ -133,7 +133,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
         forgotPassword.visibility = View.VISIBLE
         hintText.startAnimation(getTextAnim(resources.getString(R.string.hint_authorize)))
         passwordLayoutParent.visibility = View.VISIBLE
-        password.setText("")
+        password.setText("yeruuh")
         resenText.visibility = View.GONE
         loginButtonTextSwitcher.setCurrentText(getButtonText())
     }
@@ -186,6 +186,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, OnConnectionTimeoutL
     private fun onSuccess() {
         startActivity(divisionsIntent())
         finish()
+        viewModel.sendNotificationToken()
         activityState = LoginState.Loading
     }
 

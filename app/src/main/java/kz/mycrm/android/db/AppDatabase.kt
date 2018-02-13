@@ -10,8 +10,8 @@ import kz.mycrm.android.util.MyTypeConverters
 /**
  * Created by NKabylbay on 11/11/2017.
  */
-@Database(entities = arrayOf(Token::class, Division::class,
-        Customer::class, Order::class, OrderPayment::class, Service::class), version =  2)
+@Database(entities = arrayOf(Token::class, Division::class, Customer::class, Order::class,
+        OrderPayment::class, Service::class, NotificationToken::class), version =  3)
 @TypeConverters(MyTypeConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun TokenDao(): TokenDao
@@ -20,4 +20,5 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun OrderDao(): OrderDao
     abstract fun OrderPaymentDao(): OrderPaymentDao
     abstract fun ServiceDao(): ServiceDao
+    abstract fun NotificationDao(): NotificationDao
 }

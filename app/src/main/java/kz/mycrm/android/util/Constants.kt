@@ -16,4 +16,5 @@ object Constants {
     val orderStatusCanceled = 4
     val orderStatusWaiting = 5
 
+    val defaultChannelId = "mycrm_notifications"
 }

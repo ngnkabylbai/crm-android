@@ -14,7 +14,7 @@ class SplashViewModel : ViewModel() {
 
     private val tokenRepository: TokenRepository = TokenRepository(AppExecutors)
 
-    private val tokenLiveData: LiveData<Token> = tokenRepository.getToken()
+    private val tokenLiveData: LiveData<Token> = tokenRepository.getTokenLiveData()
     private var isAuthenticatedLiveData: LiveData<Boolean>
 
     init {

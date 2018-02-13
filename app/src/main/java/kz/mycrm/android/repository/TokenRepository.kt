@@ -14,10 +14,6 @@ import kz.mycrm.android.util.Resource
  */
 class TokenRepository(private var appExecutors: AppExecutors) {
 
-    fun getToken(): LiveData<Token> {
-        return MycrmApp.database.TokenDao().getTokenLiveData()
-    }
-
     fun requestToken(login: String, password: String): LiveData<Resource<Token>> {
         return object : NetworkBoundResource<Token, Token>(appExecutors) {
             override fun saveCallResult(item: Token) {
@@ -32,13 +28,22 @@ class TokenRepository(private var appExecutors: AppExecutors) {
             }
 
             override fun loadFromDb(): LiveData<Token> {
-                return getToken()
+                return getTokenLiveData()
             }
 
             override fun createCall(): LiveData<ApiResponse<Token>> {
                 return ApiUtils.getTokenService().requestToken(login, password)
             }
         }.asLiveData()
+    }
+
+
+    fun getToken(): Token {
+        return MycrmApp.database.TokenDao().getToken()
+    }
+
+    fun getTokenLiveData(): LiveData<Token> {
+        return MycrmApp.database.TokenDao().getTokenLiveData()
     }
 
     fun insertToken(token: Token) {
