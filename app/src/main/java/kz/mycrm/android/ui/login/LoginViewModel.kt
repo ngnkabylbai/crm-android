@@ -48,7 +48,7 @@ class LoginViewModel : ViewModel() {
         this.phone = newPhone.replace('-', ' ')
     }
 
-    fun sendNotificationToken() {
-        notificationRepository.sendNotificationKey()
+    fun sendNotificationToken(key: String) {
+        notificationRepository.sendNotificationKey(key)
     }
 }

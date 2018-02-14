@@ -24,7 +24,7 @@ fun Context.divisionsIntent(): Intent {
 
 class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var divisionViewModel: DivisionViewModel
+    private lateinit var viewModel: DivisionViewModel
 
     lateinit var rvDivisions: RecyclerView
 
@@ -40,8 +40,8 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         rvDivisions.adapter = adapter
         rvDivisions.layoutManager = LinearLayoutManager(this)
 
-        divisionViewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
-        divisionViewModel.getResourceDivisionsList().observe(this, Observer { resourceList ->
+        viewModel = ViewModelProviders.of(this).get(DivisionViewModel::class.java)
+        viewModel.getResourceDivisionsList().observe(this, Observer { resourceList ->
             when(resourceList?.status) {
                 Status.LOADING -> swipeRefreshContainer.isRefreshing = true
                 Status.SUCCESS -> onSuccess(resourceList)
@@ -56,22 +56,19 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
                 android.R.color.holo_blue_dark)
 
         swipeRefreshContainer.post {
-            divisionViewModel.startRefresh()
+            viewModel.startRefresh()
         }
     }
 
-    private fun onSuccess(resourceList: Resource<List<Division>>) {
-        if (resourceList.data != null) {
-            val list = resourceList.data
+    private fun onSuccess(divisionList: Resource<List<Division>>) {
+        if (divisionList.data != null) {
+            val list = divisionList.data
             Logger.debug("Division count: ${list.size}")
-//                    if (list.size > 1) {
             adapter.clear()
-            for (d in resourceList.data) {
-                adapter.add(d)
+            for (division in divisionList.data) {
+                adapter.add(division)
             }
-//                    } else if (list.size == 1) {
-//                        startMain(list[0])
-//                    }
+
             swipeRefreshContainer.isRefreshing = false
         } else {
             startLogin()
@@ -79,7 +76,7 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     override fun onRefresh() {
-        divisionViewModel.startRefresh()
+        viewModel.startRefresh()
     }
 
     private fun startLogin() {

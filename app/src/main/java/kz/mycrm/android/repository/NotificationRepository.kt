@@ -3,15 +3,14 @@ package kz.mycrm.android.repository
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.db.entity.NotificationToken
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import okhttp3.ResponseBody
-import retrofit2.Callback
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 /**
@@ -41,19 +40,7 @@ class NotificationRepository (private var appExecutors: AppExecutors?){
         }.asLiveData()
     }
 
-    private fun getNotificationToken(): NotificationToken {
-        return MycrmApp.database.NotificationDao().getNotificationToken()
-    }
-
-    fun updateNotificationToken(newNotificationToken: String) {
-        // TODO: better to use shared preferences !?
-        MycrmApp.database.NotificationDao().nukeNotificationToken()
-        MycrmApp.database.NotificationDao().insertNotificationToken(NotificationToken(newNotificationToken))
-    }
-
-    fun sendNotificationKey() {
-        val key = getNotificationToken().notificationToken
-
+    fun sendNotificationKey(key: String) {
         ApiUtils.getNotificationService()
                 .sendNotificationKey(key).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
@@ -61,7 +48,7 @@ class NotificationRepository (private var appExecutors: AppExecutors?){
             }
 
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                sendNotificationKey() // while will not be successful
+                sendNotificationKey(key) // while will not be successful
             }
         })
     }

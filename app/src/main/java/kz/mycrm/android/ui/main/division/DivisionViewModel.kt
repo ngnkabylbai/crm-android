@@ -1,6 +1,9 @@
 package kz.mycrm.android.ui.main.division
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.util.AppExecutors
@@ -13,7 +16,6 @@ import kz.mycrm.android.util.Resource
 class DivisionViewModel : ViewModel(){
 
     private var userRepository = DivisionRepository(AppExecutors)
-
     private var divisionList: LiveData<Resource<List<Division>>>
     private val toRefresh =  MutableLiveData<Boolean>()
 
@@ -33,5 +35,4 @@ class DivisionViewModel : ViewModel(){
     fun startRefresh() {
         toRefresh.value = null
     }
-
 }

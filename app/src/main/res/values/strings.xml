@@ -4,6 +4,7 @@
     <string name="app_mycrm_shared_intro" />
     <string name="app_mycrm_shared_intro_shown">Shown</string>
     <string name="app_mycrm_shared_intro_default">Not Shown</string>
+    <string name="app_mycrm_notification_token" />
     <string name="empty_string">""</string>
 
     <!-- Login activity -->

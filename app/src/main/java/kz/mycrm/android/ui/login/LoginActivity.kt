@@ -12,6 +12,7 @@ import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_login2.*
@@ -28,6 +29,7 @@ import android.view.Gravity
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.ViewSwitcher
+import com.crashlytics.android.Crashlytics
 import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
 
 /**
@@ -145,7 +147,16 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
     }
 
     private fun onSuccess() {
-        viewModel.sendNotificationToken()
+        val sharedPref = getSharedPreferences(getString(R.string.app_mycrm_shared_key), Context.MODE_PRIVATE)
+        val defaultValue = getString(R.string.empty_string)
+        val key = sharedPref.getString(getString(R.string.app_mycrm_notification_token), defaultValue)
+
+        if(key != defaultValue) {
+            viewModel.sendNotificationToken(key)
+        } else {
+            Crashlytics.log(Log.ERROR, getString(R.string.app_name), "LoginActivity: Notification key is null while sending to server")
+        }
+
         startActivity(divisionsIntent())
         finish()
     }
