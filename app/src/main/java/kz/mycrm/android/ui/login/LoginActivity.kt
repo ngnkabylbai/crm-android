@@ -125,8 +125,10 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         if(BuildConfig.DEBUG) {
 //            login.setText("+7 701 381-71-15")
 //            password.setText("password")
-            loginEditText.setText("+7 707 830-69-24")
-            reEnterPasswordEditText.setText("yeruuh")
+//            loginEditText.setText("+7 707 830-69-24")
+//            reEnterPasswordEditText.setText("yeruuh")
+            loginEditText.setText("+7 707 661-61-81")
+            reEnterPasswordEditText.setText("qwerty")
         }
     }
 

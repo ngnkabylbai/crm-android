@@ -41,6 +41,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.forgot.password.ForgotPassActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name=".ui.main.info.service.AddServiceActivity" />
+
         <meta-data
         android:name="io.fabric.ApiKey"
         android:value="c98e5391023a36058fdea03c017c4443fb3207df" />

@@ -59,7 +59,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         mDivisionId = arguments!!.getInt("division_id")
         val division = viewModel.getDivisionById(mDivisionId)
             mDivisionId = division.id
-            mStaffId = intArrayOf(division.staff?.id?.toInt() ?: 0)
+            mStaffId = intArrayOf(division.staff?.id?.toInt() ?: 6181)
 
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
@@ -185,7 +185,9 @@ class JournalFragment : Fragment(), OrderEventClickListener {
     override fun onOrderEventClicked(order: Order) {
         super.onOrderEventClicked(order)
         val intent: Intent = activity!!.infoIntent()
-            intent.putExtra("id", order.id)
+            intent.putExtra("orderId", order.id)
+            intent.putExtra("divisionId", mDivisionId)
+            intent.putExtra("staffId", mStaffId[0])
         startActivity(intent)
         Logger.debug("Event clicked:" + order.toString())
     }

@@ -6,13 +6,14 @@ import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
 
 @Entity
-class Service() {
+class Service() : Serializable {
 
    @PrimaryKey
    @ColumnInfo(name = "service_id")

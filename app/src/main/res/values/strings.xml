@@ -50,6 +50,7 @@
     <string name="note">ЗАМЕТКА</string>
     <string name="file">Файлы</string>
     <string name="docs">Документы</string>
+    <string name="action_add_new_service">Добавить услугу</string>
     <!--Journal fragment-->
     <string name="event_count">Количество записей</string>
 
@@ -60,5 +61,4 @@
     <string name="intro2_desc">Удобные уведомления напомнят врачу о предстоящих записях или о том, что нужно заполнить карточку клиента</string>
     <string name="intro3_title">Осталось только авторизоваться</string>
     <string name="intro3_desc">Чтобы начать работать с приложением, авторизуйтесь, используя ваш логин и пароль</string>
-
 </resources>

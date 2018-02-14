@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
+import kz.mycrm.android.repository.OrderRepository
 import kz.mycrm.android.util.Constants
 
 /**
@@ -13,7 +14,7 @@ import kz.mycrm.android.util.Constants
 class InfoViewModel: ViewModel() {
 
     fun requestOrder(id: String): LiveData<Order> {
-        return MycrmApp.database.OrderDao().getOrderById(id)
+        return MycrmApp.database.OrderDao().getOrderLiveDataById(id)
     }
 
     fun getTestOrder(): Order {

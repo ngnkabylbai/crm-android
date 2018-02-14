@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/info_constraint">
 
-        <View
-            android:id="@+id/info_topbar"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/infoTime"
@@ -31,7 +31,7 @@
             android:text="11 august, 11:00"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/info_topbar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
@@ -41,8 +41,9 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/close_x"
-            app:layout_constraintBottom_toBottomOf="@+id/info_topbar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/service_label"
@@ -53,7 +54,28 @@
             android:text="@string/services"
             android:textColor="@color/label_text_color"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/info_topbar" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="8dp"
+            android:background="@color/divisionBackgroundColor"
+            app:layout_constraintTop_toBottomOf="@id/service_list" />
+
+        <TextView
+            android:id="@+id/addServiceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="@string/action_add_new_service"
+            android:background="@color/white"
+            android:textColor="@color/login_textColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/separator"/>
 
         <TextView
             android:id="@+id/client_label"
@@ -64,7 +86,7 @@
             android:text="@string/client"
             android:textColor="@color/label_text_color"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/service_list" />
+            app:layout_constraintTop_toBottomOf="@id/addServiceTextView" />
 
         <LinearLayout
             android:id="@+id/client_info"

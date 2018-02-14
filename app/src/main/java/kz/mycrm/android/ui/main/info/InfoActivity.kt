@@ -1,5 +1,6 @@
 package kz.mycrm.android.ui.main.info
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -9,11 +10,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_info.*
-import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.db.entity.Service
+import kz.mycrm.android.ui.main.info.service.addServiceIntent
 import kz.mycrm.android.util.Logger
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun Context.infoIntent(): Intent {
     return Intent(this, InfoActivity::class.java)
@@ -23,13 +27,18 @@ class InfoActivity : AppCompatActivity() {
 
     private lateinit var rv:RecyclerView
     private lateinit var lm:LinearLayoutManager
-    private lateinit var adapter:ServiceAdapter
+    private val adapter = InfoServiceAdapter(this)
 
     private val textDateFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
     private lateinit var viewModel:InfoViewModel
 
-    private lateinit var id:String
+    private lateinit var orderId: String
+    private var divisionId: Int = 0
+    private var staffId: Int = 0
+
+    private lateinit var checkedServices: ArrayList<Service>
+    private lateinit var order: Order
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,26 +51,56 @@ class InfoActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(InfoViewModel::class.java)
 
-        val intent: Intent = intent
+        val mIntent: Intent = intent
+        orderId = mIntent.getStringExtra("orderId")
+        divisionId = mIntent.getIntExtra("divisionId", -1)
+        staffId = mIntent.getIntExtra("staffId", -1)
 
-        viewModel.requestOrder(intent.getStringExtra("id")).observe(this, Observer { order ->
+        viewModel.requestOrder(orderId).observe(this, Observer { order ->
+            this.order = order!!
+//            val mOrder = if(BuildConfig.MOCK) viewModel.getTestOrder() else order
+            val mOrder = order
 
-            val mOrder = if(BuildConfig.MOCK) viewModel.getTestOrder() else order
+            checkedServices = ArrayList(mOrder.services)
 
-            clientName.text = mOrder?.customerName
-            clientPhone.text = mOrder?.customerPhone
-            clientNotes.text = mOrder?.note
+            clientName.text = mOrder.customerName
+            clientPhone.text = mOrder.customerPhone
+            clientNotes.text = mOrder.note
 
-            infoTime.text = textDateFormat.format(mOrder?.datetime)
+            infoTime.text = textDateFormat.format(mOrder.datetime)
 
-            if (mOrder != null){
-                adapter = ServiceAdapter(mOrder.services, this)
-                rv.layoutManager = lm
-                rv.adapter = adapter
-            }
-            Logger.debug("Started InfoActivity: ${mOrder?.services.toString()}")
+            adapter.setServicesList(ArrayList(mOrder.services))
+            rv.adapter = adapter
+            rv.layoutManager = lm
+
+            Logger.debug("Started InfoActivity: ${mOrder.services}")
         })
 
         closeActivity.setOnClickListener { finish() }
+
+        addServiceTextView.setOnClickListener {
+            val serviceIntent = addServiceIntent()
+
+            val servicesId = ArrayList<String>()
+            checkedServices.mapTo(servicesId) { it.id }
+
+            val bundle = Bundle()
+            bundle.putSerializable("servicesId", servicesId)
+            bundle.putString("orderId", orderId)
+            bundle.putInt("divisionId", divisionId)
+            bundle.putInt("staffId", staffId)
+
+            serviceIntent.putExtras(bundle)
+
+            startActivityForResult(serviceIntent, 0)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if(resultCode == Activity.RESULT_OK) {
+            checkedServices = data!!.extras.getSerializable("services") as ArrayList<Service>
+            adapter.setServicesList(checkedServices)
+        }
     }
 }
