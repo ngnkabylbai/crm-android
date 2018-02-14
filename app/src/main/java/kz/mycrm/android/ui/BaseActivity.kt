@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import kz.mycrm.android.util.Constants
 
 /**
@@ -13,11 +13,18 @@ import kz.mycrm.android.util.Constants
  */
 open class BaseActivity: AppCompatActivity() {
 
-    internal lateinit var builder: AlertDialog.Builder
+    protected lateinit var dialogManager: MaterialDialog.Builder
+    private var dialog: MaterialDialog? = null
 
-    internal fun showMessage(msg: String) {
-        builder.setMessage(msg)
-        builder.show()
+    internal fun showMessage(msg: String, positive: BaseActivity.()->Unit = {}) {
+
+        dialog = dialogManager
+                .content(msg)
+                .onPositive({_, _-> positive()})
+                .onNegative({dialog, _-> dialog.dismiss()})
+                .build()
+
+        dialog!!.show()
     }
 
     fun redirectToMarket() {

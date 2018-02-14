@@ -6,33 +6,30 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import android.widget.ViewSwitcher
+import com.afollestad.materialdialogs.MaterialDialog
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_login2.*
 import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
 import kz.mycrm.android.ui.BaseActivity
+import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
+import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import android.view.Gravity
-import android.view.animation.AnimationUtils
-import android.widget.TextView
-import android.widget.ViewSwitcher
-import com.crashlytics.android.Crashlytics
-import kz.mycrm.android.db.entity.Token
-import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
-import kz.mycrm.android.util.Resource
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -54,16 +51,6 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
 
     private val forgotPasswordRequestCode = 1
 
-
-    private val mHandler = object: Handler(Looper.getMainLooper()) {
-        override fun handleMessage(message: Message) {
-            builder.setNegativeButton(R.string.ok, { dialog, id ->
-                loginEditText.error = null
-            })
-            showMessage(resources.getString(R.string.error_timeout))
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_login)
@@ -78,8 +65,9 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
             }
         })
 
-        builder = AlertDialog.Builder(this)
-        builder.create()
+        dialogManager = MaterialDialog.Builder(this)
+                .positiveText(R.string.dialog_ok)
+
         RetrofitClient.setConnectionTimeoutListener(this)
 
         obtainScreenSize()
@@ -218,10 +206,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         }
     }
 
-    override fun onConnectionTimeout() {
-        val msg = mHandler.obtainMessage()
-        msg.sendToTarget()
-    }
+    override fun onConnectionTimeout() { }
 
     private val mFactory = object : ViewSwitcher.ViewFactory {
 

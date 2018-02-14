@@ -60,4 +60,9 @@
     <string name="intro3_title">Осталось только авторизоваться</string>
     <string name="intro3_desc">Чтобы начать работать с приложением, авторизуйтесь, используя ваш логин и пароль</string>
 
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_later">Не сейчас</string>
+    <string name="warn_new_app_version">Появилась новая версия приложения. Пожалуйста, обновите</string>
+
 </resources>
