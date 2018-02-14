@@ -1,13 +1,11 @@
 package kz.mycrm.android
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
@@ -79,11 +77,13 @@ class SplashActivity : BaseActivity() {
 
     private fun loadNextActivity() {
         if (startMain) {
-            if (isInternetAvailable()) {
+            val isInterNetAvailable = isInternetAvailable()
+            if (isInterNetAvailable) {
                 startActivity(divisionsIntent())
                 finish()
             } else {
-                Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
+                showMessage("Нет подключения к сети")
+//                Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
             }
         } else {
             startActivity(loginIntent())
@@ -114,28 +114,5 @@ class SplashActivity : BaseActivity() {
                 viewModel.checkAppVersion()
             }
         }
-
-//        if (isInternetAvailable()) {
-//
-//
-////            viewModel.getAuthentication().observe(this, Observer { token ->
-////                if (token != null) {
-////                    startActivity(divisionsIntent()) // for MVP
-////                    setSuccess()
-////                } else {
-////                    Logger.debug("Token wasn't found. Directing to login activity...")
-////                    startActivity(loginIntent())
-////                    setSuccess()
-////                }
-////            })
-//        } else {
-//            Toast.makeText(this, "Нет подключения к сети", Toast.LENGTH_SHORT).show()
-//        }
-    }
-
-    private fun isInternetAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
     }
 }

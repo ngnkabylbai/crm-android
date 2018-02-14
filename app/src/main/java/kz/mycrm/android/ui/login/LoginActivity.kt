@@ -30,7 +30,11 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.ViewSwitcher
 import com.crashlytics.android.Crashlytics
+import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
+import kz.mycrm.android.util.Resource
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -70,7 +74,7 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
             when(token!!.status) {
                 Status.LOADING -> onLoading()
                 Status.SUCCESS -> onSuccess()
-                Status.ERROR -> onError()
+                Status.ERROR -> onError(token)
             }
         })
 
@@ -94,20 +98,28 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         }
 
         loginButton.setOnClickListener {
-            loginEditText.error = null
-            if (isValidInput()) {
-                viewModel.updateAuthData(loginEditText.text.toString(), reEnterPasswordEditText.text.toString())
-                viewModel.startRefresh()
+            if(isInternetAvailable()) {
+                loginEditText.error = null
+                if (isValidInput()) {
+                    viewModel.updateAuthData(loginEditText.text.toString(), reEnterPasswordEditText.text.toString())
+                    viewModel.startRefresh()
+                } else {
+                    loginEditText.error = resources.getString(R.string.error_empty_string)
+                    requestFocusToLogin()
+                }
             } else {
-                loginEditText.error = resources.getString(R.string.error_empty_string)
-                requestFocusToLogin()
+                showNoInternetMessage()
             }
         }
 
         forgotPassword.setOnClickListener {
-            val intent = forgotPasswordIntent()
-            intent.putExtra("screen_height", screenHeight)
-            startActivityForResult(intent, forgotPasswordRequestCode)
+            if(isInternetAvailable()) {
+                val intent = forgotPasswordIntent()
+                intent.putExtra("screen_height", screenHeight)
+                startActivityForResult(intent, forgotPasswordRequestCode)
+            } else {
+                showNoInternetMessage()
+            }
         }
 
         loginButtonTextSwitcher.inAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
@@ -161,11 +173,23 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
         finish()
     }
 
-    private fun onError() {
-        loginEditText.error = resources.getString(R.string.error_invalid_password_or_login)
+    private fun onError(response: Resource<Token>) {
+        try {
+            val responseJSON = JSONArray(response.message)[0] as JSONObject
+            loginEditText.error = responseJSON.getString("message")
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            loginEditText.error = getString(R.string.error)
+        }
+
         requestFocusToLogin()
         loginProgressBar.visibility = View.GONE
         loginButtonTextSwitcher.setText(getText(R.string.action_login))
+    }
+
+    private fun showNoInternetMessage() {
+        hideKeyboard()
+        showMessage("Нет подключения к сети")
     }
 
     private fun isValidInput(): Boolean {
@@ -208,6 +232,5 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
             return view
         }
     }
-
 }
 

@@ -1,6 +1,8 @@
 package kz.mycrm.android.ui
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -23,5 +25,11 @@ open class BaseActivity: AppCompatActivity() {
 //        intent.data = Uri.parse("market://details?id=kz.mycrm.android") TODO: change
         intent.data = Uri.parse("market://details?id=com.dropbox.android")
         startActivityForResult(intent, Constants.marketRequestCode)
+    }
+
+    fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
     }
 }
