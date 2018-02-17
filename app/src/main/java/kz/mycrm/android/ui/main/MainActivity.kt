@@ -64,12 +64,15 @@ class MainActivity : BaseActivity() {
         val navigationAdapter = AHBottomNavigationAdapter(this, R.menu.bottom_menu)
         navigationAdapter.setupWithBottomNavigation(bottomNavigation)
 
+        val bundle = Bundle()
+        bundle.putInt("division_id", intent.extras.getInt("division_id"))
+        bundle.putInt("staff_id", intent.extras.getString("staff_id").toInt())
+
         journalFragment = JournalFragment()
-            val bundle = Bundle()
-            bundle.putInt("division_id", intent.extras.getInt("division_id"))
-            journalFragment.arguments = bundle
+        journalFragment.arguments = bundle
+
         notificationFragment = NotificationFragment()
-            notificationFragment.arguments = bundle
+        notificationFragment.arguments = bundle
 
         menuFragment = MenuFragment()
 
@@ -82,7 +85,7 @@ class MainActivity : BaseActivity() {
         }
         bottomNavigation.setOnTabSelectedListener(onTabSelectedListener)
         onTabSelectedListener.onTabSelected(1, true)
-        bottomNavigation.currentItem = 1
+        bottomNavigation.currentItem = 0
 
         viewModel.checkAppVersion()
     }
@@ -105,7 +108,7 @@ class MainActivity : BaseActivity() {
             1-> notificationFragment
             2-> menuFragment
             else -> {
-                notificationFragment
+                journalFragment
             }
         }
     }

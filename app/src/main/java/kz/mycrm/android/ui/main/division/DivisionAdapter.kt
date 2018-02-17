@@ -61,7 +61,11 @@ class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<Divi
 
         override fun onClick(p0: View?){
             val intent = itemView.context.mainIntent()
-            intent.putExtra("division_id", division.id)
+            val divisionId = division.id
+            val staffId = division.staff?.id ?: "-1"
+
+            intent.putExtra("division_id", divisionId)
+            intent.putExtra("staff_id", staffId)
             itemView.context.startActivity(intent)
             (itemView.context as Activity).finish()
         }

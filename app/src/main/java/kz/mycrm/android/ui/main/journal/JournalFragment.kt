@@ -57,9 +57,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
 
         mDivisionId = arguments!!.getInt("division_id")
-        val division = viewModel.getDivisionById(mDivisionId)
-            mDivisionId = division.id
-            mStaffId = intArrayOf(division.staff?.id?.toInt() ?: 0)
+        mStaffId = intArrayOf(arguments!!.getInt("staff_id"))
 
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
