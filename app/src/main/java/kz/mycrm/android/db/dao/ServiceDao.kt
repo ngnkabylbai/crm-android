@@ -24,4 +24,7 @@ interface ServiceDao {
 
     @Query("SELECT * FROM service")
     fun getServices():LiveData<List<Service>>
+
+    @Query("DELETE FROM service")
+    fun nukeService()
 }

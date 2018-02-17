@@ -17,7 +17,7 @@ import kz.mycrm.android.util.Resource
 class AddServiceViewModel: ViewModel() {
 
     private val orderRepository = OrderRepository(AppExecutors)
-    private val serviceRepository = ServiceRepository()
+    private val serviceRepository = ServiceRepository(AppExecutors)
 
     private val serviceList:LiveData<Resource<List<Service>>>
 
@@ -41,7 +41,7 @@ class AddServiceViewModel: ViewModel() {
     }
 
     private fun requestServiceList(divisionId: Int, staffId: Int): LiveData<Resource<List<Service>>> {
-        return orderRepository.requestServiceList(divisionId, staffId)
+        return serviceRepository.requestServiceList(divisionId, staffId)
     }
 
     fun getOrderById(id: String): Order {
