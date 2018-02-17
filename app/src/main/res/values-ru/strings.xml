@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">MyCRM</string>
     <string name="app_mycrm_shared_key">MyCRM_shared</string>
-    <string name="app_mycrm_shared_intro" />
+    <string name="app_mycrm_shared_intro">MyCRM_intro</string>
     <string name="app_mycrm_shared_intro_shown">Shown</string>
     <string name="app_mycrm_shared_intro_default">Not Shown</string>
-    <string name="app_mycrm_notification_token" />
+    <string name="app_mycrm_notification_token">MyCRM_notification_token</string>
     <string name="empty_string">""</string>
     <string name="error">Ошибка</string>
 
