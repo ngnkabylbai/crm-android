@@ -6,8 +6,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_service.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Service
@@ -23,12 +25,14 @@ fun Context.addServiceIntent(): Intent {
     return Intent(this, AddServiceActivity::class.java)
 }
 
-class AddServiceActivity : AppCompatActivity() {
+class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var viewModel: AddServiceViewModel
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var adapter: AddServiceAdapter
+    private var divisionId: Int = -1
+    private var staffId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,26 +43,37 @@ class AddServiceActivity : AppCompatActivity() {
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.setHasFixedSize(true)
 
+
         val extras = intent.extras
+        divisionId = extras.getInt("divisionId", -1)
+        staffId = extras.getInt("staffId", -1)
         val orderId = extras.getString("orderId")
-        val divisionId = extras.getInt("divisionId", -1)
-        val staffId = extras.getInt("staffId", -1)
         val services = extras.getSerializable("servicesId") as ArrayList<String>
 
         val order = viewModel.getOrderById(orderId)
-        order.services = viewModel.getServiceArrayList(services)
+        order.services = viewModel.getServiceArrayListByIds(services)
 
         adapter = AddServiceAdapter(order, this)
 
-        viewModel.requestServiceList(divisionId, staffId).observe(this, Observer { serviceList ->
+        viewModel.getResourceServiceList().observe(this, Observer { serviceList ->
             when(serviceList?.status) {
-                Status.LOADING -> {}
+                Status.LOADING -> swipeRefreshContainer.isRefreshing = true
                 Status.SUCCESS -> onSuccess(serviceList)
-                Status.ERROR -> {}
+                Status.ERROR -> onError(serviceList)
             }
         })
 
         Logger.debug(order.toString())
+
+        swipeRefreshContainer.setOnRefreshListener(this)
+        swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark)
+
+        swipeRefreshContainer.post {
+            viewModel.startRefresh(divisionId, staffId)
+        }
 
         cancelTextView.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
@@ -77,6 +92,10 @@ class AddServiceActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRefresh() {
+        viewModel.startRefresh(divisionId, staffId)
+    }
+
     private fun onSuccess(serviceList: Resource<List<Service>>) {
         if(serviceList.data == null)
             return
@@ -86,5 +105,11 @@ class AddServiceActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
+        swipeRefreshContainer.isRefreshing = false
+    }
+
+    private fun onError(serviceList: Resource<List<Service>>) {
+        swipeRefreshContainer.isRefreshing = false
+        Toast.makeText(this, serviceList.message, Toast.LENGTH_SHORT).show()
     }
 }
