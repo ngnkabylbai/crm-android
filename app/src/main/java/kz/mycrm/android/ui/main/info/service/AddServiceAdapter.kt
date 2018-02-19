@@ -37,17 +37,33 @@ class AddServiceAdapter(private val order: Order, private var context: Context) 
             holder.selectCheckBox.isChecked = false
         }
 
-        holder.selectCheckBox.setOnClickListener {
+        val holderListener = View.OnClickListener {
             if(holder.selectCheckBox.isChecked) {
-                checkedServices.add(service)
-                holder.selectCheckBox.isChecked = true
-                mask[position] = 1
-            } else {
                 holder.selectCheckBox.isChecked = false
                 checkedServices.remove(service)
                 mask[position] = 0
+            } else {
+                checkedServices.add(service)
+                holder.selectCheckBox.isChecked = true
+                mask[position] = 1
             }
         }
+
+        val checkBoxListener = View.OnClickListener {
+            if(!holder.selectCheckBox.isChecked) {
+                holder.selectCheckBox.isChecked = false
+                checkedServices.remove(service)
+                mask[position] = 0
+            } else {
+                checkedServices.add(service)
+                holder.selectCheckBox.isChecked = true
+                mask[position] = 1
+            }
+        }
+
+        holder.itemView.setOnClickListener(holderListener)
+        holder.selectCheckBox.setOnClickListener(checkBoxListener)
+
         holder.serviceName.text = service.serviceName
         holder.servicePrice.text = service.price
     }
