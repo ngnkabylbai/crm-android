@@ -13,10 +13,12 @@ import kz.mycrm.android.db.entity.Service
  * Created by asset on 12/7/17.
  */
 
-class ServiceAdapter(private var serviceList: List<Service>, internal var context: Context) : RecyclerView.Adapter<ServiceAdapter.ViewHolder>() {
+class InfoServiceAdapter(internal var context: Context) : RecyclerView.Adapter<InfoServiceAdapter.ViewHolder>() {
+
+    private lateinit var serviceList: List<Service>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_service, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_info_service, parent, false)
         return ViewHolder(view)
     }
 
@@ -28,6 +30,11 @@ class ServiceAdapter(private var serviceList: List<Service>, internal var contex
 
     override fun getItemCount(): Int {
         return serviceList.size
+    }
+
+    fun setServicesList(list: ArrayList<Service>) {
+        this.serviceList = list
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

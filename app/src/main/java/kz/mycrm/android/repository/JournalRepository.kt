@@ -22,10 +22,13 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                 override fun saveCallResult(item: List<StaffJournal>) {
                     for(s in item) {
                         s.orders?.let {
-                            for(oorder in s.orders!!)
-                                if(oorder.status == Constants.orderStatusEnabled
-                                        || oorder.status == Constants.orderStatusFinished)
-                                    MycrmApp.database.OrderDao().insertOrder(oorder)
+                            for(order in s.orders!!)
+                                if(order.status == Constants.orderStatusEnabled
+                                        || order.status == Constants.orderStatusFinished
+                                        || order.status == Constants.orderStatusCanceled) {
+                                    MycrmApp.database.OrderDao().insertOrder(order)
+                                    MycrmApp.database.ServiceDao().insertServiceList(order.services)
+                                }
                         }
                     }
                 }

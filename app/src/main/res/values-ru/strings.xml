@@ -48,6 +48,8 @@
     <string name="note">ЗАМЕТКА</string>
     <string name="file">Файлы</string>
     <string name="docs">Документы</string>
+    <string name="action_add_new_service">Добавить услугу</string>
+    <string name="warn_choose_service">Пожалуйста, выберите как минимум одну услугу</string>
     <!--Journal fragment-->
     <string name="event_count">Количество записей</string>
 

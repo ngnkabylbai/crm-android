@@ -2,17 +2,17 @@ package kz.mycrm.android.db.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
 
 @Entity
-class Service() {
+class Service() : Serializable {
 
    @PrimaryKey
    @ColumnInfo(name = "service_id")
@@ -26,9 +26,9 @@ class Service() {
    var servicePrice: String? = null
 
    @ColumnInfo(name = "duration")
-   @SerializedName("duration")
+   @SerializedName("average_time")
    @Expose
-   var duration: String? = null
+   var duration: Int = 0
 
    @ColumnInfo(name = "price")
    @SerializedName("price")
@@ -48,7 +48,7 @@ class Service() {
    @ColumnInfo(name = "quantity")
    @SerializedName("quantity")
    @Expose
-   var quantity: String? = null
+   var quantity: Int = 1
 
    @ColumnInfo(name = "service_name")
    @SerializedName("service_name")
@@ -58,7 +58,7 @@ class Service() {
    @ColumnInfo(name = "discount")
    @SerializedName("discount")
    @Expose
-   var discount: String? = null
+   var discount: Int = 0
 
    constructor(id: String, serviceName: String): this() {
       this.id = id
@@ -93,26 +93,21 @@ class Service() {
    override fun hashCode(): Int {
       var result = id.hashCode()
       result = 31 * result + (servicePrice?.hashCode() ?: 0)
-      result = 31 * result + (duration?.hashCode() ?: 0)
+      result = 31 * result + duration
       result = 31 * result + (price?.hashCode() ?: 0)
       result = 31 * result + (orderServiceId?.hashCode() ?: 0)
       result = 31 * result + (name?.hashCode() ?: 0)
-      result = 31 * result + (quantity?.hashCode() ?: 0)
+      result = 31 * result + quantity
       result = 31 * result + (serviceName?.hashCode() ?: 0)
-      result = 31 * result + (discount?.hashCode() ?: 0)
+      result = 31 * result + discount
       return result
    }
 
    override fun toString(): String {
       return "Service(id='$id', servicePrice=$servicePrice, duration=$duration, price=$price, orderServiceId=$orderServiceId, name=$name, quantity=$quantity, serviceName=$serviceName, discount=$discount)"
    }
-
-
 //   @ColumnInfo(name = "products")
 //   @SerializedName("products")
 //   @Expose
 //   var products: Array<String>? = null
-
-
-
 }

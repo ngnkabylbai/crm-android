@@ -379,12 +379,12 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             isUpdated = true
             mOrderList = newOrderList
 
-            mOrderEventLayoutGroupList = if(BuildConfig.MOCK) {
-                getTestOrderEventGroups()
-            } else {
+//            mOrderEventLayoutGroupList = if(BuildConfig.MOCK) {
+//                getTestOrderEventGroups()
+//            } else {
                 val mOrderEventList = getOrderEventRects(newOrderList)
-                getOrderEventGroups(mOrderEventList)
-            }
+            mOrderEventLayoutGroupList = getOrderEventGroups(mOrderEventList)
+//            }
 
             invalidate()
         }

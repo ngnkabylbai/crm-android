@@ -28,7 +28,10 @@ interface OrderDao {
     fun getOrdersByDate(date: String): LiveData<List<Order>>
 
     @Query("SELECT * FROM mOrder WHERE order_id = :arg0")
-    fun getOrderById(id: String): LiveData<Order>
+    fun getOrderLiveDataById(id: String): LiveData<Order>
+
+    @Query("SELECT * FROM mOrder WHERE order_id = :arg0")
+    fun getOrderById(id: String): Order
 
     @Query("SELECT * FROM mOrder WHERE datetime>Date(:arg0) ORDER BY datetime")
     fun getAfter(date: String): LiveData<List<Order>>

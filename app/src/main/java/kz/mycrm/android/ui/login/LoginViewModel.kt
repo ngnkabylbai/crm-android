@@ -7,10 +7,12 @@ import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Token
 import kz.mycrm.android.repository.DivisionRepository
 import kz.mycrm.android.repository.JournalRepository
+import kz.mycrm.android.util.Resource
+
 import kz.mycrm.android.repository.NotificationRepository
+import kz.mycrm.android.repository.ServiceRepository
 import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.util.AppExecutors
-import kz.mycrm.android.util.Resource
 
 /**
  * Created by NKabylbay on 11/11/2017.
@@ -21,6 +23,7 @@ class LoginViewModel : ViewModel() {
     private var divisionRepository = DivisionRepository(AppExecutors)
     private var journalRepository = JournalRepository(AppExecutors)
     private var notificationRepository = NotificationRepository(AppExecutors)
+    private var serviceRepository = ServiceRepository(AppExecutors)
 
     private val token: LiveData<Resource<Token>>
     private lateinit var phone: String
@@ -32,6 +35,7 @@ class LoginViewModel : ViewModel() {
         tokenRepository.nukeTables()
         divisionRepository.nukeTables()
         journalRepository.nukeTables()
+        serviceRepository.nukeTables()
         token = Transformations.switchMap(toRequest) { _ -> tokenRepository.requestToken(phone, password)}
     }
 
