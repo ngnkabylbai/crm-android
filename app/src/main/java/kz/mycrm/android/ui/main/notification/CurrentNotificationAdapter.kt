@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,7 +21,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
     private var TYPE_HEADER = 0
     private var TYPE_ITEM = 1
 
-    private var notificationList: ArrayList<Order> = ArrayList()
+    private var notificationList: ArrayList<Notification> = ArrayList()
 
     private val targetFormat = SimpleDateFormat("d MMMM, H:mm", Locale.getDefault())
 
@@ -43,7 +44,8 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
 
         } else if(holder is ViewItemHolder) {
             val notification = notificationList[position-1]
-            holder.name.text = notification.title
+            holder.title.text = notification.title
+            holder.body.text = notification.body
             holder.time.text = targetFormat.format(notification.datetime).toLowerCase()
             holder.type.text = "Визит".toUpperCase()
         }
@@ -61,7 +63,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
     }
 
     // TODO: change type to Notification
-    fun add(notification: Order) {
+    fun add(notification: Notification) {
         notificationList.add(notification)
         notifyDataSetChanged()
     }
@@ -70,7 +72,7 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
         notificationList.clear()
     }
 
-    fun setListAndNotify(notificationList: ArrayList<Order>) {
+    fun setListAndNotify(notificationList: ArrayList<Notification>) {
         this.notificationList = notificationList
         notifyDataSetChanged()
     }
@@ -80,7 +82,8 @@ class CurrentNotificationAdapter(var context: Context): RecyclerView.Adapter<Rec
             Toast.makeText(itemView.context, "Go to map", Toast.LENGTH_SHORT).show()
         }
 
-        internal var name: TextView = itemView.findViewById<View>(R.id.notification_name) as TextView
+        internal var title: TextView = itemView.findViewById<View>(R.id.notification_title) as TextView
+        internal var body: TextView = itemView.findViewById<View>(R.id.notification_body) as TextView
         internal var time: TextView = itemView.findViewById<View>(R.id.notification_time) as TextView
         internal var type: TextView = itemView.findViewById<View>(R.id.notification_type) as TextView
         internal var link: TextView = itemView.findViewById<View>(R.id.notification_link) as TextView

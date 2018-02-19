@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
@@ -42,10 +43,10 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val divisionId = arguments!!.getInt("division_id")
         viewModel.setDivisionId(divisionId)
 
-        viewModel.getToDaysNotifications().observe(this, Observer { resourceList ->
-            when(resourceList!!.status) {
-                Status.LOADING -> onLoading(resourceList)
-                Status.SUCCESS -> onSuccess(resourceList)
+        viewModel.getToDaysNotifications().observe(this, Observer { notifications ->
+            when(notifications!!.status) {
+                Status.LOADING -> onLoading(notifications)
+                Status.SUCCESS -> onSuccess(notifications)
                 Status.ERROR -> onError()
             }
         })
@@ -65,13 +66,13 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel.startRefresh()
     }
 
-    private fun onLoading(resourceList: Resource<List<Order>>) {
+    private fun onLoading(notifications: Resource<List<Notification>>) {
         swipeRefreshContainer.isRefreshing = true
-        currentNotificationAdapter.setListAndNotify(getOrderList(resourceList.data))
+        currentNotificationAdapter.setListAndNotify(getOrderList(notifications.data))
     }
 
-    private fun onSuccess(resourceList: Resource<List<Order>>) {
-        currentNotificationAdapter.setListAndNotify(getOrderList(resourceList.data))
+    private fun onSuccess(notifications: Resource<List<Notification>>) {
+        currentNotificationAdapter.setListAndNotify(getOrderList(notifications.data))
         swipeRefreshContainer.isRefreshing = false
     }
 
@@ -79,7 +80,7 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         swipeRefreshContainer.isRefreshing = false
     }
 
-    private fun getOrderList(list:List<Order>?): ArrayList<Order> {
+    private fun getOrderList(list:List<Notification>?): ArrayList<Notification> {
         if(list == null) {
             return ArrayList()
         }

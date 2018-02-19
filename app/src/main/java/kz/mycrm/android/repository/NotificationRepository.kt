@@ -3,7 +3,7 @@ package kz.mycrm.android.repository
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.db.entity.Order
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Logger
@@ -18,24 +18,23 @@ import retrofit2.Response
  */
 class NotificationRepository (private var appExecutors: AppExecutors?){
 
-    fun requestAllOrders(staffId: String, thisDate:String): LiveData<Resource<List<Order>>> {
-        return object : NetworkBoundResource<List<Order>, List<Order>> (appExecutors!!) {
+    fun requestAllOrders(staffId: String, thisDate:String): LiveData<Resource<List<Notification>>> {
+        return object : NetworkBoundResource<List<Notification>, List<Notification>> (appExecutors!!) {
 
-            override fun saveCallResult(item: List<Order>) {
-                for(order in item)
-                    MycrmApp.database.OrderDao().insertOrder(order)
+            override fun saveCallResult(item: List<Notification>) {
+                TODO("Not implemented")
             }
 
-            override fun shouldFetch(data: List<Order>?): Boolean {
-                return true
+            override fun shouldFetch(data: List<Notification>?): Boolean {
+                return false
             }
 
-            override fun loadFromDb(): LiveData<List<Order>> {
-                return MycrmApp.database.OrderDao().getAfter(thisDate)
+            override fun loadFromDb(): LiveData<List<Notification>> {
+                return MycrmApp.database.NotificationDao().getAllNotificationsByStaffId(staffId)
             }
 
-            override fun createCall(): LiveData<ApiResponse<List<Order>>> {
-                return ApiUtils.getOrderService().requestAllOrders(staffId, "services")
+            override fun createCall(): LiveData<ApiResponse<List<Notification>>> {
+                TODO("Not implemented")
             }
         }.asLiveData()
     }

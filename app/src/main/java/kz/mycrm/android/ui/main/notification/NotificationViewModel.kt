@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.repository.NotificationRepository
 import kz.mycrm.android.repository.DivisionRepository
@@ -20,7 +21,7 @@ class NotificationViewModel: ViewModel() {
     private val notificationRepository = NotificationRepository(AppExecutors)
     private val userRepository = DivisionRepository(AppExecutors)
 
-    private val orderList: LiveData<Resource<List<Order>>>
+    private val orderList: LiveData<Resource<List<Notification>>>
     private val toRefresh = MutableLiveData<Boolean>()
     private var divisionId = 0
     private lateinit var staffId:String
@@ -32,11 +33,11 @@ class NotificationViewModel: ViewModel() {
     }
 
 //    TODO: Change type to Notification
-    fun getToDaysNotifications(): LiveData<Resource<List<Order>>> {
+    fun getToDaysNotifications(): LiveData<Resource<List<Notification>>> {
         return orderList
     }
 
-    private fun requestNotificationList(): LiveData<Resource<List<Order>>> {
+    private fun requestNotificationList(): LiveData<Resource<List<Notification>>> {
         return notificationRepository.requestAllOrders(staffId, today)
     }
 

@@ -9,7 +9,9 @@ import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.ui.main.division.DivisionsActivity
 
 
@@ -21,6 +23,26 @@ class ClientFirebaseMessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Logger.debug("onMessageReceived()")
 
+
+        saveNotification(remoteMessage)
+
+        generateNotification(remoteMessage)
+    }
+
+    private fun saveNotification(remoteMessage: RemoteMessage) {
+        val notification = Notification()
+        notification.orderId = remoteMessage.data["order_id"] ?: ""
+        notification.staffId = remoteMessage.data["staff_id"] ?: ""
+        notification.divisionId = remoteMessage.data["division_id"] ?: ""
+        notification.title = remoteMessage.data["title"] ?: ""
+        notification.body = remoteMessage.data["body"] ?: ""
+        notification.datetime = Constants.orderDateTimeFormat.parse(remoteMessage.data["datetime"]).time
+
+        MycrmApp.database.NotificationDao().deleteStaffNotification(notification.staffId!!)
+        MycrmApp.database.NotificationDao().insertNotification(notification)
+    }
+
+    private fun generateNotification(remoteMessage: RemoteMessage) {
         val vibration = LongArray(2, {1000L})
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
@@ -42,5 +64,6 @@ class ClientFirebaseMessagingService: FirebaseMessagingService() {
 
         val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mNotificationManager.notify(-1, mBuilder.build()) // TODO: add notification ID
+
     }
 }
