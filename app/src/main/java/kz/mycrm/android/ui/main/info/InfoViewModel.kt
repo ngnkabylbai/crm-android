@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.db.entity.UpdateOrder
@@ -21,14 +20,18 @@ class InfoViewModel: ViewModel() {
     private val orderRepository = OrderRepository(AppExecutors)
 
     private var updatedOrder: LiveData<Resource<Order>>
+    private var order: LiveData<Resource<Order>>
+
     private lateinit var updatingOrder: UpdateOrder
     private lateinit var staffId: String
+    private var orderId: String = "-1"
 
     private val toUpdate = MutableLiveData<Boolean>()
-
+    private val toFetch = MutableLiveData<Boolean>()
 
     init {
         updatedOrder = Transformations.switchMap(toUpdate) {_-> requestUpdateOrder(staffId, updatingOrder)}
+        order = Transformations.switchMap(toFetch) {_-> requestOrder(orderId)}
     }
 
     fun updateOrder(staffId: String, updatingOrder: UpdateOrder) {
@@ -36,13 +39,20 @@ class InfoViewModel: ViewModel() {
         this.updatingOrder = updatingOrder
         this.toUpdate.value = null
     }
+
     fun getUpdatedOrder(): LiveData<Resource<Order>> {
         return updatedOrder
     }
 
-    fun getOrderById(id: String): LiveData<Order> {
-        return MycrmApp.database.OrderDao().getOrderLiveDataById(id)
+    fun getOrderById(id: String): LiveData<Resource<Order>> {
+        return orderRepository.requestOrder(id)
     }
+
+
+    private fun requestOrder(orderId: String): LiveData<Resource<Order>> {
+        return orderRepository.requestOrder(orderId)
+    }
+
 
     private fun requestUpdateOrder(orderId: String, body: UpdateOrder): LiveData<Resource<Order>> {
         return orderRepository.updateOrder(orderId, body)

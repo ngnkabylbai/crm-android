@@ -66,7 +66,7 @@ class MainActivity : BaseActivity() {
 
         val bundle = Bundle()
         bundle.putInt("division_id", intent.extras.getInt("division_id"))
-        bundle.putInt("staff_id", intent.extras.getString("staff_id").toInt())
+        bundle.putString("staff_id", intent.extras.getString("staff_id"))
 
         journalFragment = JournalFragment()
         journalFragment.arguments = bundle

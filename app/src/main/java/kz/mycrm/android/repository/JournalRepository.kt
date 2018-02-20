@@ -4,6 +4,7 @@ import kz.mycrm.android.db.entity.StaffJournal
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.MycrmApp
+import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.*
 
@@ -28,6 +29,28 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                                         || order.status == Constants.orderStatusCanceled) {
                                     MycrmApp.database.OrderDao().insertOrder(order)
                                     MycrmApp.database.ServiceDao().insertServiceList(order.services)
+
+                                    if(order.status == Constants.orderStatusEnabled) {
+                                        val notification = Notification()
+                                        notification.staffId = staffId[0].toString()
+                                        notification.divisionId = divisionId.toString()
+                                        notification.orderId = order.id
+                                        notification.title = order.customerName
+
+                                        var body = ""
+                                        for(i in 0 until order.services.size) {
+                                            body += order.services[i].serviceName
+                                            if(i != order.services.size - 1)
+                                                body += ", "
+                                        }
+
+                                        notification.body = body
+
+
+                                                notification.datetime = order.datetime.time
+
+                                        MycrmApp.database.NotificationDao().insertNotification(notification)
+                                    }
                                 }
                         }
                     }
@@ -49,27 +72,6 @@ class JournalRepository(private var appExecutors: AppExecutors) {
             }.asLiveData()
     }
 
-//    fun requestOrders(token:String, compCustId:Int, staffId:Int, type:Int, status:Int): LiveData<Resource<List<Order>>> {
-//        return object : NetworkBoundResource<List<Order>, List<Order>>(appExecutors){
-//            override fun saveCallResult(item: List<Order>) {
-//
-//            }
-//
-//            override fun shouldFetch(data: List<Order>?): Boolean {
-//                return true
-//            }
-//
-//            override fun loadFromDb(): LiveData<List<Order>> {
-//                return getOrders(token, compCustId, staffId, type, status)
-//            }
-//
-//            override fun createCall(): LiveData<ApiResponse<List<Order>>> {
-//                return ApiUtils.getJournalService().requestOrders(token, compCustId, staffId, type, status)
-//            }
-//        }.asLiveData()
-//
-//    }
-
     fun nukeTables() {
         MycrmApp.database.OrderDao().nukeOrder()
     }
@@ -78,5 +80,4 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                           statusFinished: Int): LiveData<List<Order>> {
         return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId, statusEnabled, statusFinished)
     }
-
 }

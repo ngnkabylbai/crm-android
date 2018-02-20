@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Notification
-import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
 
@@ -41,7 +40,8 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         rvCurrentNotifications.setHasFixedSize(true)
 
         val divisionId = arguments!!.getInt("division_id")
-        viewModel.setDivisionId(divisionId)
+        val staffId = arguments!!.getString("staff_id")
+        viewModel.setDivisionId(divisionId, staffId)
 
         viewModel.getToDaysNotifications().observe(this, Observer { notifications ->
             when(notifications!!.status) {

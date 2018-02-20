@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
+import kz.mycrm.android.ui.main.info.InfoActivity
 import kz.mycrm.android.ui.main.mainIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
@@ -57,6 +58,15 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
         swipeRefreshContainer.post {
             viewModel.startRefresh()
+        }
+
+        val mIntent = intent
+        if(mIntent.extras != null) {
+            val startInfoIntent = Intent(this, InfoActivity::class.java)
+            val bundle = mIntent.extras
+            startInfoIntent.putExtras(bundle)
+
+            startActivity(startInfoIntent)
         }
     }
 

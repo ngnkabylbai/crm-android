@@ -35,6 +35,27 @@ class OrderRepository(private val appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
+    fun requestOrder(orderId: String): LiveData<Resource<Order>> {
+        return object : NetworkBoundResource<Order, Order>(appExecutors) {
+            override fun saveCallResult(item: Order) {
+                MycrmApp.database.OrderDao().insertOrder(item)
+            }
+
+            override fun shouldFetch(data: Order?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<Order> {
+                return MycrmApp.database.OrderDao().getOrderLiveDataById(orderId)
+            }
+
+            override fun createCall(): LiveData<ApiResponse<Order>> {
+                return ApiUtils.getOrderService().requestOrder(orderId,"services")
+            }
+
+        }.asLiveData()
+    }
+
     fun getOrderById(id: String): Order {
         return MycrmApp.database.OrderDao().getOrderById(id)
     }

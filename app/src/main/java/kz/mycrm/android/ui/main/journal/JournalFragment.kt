@@ -57,7 +57,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
 
         mDivisionId = arguments!!.getInt("division_id")
-        mStaffId = intArrayOf(arguments!!.getInt("staff_id"))
+        mStaffId = intArrayOf(arguments!!.getString("staff_id").toInt())
 
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
@@ -183,10 +183,16 @@ class JournalFragment : Fragment(), OrderEventClickListener {
     override fun onOrderEventClicked(order: Order) {
         super.onOrderEventClicked(order)
         val intent: Intent = activity!!.infoIntent()
-            intent.putExtra("orderId", order.id)
-            intent.putExtra("divisionId", mDivisionId)
-            intent.putExtra("staffId", mStaffId[0])
+            intent.putExtra("order_id", order.id)
+            intent.putExtra("division_id", mDivisionId)
+            intent.putExtra("staff_id", mStaffId[0])
         startActivity(intent)
         Logger.debug("Event clicked:" + order.toString())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val dayName = SimpleDateFormat("EEEE", Locale.getDefault())
+        val monthName = SimpleDateFormat("MMMM", Locale.getDefault())
     }
 }

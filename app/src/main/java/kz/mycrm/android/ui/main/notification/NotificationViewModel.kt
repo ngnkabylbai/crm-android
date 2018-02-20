@@ -5,9 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.Notification
-import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.repository.NotificationRepository
 import kz.mycrm.android.repository.DivisionRepository
+import kz.mycrm.android.repository.NotificationRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.Resource
@@ -41,9 +40,9 @@ class NotificationViewModel: ViewModel() {
         return notificationRepository.requestAllOrders(staffId, today)
     }
 
-    fun setDivisionId(divisionId: Int) {
+    fun setDivisionId(divisionId: Int, staffId: String) {
         this.divisionId = divisionId
-        this.staffId = userRepository.getDivisionById(divisionId).staff?.id ?: ""
+        this.staffId = staffId //userRepository.getDivisionById(divisionId).staff?.id ?: ""
     }
 
     fun startRefresh() {

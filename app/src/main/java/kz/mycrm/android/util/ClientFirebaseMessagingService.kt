@@ -9,9 +9,8 @@ import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.R
-import kz.mycrm.android.db.entity.Notification
+import kz.mycrm.android.SplashActivity
 import kz.mycrm.android.ui.main.division.DivisionsActivity
 
 
@@ -23,34 +22,18 @@ class ClientFirebaseMessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Logger.debug("onMessageReceived()")
 
-
-        saveNotification(remoteMessage)
-
         generateNotification(remoteMessage)
-    }
 
-    private fun saveNotification(remoteMessage: RemoteMessage) {
-        val notification = Notification()
-        notification.orderId = remoteMessage.data["order_id"] ?: ""
-        notification.staffId = remoteMessage.data["staff_id"] ?: ""
-        notification.divisionId = remoteMessage.data["division_id"] ?: ""
-        notification.title = remoteMessage.data["title"] ?: ""
-        notification.body = remoteMessage.data["body"] ?: ""
-        notification.datetime = Constants.orderDateTimeFormat.parse(remoteMessage.data["datetime"]).time
-
-        MycrmApp.database.NotificationDao().deleteStaffNotification(notification.staffId!!)
-        MycrmApp.database.NotificationDao().insertNotification(notification)
     }
 
     private fun generateNotification(remoteMessage: RemoteMessage) {
         val vibration = LongArray(2, {1000L})
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
-        val resultIntent = Intent(this, DivisionsActivity::class.java)
-        val stackBuilder = TaskStackBuilder.create(this)
-                .addParentStack(DivisionsActivity::class.java)
-                .addNextIntent(resultIntent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        val resultIntent = Intent(this, SplashActivity::class.java)
+        resultIntent.putExtra("staff_id", remoteMessage.data["staff_id"])
+        resultIntent.putExtra("division_id", remoteMessage.data["division_id"])
+        resultIntent.putExtra("order_id", remoteMessage.data["order_id"])
 
         val mBuilder = NotificationCompat.Builder(this, Constants.defaultChannelId)
                 .setSmallIcon(R.mipmap.ic_logo)
@@ -59,11 +42,18 @@ class ClientFirebaseMessagingService: FirebaseMessagingService() {
                 .setVibrate(vibration)
                 .setSound(soundUri)
                 .setAutoCancel(true)
-                .setContentIntent(resultPendingIntent)
 
+        val stackBuilder = TaskStackBuilder.create(this)
+                .addParentStack(DivisionsActivity::class.java)
+                .addNextIntent(resultIntent)
+
+        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        mBuilder.setContentIntent(resultPendingIntent)
+
+        val uniqueId = (System.currentTimeMillis() and 0xff).toInt()
 
         val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mNotificationManager.notify(-1, mBuilder.build()) // TODO: add notification ID
+        mNotificationManager.notify(uniqueId, mBuilder.build())
 
     }
 }

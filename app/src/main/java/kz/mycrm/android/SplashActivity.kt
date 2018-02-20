@@ -11,6 +11,7 @@ import io.fabric.sdk.android.Fabric
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.intro.IntroActivity
 import kz.mycrm.android.ui.login.loginIntent
+import kz.mycrm.android.ui.main.division.DivisionsActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Constants
 
@@ -19,11 +20,14 @@ class SplashActivity : BaseActivity() {
     private var isAuthenticated = false
     private lateinit var viewModel: SplashViewModel
     private lateinit var sharedPref: SharedPreferences
+    private var mIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Fabric.with(this, Crashlytics())
+
+        mIntent = intent
 
         sharedPref = getSharedPreferences(getString(R.string.app_mycrm_shared_key), Context.MODE_PRIVATE)
 
@@ -39,6 +43,14 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun invalidate() {
+        if(mIntent?.extras != null) {
+            val startDivisionIntent = Intent(this, DivisionsActivity::class.java)
+            val bundle = mIntent!!.extras
+            startDivisionIntent.putExtras(bundle)
+            startActivity(startDivisionIntent)
+            finish()
+        }
+
         if(BuildConfig.DEBUG || !wasIntroShown()) {
             startActivityForResult(Intent(this, IntroActivity::class.java), Constants.introRequestCode)
         } else {

@@ -31,8 +31,8 @@ class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshList
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var adapter: AddServiceAdapter
-    private var divisionId: Int = -1
-    private var staffId: Int = -1
+    private lateinit var divisionId: String
+    private lateinit var staffId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +45,8 @@ class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshList
 
 
         val extras = intent.extras
-        divisionId = extras.getInt("divisionId", -1)
-        staffId = extras.getInt("staffId", -1)
+        divisionId = extras.getString("divisionId")
+        staffId = extras.getString("staffId")
         val orderId = extras.getString("orderId")
         val services = extras.getSerializable("servicesId") as ArrayList<String>
 
@@ -72,7 +72,7 @@ class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshList
                 android.R.color.holo_blue_dark)
 
         swipeRefreshContainer.post {
-            viewModel.startRefresh(divisionId, staffId)
+            viewModel.startRefresh(divisionId.toInt(), staffId.toInt())
         }
 
         cancelTextView.setOnClickListener {
@@ -93,7 +93,7 @@ class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshList
     }
 
     override fun onRefresh() {
-        viewModel.startRefresh(divisionId, staffId)
+        viewModel.startRefresh(divisionId.toInt(), staffId.toInt())
     }
 
     private fun onSuccess(serviceList: Resource<List<Service>>) {

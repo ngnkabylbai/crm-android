@@ -39,9 +39,9 @@ class InfoActivity : AppCompatActivity() {
 
     private lateinit var viewModel:InfoViewModel
 
-    private lateinit var orderId: String
-    private var divisionId: Int = 0
-    private var staffId: Int = 0
+    private var orderId: String = "-1"
+    private var divisionId: String = "-1"
+    private var staffId: String = "-1"
 
     private lateinit var checkedServices: ArrayList<Service>
     private lateinit var order: Order
@@ -60,34 +60,28 @@ class InfoActivity : AppCompatActivity() {
             when(order?.status) {
                 Status.LOADING -> {}
                 Status.SUCCESS -> finish()
-                Status.ERROR -> onError(order)
+                Status.ERROR -> onUpdateError(order)
             }
         })
 
-
         val mIntent: Intent = intent
-        orderId = mIntent.getStringExtra("orderId")
-        divisionId = mIntent.getIntExtra("divisionId", -1)
-        staffId = mIntent.getIntExtra("staffId", -1)
+        if(mIntent.extras != null) {
+            for (key in intent.extras!!.keySet()) {
+                val value = intent.extras!!.getString(key)
+                Logger.debug("Key: $key Value: $value")
+            }
+
+            orderId = mIntent.getStringExtra("order_id")
+            divisionId = mIntent.getStringExtra("division_id")
+            staffId = mIntent.getStringExtra("staff_id")
+        }
 
         viewModel.getOrderById(orderId).observe(this, Observer { order ->
-            this.order = order!!
-//            val mOrder = if(BuildConfig.MOCK) viewModel.getTestOrder() else order
-            val mOrder = order
-
-            checkedServices = ArrayList(mOrder.services)
-
-            clientName.text = mOrder.customerName
-            clientPhone.text = mOrder.customerPhone
-            clientNotes.text = mOrder.note
-
-            infoTime.text = textDateFormat.format(mOrder.datetime)
-
-            adapter.setServicesList(ArrayList(mOrder.services))
-            rv.adapter = adapter
-            rv.layoutManager = lm
-
-            Logger.debug("Started InfoActivity: ${mOrder.services}")
+            when(order!!.status) {
+                Status.LOADING -> {}
+                Status.SUCCESS -> onRequestSuccess(order)
+                Status.ERROR -> {}
+            }
         })
 
         closeActivity.setOnClickListener { finish() }
@@ -101,8 +95,8 @@ class InfoActivity : AppCompatActivity() {
             val bundle = Bundle()
             bundle.putSerializable("servicesId", servicesId)
             bundle.putString("orderId", orderId)
-            bundle.putInt("divisionId", divisionId)
-            bundle.putInt("staffId", staffId)
+            bundle.putString("divisionId", divisionId)
+            bundle.putString("staffId", staffId)
 
             serviceIntent.putExtras(bundle)
 
@@ -125,7 +119,7 @@ class InfoActivity : AppCompatActivity() {
             }
 
             val newOrder = UpdateOrder()
-            newOrder.staffId = staffId.toString()
+            newOrder.staffId = staffId
             newOrder.services = updateServiceList
 
             if(updateServiceList.isEmpty()){
@@ -137,10 +131,27 @@ class InfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun onError(order: Resource<Order>) {
-        Toast.makeText(this, order.message, Toast.LENGTH_SHORT).show()
+    private fun onRequestSuccess(retrievedOrderResource: Resource<Order>) {
+        this.order = retrievedOrderResource.data!!
+//            val mOrder = if(BuildConfig.MOCK) viewModel.getTestOrder() else order
+        val mOrder = this.order
+
+        checkedServices = ArrayList(mOrder.services)
+
+        clientName.text = mOrder.customerName
+        clientPhone.text = mOrder.customerPhone
+        clientNotes.text = mOrder.note
+
+        infoTime.text = textDateFormat.format(mOrder.datetime)
+
+        adapter.setServicesList(ArrayList(mOrder.services))
+        rv.adapter = adapter
+        rv.layoutManager = lm
     }
 
+    private fun onUpdateError(order: Resource<Order>) {
+        Toast.makeText(this, order.message, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
