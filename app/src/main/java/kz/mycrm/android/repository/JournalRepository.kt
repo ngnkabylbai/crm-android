@@ -1,12 +1,15 @@
 package kz.mycrm.android.repository
 
-import kz.mycrm.android.db.entity.StaffJournal
 import android.arch.lifecycle.LiveData
-import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.MycrmApp
+import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
-import kz.mycrm.android.util.*
+import kz.mycrm.android.db.entity.StaffJournal
+import kz.mycrm.android.util.ApiUtils
+import kz.mycrm.android.util.AppExecutors
+import kz.mycrm.android.util.Constants
+import kz.mycrm.android.util.Resource
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
@@ -45,9 +48,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                                         }
 
                                         notification.body = body
-
-
-                                                notification.datetime = order.datetime.time
+                                        notification.datetime = order.datetime.time
 
                                         MycrmApp.database.NotificationDao().insertNotification(notification)
                                     }
@@ -62,8 +63,8 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 
                 override fun loadFromDb(): LiveData<List<Order>> {
     //                TODO: Complete order
-                    return getOrders(date, divisionId, staffId[0],
-                            Constants.orderStatusEnabled, Constants.orderStatusFinished)
+                    return getOrders(date, divisionId, staffId[0], Constants.orderStatusEnabled,
+                            Constants.orderStatusFinished, Constants.orderStatusCanceled)
                 }
 
                 override fun createCall(): LiveData<ApiResponse<List<StaffJournal>>> {
@@ -77,7 +78,8 @@ class JournalRepository(private var appExecutors: AppExecutors) {
     }
 
     private fun getOrders(date:String, divisionId: Int, staffId:Int, statusEnabled: Int,
-                          statusFinished: Int): LiveData<List<Order>> {
-        return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId, statusEnabled, statusFinished)
+                          statusFinished: Int, statusCanceled: Int): LiveData<List<Order>> {
+        return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId,
+                statusEnabled, statusFinished, statusCanceled)
     }
 }

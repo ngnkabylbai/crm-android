@@ -11,7 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import kz.mycrm.android.BuildConfig
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
@@ -372,25 +371,21 @@ class JournalView(context: Context, attrs: AttributeSet) : View(context, attrs) 
      * @param newOrderList A new OrderList
      * @param status The status of the new list
      */
-    private var isUpdated = true
     fun updateEventsAndInvalidate(newOrderList: ArrayList<Order>, status: Status) {
 
-        if (!isSameListWithOrigin(newOrderList, status)) {
-            isUpdated = true
+        if (status == Status.SUCCESS) {
             mOrderList = newOrderList
 
 //            mOrderEventLayoutGroupList = if(BuildConfig.MOCK) {
 //                getTestOrderEventGroups()
 //            } else {
-                val mOrderEventList = getOrderEventRects(newOrderList)
+            val mOrderEventList = getOrderEventRects(newOrderList)
             mOrderEventLayoutGroupList = getOrderEventGroups(mOrderEventList)
 //            }
-
             invalidate()
-        }
-        if (isUpdated && status == Status.SUCCESS) {
             Toast.makeText(context, resources.getString(R.string.event_count)+": "+ mOrderEventLayoutGroupList.map{it.getGroupSize()}.sum(), Toast.LENGTH_SHORT).show()
-            isUpdated = false
+        } else if(status == Status.ERROR){
+            Toast.makeText(context, resources.getString(R.string.error), Toast.LENGTH_SHORT).show()
         }
     }
 

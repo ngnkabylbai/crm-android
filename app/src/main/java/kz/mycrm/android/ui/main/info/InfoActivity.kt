@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_info.*
 import kz.mycrm.android.R
@@ -43,7 +44,7 @@ class InfoActivity : AppCompatActivity() {
     private var divisionId: String = "-1"
     private var staffId: String = "-1"
 
-    private lateinit var checkedServices: ArrayList<Service>
+    private var checkedServices: ArrayList<Service> = ArrayList()
     private lateinit var order: Order
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +61,7 @@ class InfoActivity : AppCompatActivity() {
             when(order?.status) {
                 Status.LOADING -> {}
                 Status.SUCCESS -> finish()
-                Status.ERROR -> onUpdateError(order)
+                Status.ERROR -> onError(order)
             }
         })
 
@@ -78,9 +79,9 @@ class InfoActivity : AppCompatActivity() {
 
         viewModel.getOrderById(orderId).observe(this, Observer { order ->
             when(order!!.status) {
-                Status.LOADING -> {}
+                Status.LOADING -> progress.visibility = View.VISIBLE
                 Status.SUCCESS -> onRequestSuccess(order)
-                Status.ERROR -> {}
+                Status.ERROR -> onError(order)
             }
         })
 
@@ -132,6 +133,7 @@ class InfoActivity : AppCompatActivity() {
     }
 
     private fun onRequestSuccess(retrievedOrderResource: Resource<Order>) {
+        progress.visibility = View.INVISIBLE
         this.order = retrievedOrderResource.data!!
 //            val mOrder = if(BuildConfig.MOCK) viewModel.getTestOrder() else order
         val mOrder = this.order
@@ -149,7 +151,8 @@ class InfoActivity : AppCompatActivity() {
         rv.layoutManager = lm
     }
 
-    private fun onUpdateError(order: Resource<Order>) {
+    private fun onError(order: Resource<Order>) {
+        progress.visibility = View.INVISIBLE
         Toast.makeText(this, order.message, Toast.LENGTH_SHORT).show()
     }
 

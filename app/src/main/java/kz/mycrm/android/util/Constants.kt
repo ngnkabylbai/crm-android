@@ -20,6 +20,7 @@ object Constants {
 
     val introRequestCode = 1
     val marketRequestCode = 2
+    val infoRequestCode = 3
 
     val defaultChannelId = "mycrm_notifications"
 

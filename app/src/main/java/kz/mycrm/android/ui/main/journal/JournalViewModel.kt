@@ -38,11 +38,7 @@ class JournalViewModel: ViewModel() {
         toRefresh.value = null
     }
 
-    fun startRefresh() {
-        toRefresh.value = null
-    }
-
-    fun getOrderLis(): LiveData<Resource<List<Order>>> {
+    fun getOrderList(): LiveData<Resource<List<Order>>> {
         return orderList
     }
 

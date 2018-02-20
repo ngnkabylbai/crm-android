@@ -20,6 +20,7 @@ import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.ui.main.info.infoIntent
 import kz.mycrm.android.ui.view.journal.OrderEventClickListener
+import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
@@ -62,7 +63,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
 
-        viewModel.getOrderLis().observe(this, Observer {orders ->
+        viewModel.getOrderList().observe(this, Observer { orders ->
             when(orders!!.status) {
                 Status.LOADING -> onLoading(orders)
                 Status.SUCCESS -> onSuccess(orders)
@@ -75,7 +76,10 @@ class JournalFragment : Fragment(), OrderEventClickListener {
 
         setupCalendar(view)
         setupSpinner()
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.refreshData(mDate, mDivisionId, mStaffId)
     }
 
@@ -159,7 +163,6 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         Toast.makeText(activity, "Произошла ошибка", Toast.LENGTH_SHORT).show()
     }
 
-
     private fun formatDate(date: Date): String {
         val cal = Calendar.getInstance()
         cal.time = date
@@ -184,15 +187,13 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         super.onOrderEventClicked(order)
         val intent: Intent = activity!!.infoIntent()
             intent.putExtra("order_id", order.id)
-            intent.putExtra("division_id", mDivisionId)
-            intent.putExtra("staff_id", mStaffId[0])
-        startActivity(intent)
+            intent.putExtra("division_id", mDivisionId.toString())
+            intent.putExtra("staff_id", mStaffId[0].toString())
+        startActivityForResult(intent, Constants.infoRequestCode)
         Logger.debug("Event clicked:" + order.toString())
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        val dayName = SimpleDateFormat("EEEE", Locale.getDefault())
-        val monthName = SimpleDateFormat("MMMM", Locale.getDefault())
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.refreshData(mDate, mDivisionId, mStaffId)
     }
 }
