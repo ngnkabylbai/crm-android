@@ -19,6 +19,7 @@ import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.AppVersion
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.journal.JournalFragment
+import kz.mycrm.android.ui.main.listener.OnLogoutListener
 import kz.mycrm.android.ui.main.menu.MenuFragment
 import kz.mycrm.android.ui.main.notification.NotificationFragment
 import kz.mycrm.android.util.Constants
@@ -30,8 +31,7 @@ fun Context.mainIntent(): Intent {
     return Intent(this, MainActivity::class.java)
 }
 
-class MainActivity : BaseActivity() {
-
+class MainActivity : BaseActivity(), OnLogoutListener {
     private lateinit var viewModel: MainViewModel
 
     private lateinit var fragment :Fragment
@@ -119,5 +119,9 @@ class MainActivity : BaseActivity() {
                 viewModel.checkAppVersion()
             }
         }
+    }
+
+    override fun onLogout() {
+        viewModel.deleteToken()
     }
 }

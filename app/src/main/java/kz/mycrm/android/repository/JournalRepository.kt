@@ -16,7 +16,8 @@ import java.util.*
  */
 class JournalRepository(private var appExecutors: AppExecutors) {
 
-    private val notificationRepostiory = NotificationRepository(appExecutors)
+    private val notificationRepository = NotificationRepository(appExecutors)
+    private val orderRepository = OrderRepository(appExecutors)
 
 //    The function requests for a journal by a date, but returns a list of Orders
 //    The journal is used only to retrieve the Orders
@@ -28,19 +29,21 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                 override fun saveCallResult(item: List<StaffJournal>) {
                     for(s in item) {
                         s.orders?.let {
-                            for(order in s.orders!!)
-                                if(order.status == Constants.orderStatusEnabled
+                            orderRepository.deleteOrdersByDate(date)
+                            for(order in s.orders!!) {
+                                if (order.status == Constants.orderStatusEnabled
                                         || order.status == Constants.orderStatusFinished
                                         || order.status == Constants.orderStatusCanceled) {
 
                                     MycrmApp.database.OrderDao().insertOrder(order)
                                     MycrmApp.database.ServiceDao().insertServiceList(order.services)
 
-                                    if(order.status == Constants.orderStatusEnabled
+                                    if (order.status == Constants.orderStatusEnabled
                                             && order.datetime.after(Date())) {
-                                        notificationRepostiory.addNewNotification(order, divisionId, staffId[0].toString())
+                                        notificationRepository.addNewNotification(order, divisionId, staffId[0].toString())
                                     }
                                 }
+                            }
                         }
                     }
                 }

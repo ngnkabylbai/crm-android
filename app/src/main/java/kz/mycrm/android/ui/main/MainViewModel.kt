@@ -6,6 +6,7 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import kz.mycrm.android.db.entity.AppVersion
 import kz.mycrm.android.repository.AppInfoRepository
+import kz.mycrm.android.repository.TokenRepository
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Resource
 
@@ -16,12 +17,17 @@ class MainViewModel :ViewModel() {
 
     private val appInfoRepository: AppInfoRepository = AppInfoRepository(AppExecutors)
     private var appVersion: LiveData<Resource<AppVersion>>
+    private var tokenRepository = TokenRepository(AppExecutors)
 
     private val checkAppVersion = MutableLiveData<Boolean>()
 
     init {
         appVersion = Transformations.switchMap(checkAppVersion) { _ -> requestAppVersion()}
 
+    }
+
+    fun deleteToken() {
+        tokenRepository.nukeTables()
     }
 
     fun getAppVersion() : LiveData<Resource<AppVersion>> {

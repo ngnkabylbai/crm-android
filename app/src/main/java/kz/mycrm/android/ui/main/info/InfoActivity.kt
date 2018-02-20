@@ -47,6 +47,8 @@ class InfoActivity : AppCompatActivity() {
     private var checkedServices: ArrayList<Service> = ArrayList()
     private lateinit var order: Order
 
+    private var isOrderUpdated = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
@@ -105,6 +107,11 @@ class InfoActivity : AppCompatActivity() {
         }
 
         saveTextView.setOnClickListener {
+            if(!isOrderUpdated) {
+                finish()
+                return@setOnClickListener
+            }
+
             val updateServiceList = ArrayList<UpdateService>()
             for(i in 0 until checkedServices.size) {
                 val service = checkedServices[i]
@@ -159,6 +166,7 @@ class InfoActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if(resultCode == Activity.RESULT_OK) {
+            isOrderUpdated = true
             checkedServices = data!!.extras.getSerializable("services") as ArrayList<Service>
             adapter.setServicesList(checkedServices)
         }

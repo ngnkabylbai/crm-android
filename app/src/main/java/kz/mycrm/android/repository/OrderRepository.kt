@@ -56,6 +56,10 @@ class OrderRepository(private val appExecutors: AppExecutors) {
         }.asLiveData()
     }
 
+    fun deleteOrdersByDate(datetime: String) {
+        MycrmApp.database.OrderDao().deleteOrdersByDate(datetime)
+    }
+
     fun getOrderById(id: String): Order {
         return MycrmApp.database.OrderDao().getOrderById(id)
     }

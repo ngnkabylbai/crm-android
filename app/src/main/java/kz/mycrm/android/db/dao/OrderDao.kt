@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Update
 import kz.mycrm.android.db.entity.Order
+import java.util.*
 
 /**
  * Created by asset on 12/8/17.
@@ -38,6 +39,9 @@ interface OrderDao {
 
     @Query("SELECT * FROM mOrder WHERE datetime>Date(:arg0) ORDER BY datetime")
     fun getAfter(date: String): LiveData<List<Order>>
+
+    @Query("DELETE FROM mOrder WHERE DATE(datetime) = DATE(:arg0)")
+    fun deleteOrdersByDate(dateToDelete: String)
 
     @Query("DELETE FROM mOrder")
     fun nukeOrder()

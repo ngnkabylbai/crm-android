@@ -39,9 +39,9 @@ class NotificationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         rvCurrentNotifications.layoutManager = LinearLayoutManager(activity)
         rvCurrentNotifications.setHasFixedSize(true)
 
-        val divisionId = arguments!!.getInt("division_id")
+        val divisionId = arguments!!.getString("division_id")
         val staffId = arguments!!.getString("staff_id")
-        viewModel.setDivisionId(divisionId, staffId)
+        viewModel.setDivisionId(divisionId.toInt(), staffId)
 
         viewModel.getToDaysNotifications().observe(this, Observer { notifications ->
             when(notifications!!.status) {
