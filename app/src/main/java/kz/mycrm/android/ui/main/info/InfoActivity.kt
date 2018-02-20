@@ -59,7 +59,7 @@ class InfoActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(InfoViewModel::class.java)
         viewModel.getUpdatedOrder().observe(this, Observer { order ->
             when(order?.status) {
-                Status.LOADING -> {}
+                Status.LOADING -> progress.visibility = View.VISIBLE
                 Status.SUCCESS -> finish()
                 Status.ERROR -> onError(order)
             }
@@ -73,8 +73,8 @@ class InfoActivity : AppCompatActivity() {
             }
 
             orderId = mIntent.getStringExtra("order_id")
-            divisionId = mIntent.getStringExtra("division_id")
             staffId = mIntent.getStringExtra("staff_id")
+            divisionId = mIntent.getStringExtra("division_id")
         }
 
         viewModel.getOrderById(orderId).observe(this, Observer { order ->
@@ -94,10 +94,10 @@ class InfoActivity : AppCompatActivity() {
             checkedServices.mapTo(servicesId) { it.id }
 
             val bundle = Bundle()
-            bundle.putSerializable("servicesId", servicesId)
-            bundle.putString("orderId", orderId)
-            bundle.putString("divisionId", divisionId)
-            bundle.putString("staffId", staffId)
+            bundle.putSerializable("services_id", servicesId)
+            bundle.putString("order_id", orderId)
+            bundle.putString("division_id", divisionId)
+            bundle.putString("staff_id", staffId)
 
             serviceIntent.putExtras(bundle)
 

@@ -45,10 +45,10 @@ class AddServiceActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshList
 
 
         val extras = intent.extras
-        divisionId = extras.getString("divisionId")
-        staffId = extras.getString("staffId")
-        val orderId = extras.getString("orderId")
-        val services = extras.getSerializable("servicesId") as ArrayList<String>
+        divisionId = extras.getString("division_id")
+        staffId = extras.getString("staff_id")
+        val orderId = extras.getString("order_id")
+        val services = extras.getSerializable("services_id") as ArrayList<String>
 
         val order = viewModel.getOrderById(orderId)
         order.services = viewModel.getServiceArrayListByIds(services)

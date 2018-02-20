@@ -187,8 +187,8 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         super.onOrderEventClicked(order)
         val intent: Intent = activity!!.infoIntent()
             intent.putExtra("order_id", order.id)
-            intent.putExtra("division_id", mDivisionId.toString())
-            intent.putExtra("staff_id", mStaffId[0].toString())
+            intent.putExtra("division_id", mDivisionId)
+            intent.putExtra("staff_id", mStaffId)
         startActivityForResult(intent, Constants.infoRequestCode)
         Logger.debug("Event clicked:" + order.toString())
     }
