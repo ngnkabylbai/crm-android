@@ -1,5 +1,6 @@
 package kz.mycrm.android
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -14,6 +15,7 @@ import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.division.DivisionsActivity
 import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Constants
+import kz.mycrm.android.util.Logger
 
 class SplashActivity : BaseActivity() {
 
@@ -21,6 +23,8 @@ class SplashActivity : BaseActivity() {
     private lateinit var viewModel: SplashViewModel
     private lateinit var sharedPref: SharedPreferences
     private var mIntent: Intent? = null
+
+    private var pushAction = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,54 +47,63 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun invalidate() {
-        if(mIntent?.extras != null) {
-            val startDivisionIntent = Intent(this, DivisionsActivity::class.java)
-            val bundle = mIntent!!.extras
-            startDivisionIntent.putExtras(bundle)
-            startActivity(startDivisionIntent)
-            finish()
-        }
+        pushAction = mIntent?.extras != null
 
-        if(BuildConfig.DEBUG || !wasIntroShown()) {
+        if(!pushAction && (BuildConfig.DEBUG || !viewModel.wasIntroShown(this, sharedPref))) {
             startActivityForResult(Intent(this, IntroActivity::class.java), Constants.introRequestCode)
         } else {
-            loadNextActivity()
+            startNextActivity()
         }
     }
 
-    private fun loadNextActivity() {
+    private fun startNextActivity() {
         if (isAuthenticated) {
+
             val isInterNetAvailable = isInternetAvailable()
             if (isInterNetAvailable) {
-                startActivity(divisionsIntent())
-                finish()
+                if(pushAction) { startPushActivity() } else { startDivisionsActivity() }
             } else {
                 showMessage("Нет подключения к сети")
             }
+
         } else {
-            startActivity(loginIntent())
-            finish()
+            Logger.debug("Starting loginActivity")
+            startActivityForResult(loginIntent(), Constants.loginRequestCode)
         }
     }
 
-    private fun wasIntroShown(): Boolean {
-        val defaultValue = getString(R.string.app_mycrm_shared_intro_default)
-        val sharedValue = sharedPref.getString(getString(R.string.app_mycrm_shared_intro), defaultValue)
-        return sharedValue == defaultValue
+    private fun startPushActivity() {
+        val startDivisionIntent = Intent(this, DivisionsActivity::class.java)
+        val bundle = mIntent!!.extras
+        startDivisionIntent.putExtras(bundle)
+        startActivity(startDivisionIntent)
+        finish()
+        return
     }
 
-    private fun saveState() {
-        val editor = sharedPref.edit()
-        editor.putString(getString(R.string.app_mycrm_shared_intro), getString(R.string.app_mycrm_shared_intro_shown))
-        editor.apply()
+    private fun startDivisionsActivity() {
+        startActivity(divisionsIntent())
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
-            Constants.introRequestCode -> {
-                saveState()
-                loadNextActivity()
+        Logger.debug("onActivityResult: requestCode $requestCode, resultCode $resultCode")
+        if(resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                Constants.introRequestCode -> {
+                    viewModel.saveState(this, sharedPref)
+                    startNextActivity()
+                }
+                Constants.loginRequestCode -> {
+                    if (pushAction) {
+                        startPushActivity()
+                    } else {
+                        startDivisionsActivity()
+                    }
+                }
             }
+        } else {
+            finish()
         }
     }
 }

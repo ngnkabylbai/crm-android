@@ -24,7 +24,7 @@ interface OrderDao {
     fun insertOrder(order: Order)
 
     @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0 AND division_id = :arg1 AND staff_id = :arg2 AND (status = :arg3 OR status = :arg4 OR status = :arg5)")
-    fun getOrders(date: String, divisionId: Int, staffId:Int, statusEnabled: Int,
+    fun getOrders(date: String, divisionId: String, staffId: String, statusEnabled: Int,
                   statusFinished: Int, statusCanceled: Int):LiveData<List<Order>>
 
     @Query("SELECT * FROM mOrder WHERE datetime LIKE :arg0")

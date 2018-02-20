@@ -25,7 +25,6 @@ import kz.mycrm.android.remote.OnConnectionTimeoutListener
 import kz.mycrm.android.remote.RetrofitClient
 import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.forgot.password.forgotPasswordIntent
-import kz.mycrm.android.ui.main.division.divisionsIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
@@ -159,7 +158,12 @@ class LoginActivity : BaseActivity(), OnConnectionTimeoutListener {
             Crashlytics.log(Log.ERROR, getString(R.string.app_name), "LoginActivity: Notification key is null while sending to server")
         }
 
-        startActivity(divisionsIntent())
+        finishWithOk()
+    }
+
+    private fun finishWithOk() {
+        val resultIntent = Intent()
+        setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }
 

@@ -65,7 +65,7 @@ class MainActivity : BaseActivity() {
         navigationAdapter.setupWithBottomNavigation(bottomNavigation)
 
         val bundle = Bundle()
-        bundle.putInt("division_id", intent.extras.getInt("division_id"))
+        bundle.putString("division_id", intent.extras.getString("division_id"))
         bundle.putString("staff_id", intent.extras.getString("staff_id"))
 
         journalFragment = JournalFragment()

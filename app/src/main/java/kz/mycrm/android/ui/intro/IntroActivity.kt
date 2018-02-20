@@ -1,5 +1,7 @@
 package kz.mycrm.android.ui.intro
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.github.paolorotolo.appintro.AppIntro
@@ -31,13 +33,13 @@ class IntroActivity : AppIntro() {
     override fun onSkipPressed(currentFragment: Fragment?) {
         super.onSkipPressed(currentFragment)
         Logger.debug("Intro: Skipped")
-        finish()
+        finishWithOk()
     }
 
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
         Logger.debug("Intro: Done pressed")
-        finish()
+        finishWithOk()
     }
 
     override fun onSlideChanged(oldFragment: Fragment?, newFragment: Fragment?) {
@@ -45,4 +47,9 @@ class IntroActivity : AppIntro() {
         Logger.debug("Intro: Slide changed")
     }
 
+    private fun finishWithOk() {
+        val resultIntent = Intent()
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+    }
 }

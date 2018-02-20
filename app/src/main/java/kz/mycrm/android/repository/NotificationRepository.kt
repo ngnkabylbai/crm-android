@@ -54,10 +54,10 @@ class NotificationRepository (private var appExecutors: AppExecutors?){
         })
     }
 
-    fun addNewNotification(order: Order, divisionId: Int, staffId: Int) {
+    fun addNewNotification(order: Order, divisionId: String, staffId: String) {
         val notification = Notification()
-        notification.staffId = staffId.toString()
-        notification.divisionId = divisionId.toString()
+        notification.staffId = staffId
+        notification.divisionId = divisionId
         notification.orderId = order.id
         notification.title = order.customerName
 

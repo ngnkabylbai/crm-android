@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.main.mainIntent
@@ -61,7 +60,7 @@ class DivisionAdapter(internal var context: Context) : RecyclerView.Adapter<Divi
 
         override fun onClick(p0: View?){
             val intent = itemView.context.mainIntent()
-            val divisionId = division.id
+            val divisionId = division.id.toString()
             val staffId = division.staff?.id ?: "-1"
 
             intent.putExtra("division_id", divisionId)

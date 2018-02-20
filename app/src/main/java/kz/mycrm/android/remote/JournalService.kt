@@ -2,7 +2,6 @@ package kz.mycrm.android.remote
 
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.StaffJournal
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,7 +13,7 @@ interface JournalService {
 
     @GET("v2/user/schedule")
     fun requestJournal(@Query("date")date: String,
-                        @Query("division_id")id: Int, @Query("staff")staff: IntArray, @Query("expand")expand: String): LiveData<ApiResponse<List<StaffJournal>>>
+                        @Query("division_id")id: String, @Query("staff")staff: IntArray, @Query("expand")expand: String): LiveData<ApiResponse<List<StaffJournal>>>
 
 //    @GET("order")
 //    fun requestOrders(@Query("access-token")token:String, @Query("company_customer_id")compCustId:Int,

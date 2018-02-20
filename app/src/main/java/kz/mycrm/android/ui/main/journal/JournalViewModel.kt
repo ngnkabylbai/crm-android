@@ -19,7 +19,7 @@ class JournalViewModel: ViewModel() {
     private var journalRepository = JournalRepository(AppExecutors)
     private var userRepository = DivisionRepository(AppExecutors)
 
-    private var divisionId = 0
+    private lateinit var divisionId: String
     private var staffId = intArrayOf(0)
     private lateinit var date: String
 
@@ -31,10 +31,10 @@ class JournalViewModel: ViewModel() {
         orderList = Transformations.switchMap(toRefresh) { _ -> requestJournal(date, divisionId, staffId)}
     }
 
-    fun refreshData(date: String, divisionId: Int, staffId: IntArray) {
+    fun refreshData(date: String, divisionId: String, staffId: String) {
         this.divisionId = divisionId
         this.date = date
-        this.staffId = staffId
+        this.staffId = intArrayOf(staffId.toInt())
         toRefresh.value = null
     }
 
@@ -42,7 +42,7 @@ class JournalViewModel: ViewModel() {
         return orderList
     }
 
-    private fun requestJournal(date: String, divisionId: Int, staffId: IntArray): LiveData<Resource<List<Order>>> {
+    private fun requestJournal(date: String, divisionId: String, staffId: IntArray): LiveData<Resource<List<Order>>> {
         return journalRepository.requestJournal(date, divisionId, staffId)
     }
 

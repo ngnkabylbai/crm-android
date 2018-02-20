@@ -36,8 +36,8 @@ class JournalFragment : Fragment(), OrderEventClickListener {
     private lateinit var viewModel: JournalViewModel
     private lateinit var horizontalCalendar: HorizontalCalendar
     private lateinit var mDate: String
-    private var mDivisionId = -1
-    private lateinit var mStaffId: IntArray
+    private lateinit var mDivisionId: String
+    private lateinit var mStaffId: String
 
     private lateinit var dateFormat: SimpleDateFormat
     private val spinnerItems = ArrayList<String>()
@@ -57,8 +57,8 @@ class JournalFragment : Fragment(), OrderEventClickListener {
         journal.setOnEventClickListener(this)
         viewModel = ViewModelProviders.of(this).get(JournalViewModel::class.java)
 
-        mDivisionId = arguments!!.getInt("division_id")
-        mStaffId = intArrayOf(arguments!!.getString("staff_id").toInt())
+        mDivisionId = arguments!!.getString("division_id")
+        mStaffId = arguments!!.getString("staff_id")
 
         adapter = ArrayAdapter(activity, R.layout.item_journal_spinner, spinnerItems)
         divisionSpinner.adapter = adapter
@@ -90,7 +90,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
 
         list.mapTo(spinnerItems) { it.name!! }
         for(d in list) {
-            if(d.id == mDivisionId) {
+            if(d.id.toString() == mDivisionId) {
                 divisionSpinner.setSelection(spinnerItems.indexOf(d.name))
             }
             divisionList.add(d)
@@ -99,7 +99,7 @@ class JournalFragment : Fragment(), OrderEventClickListener {
 
         divisionSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                mDivisionId = divisionList[position].id
+                mDivisionId = divisionList[position].id.toString()
                 divisionSpinner.setSelection(position)
                 if(initDivision) {
                     viewModel.refreshData(mDate, mDivisionId, mStaffId)

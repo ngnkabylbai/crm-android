@@ -13,8 +13,9 @@ import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
 import kz.mycrm.android.ui.login.loginIntent
+import kz.mycrm.android.ui.main.MainActivity
 import kz.mycrm.android.ui.main.info.InfoActivity
-import kz.mycrm.android.ui.main.mainIntent
+import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
 import kz.mycrm.android.util.Status
@@ -66,8 +67,18 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             val bundle = mIntent.extras
             startInfoIntent.putExtras(bundle)
 
-            startActivity(startInfoIntent)
+            startActivityForResult(startInfoIntent, Constants.infoRequestCode)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val startMainIntent = Intent(this, MainActivity::class.java)
+        val bundle = intent.extras
+        startMainIntent.putExtras(bundle)
+        startActivity(startMainIntent)
+        finish()
     }
 
     private fun onSuccess(divisionList: Resource<List<Division>>) {
@@ -91,13 +102,6 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
 
     private fun startLogin() {
         startActivity(loginIntent())
-        finish()
-    }
-
-    private fun startMain(division: Division) {
-        val intent = mainIntent()
-        intent.putExtra("division_id", division.id)
-        startActivity(intent)
         finish()
     }
 }
