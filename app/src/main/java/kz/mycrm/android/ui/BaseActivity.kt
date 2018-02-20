@@ -29,8 +29,13 @@ open class BaseActivity: AppCompatActivity() {
 
     fun redirectToMarket() {
         val intent = Intent(Intent.ACTION_VIEW)
-//        intent.data = Uri.parse("market://details?id=kz.mycrm.android") TODO: change
-        intent.data = Uri.parse("market://details?id=com.dropbox.android")
+
+        try {
+            intent.data = Uri.parse("market://details?id=kz.mycrm.android")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         startActivityForResult(intent, Constants.marketRequestCode)
     }
 
