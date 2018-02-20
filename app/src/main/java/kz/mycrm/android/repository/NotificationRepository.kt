@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.api.ApiResponse
 import kz.mycrm.android.db.entity.Notification
+import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Logger
@@ -30,6 +31,7 @@ class NotificationRepository (private var appExecutors: AppExecutors?){
             }
 
             override fun loadFromDb(): LiveData<List<Notification>> {
+                MycrmApp.database.NotificationDao().deleteOldNotifications()
                 return MycrmApp.database.NotificationDao().getAllNotificationsByStaffId(staffId)
             }
 
@@ -50,5 +52,25 @@ class NotificationRepository (private var appExecutors: AppExecutors?){
                 sendNotificationKey(key) // while will not be successful
             }
         })
+    }
+
+    fun addNewNotification(order: Order, divisionId: Int, staffId: Int) {
+        val notification = Notification()
+        notification.staffId = staffId.toString()
+        notification.divisionId = divisionId.toString()
+        notification.orderId = order.id
+        notification.title = order.customerName
+
+        var body = ""
+        for(i in 0 until order.services.size) {
+            body += order.services[i].serviceName
+            if(i != order.services.size - 1)
+                body += ", "
+        }
+
+        notification.body = body
+        notification.datetime = order.datetime
+
+        MycrmApp.database.NotificationDao().insertNotification(notification)
     }
 }

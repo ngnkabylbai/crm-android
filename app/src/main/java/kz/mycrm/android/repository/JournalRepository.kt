@@ -3,18 +3,20 @@ package kz.mycrm.android.repository
 import android.arch.lifecycle.LiveData
 import kz.mycrm.android.MycrmApp
 import kz.mycrm.android.api.ApiResponse
-import kz.mycrm.android.db.entity.Notification
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.StaffJournal
 import kz.mycrm.android.util.ApiUtils
 import kz.mycrm.android.util.AppExecutors
 import kz.mycrm.android.util.Constants
 import kz.mycrm.android.util.Resource
+import java.util.*
 
 /**
  * Created by Nurbek Kabylbay on 04.12.2017.
  */
 class JournalRepository(private var appExecutors: AppExecutors) {
+
+    private val notificationRepostiory = NotificationRepository(appExecutors)
 
 //    The function requests for a journal by a date, but returns a list of Orders
 //    The journal is used only to retrieve the Orders
@@ -30,27 +32,13 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                                 if(order.status == Constants.orderStatusEnabled
                                         || order.status == Constants.orderStatusFinished
                                         || order.status == Constants.orderStatusCanceled) {
+
                                     MycrmApp.database.OrderDao().insertOrder(order)
                                     MycrmApp.database.ServiceDao().insertServiceList(order.services)
 
-                                    if(order.status == Constants.orderStatusEnabled) {
-                                        val notification = Notification()
-                                        notification.staffId = staffId[0].toString()
-                                        notification.divisionId = divisionId.toString()
-                                        notification.orderId = order.id
-                                        notification.title = order.customerName
-
-                                        var body = ""
-                                        for(i in 0 until order.services.size) {
-                                            body += order.services[i].serviceName
-                                            if(i != order.services.size - 1)
-                                                body += ", "
-                                        }
-
-                                        notification.body = body
-                                        notification.datetime = order.datetime.time
-
-                                        MycrmApp.database.NotificationDao().insertNotification(notification)
+                                    if(order.status == Constants.orderStatusEnabled
+                                            && order.datetime.after(Date())) {
+                                        notificationRepostiory.addNewNotification(order, divisionId, staffId[0])
                                     }
                                 }
                         }

@@ -26,8 +26,11 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNotification(token: Notification)
 
-    @Query("SELECT * FROM Notification WHERE staffId = :arg0")
+    @Query("SELECT * FROM Notification WHERE staffId = :arg0 ORDER BY datetime")
     fun getAllNotificationsByStaffId(staffId: String): LiveData<List<Notification>>
+
+    @Query("DELETE FROM Notification WHERE datetime(datetime) < datetime('now')")
+    fun deleteOldNotifications()
 
     @Query("DELETE FROM Notification WHERE staffId = :arg0")
     fun deleteStaffNotification(staffId: String)
