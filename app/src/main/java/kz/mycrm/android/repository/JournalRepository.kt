@@ -32,8 +32,7 @@ class JournalRepository(private var appExecutors: AppExecutors) {
                             orderRepository.deleteOrdersByDate(date)
                             for(order in s.orders!!) {
                                 if (order.status == Constants.orderStatusEnabled
-                                        || order.status == Constants.orderStatusFinished
-                                        || order.status == Constants.orderStatusCanceled) {
+                                        || order.status == Constants.orderStatusFinished) {
 
                                     MycrmApp.database.OrderDao().insertOrder(order)
                                     MycrmApp.database.ServiceDao().insertServiceList(order.services)
@@ -54,8 +53,8 @@ class JournalRepository(private var appExecutors: AppExecutors) {
 
                 override fun loadFromDb(): LiveData<List<Order>> {
     //                TODO: Complete order
-                    return getOrders(date, divisionId, staffId[0].toString(), Constants.orderStatusEnabled,
-                            Constants.orderStatusFinished, Constants.orderStatusCanceled)
+                    return getOrders(date, divisionId, staffId[0].toString(),
+                            Constants.orderStatusEnabled, Constants.orderStatusFinished)
                 }
 
                 override fun createCall(): LiveData<ApiResponse<List<StaffJournal>>> {
@@ -68,9 +67,9 @@ class JournalRepository(private var appExecutors: AppExecutors) {
         MycrmApp.database.OrderDao().nukeOrder()
     }
 
-    private fun getOrders(date:String, divisionId: String, staffId:String, statusEnabled: Int,
-                          statusFinished: Int, statusCanceled: Int): LiveData<List<Order>> {
+    private fun getOrders(date:String, divisionId: String, staffId:String,
+                          statusEnabled: Int, statusFinished: Int): LiveData<List<Order>> {
         return MycrmApp.database.OrderDao().getOrders("%$date%", divisionId, staffId,
-                statusEnabled, statusFinished, statusCanceled)
+                statusEnabled, statusFinished)
     }
 }
