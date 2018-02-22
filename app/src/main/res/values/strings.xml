@@ -17,7 +17,7 @@
     <string name="error_empty_string">Пожалуйста, заполните все поля</string>
     <string name="error_timeout">Не удалось установить соединение с сервером. Пожалуйста, попробуйте позже</string>
     <string name="error_invalid_login">Пожалуйста, введите валидный номер</string>
-    <string name="ok">Хорошо</string>
+    <string name="agree">Хорошо</string>
     <string name="hint_authorize">Чтобы пользоваться приложением, авторизуйтесь</string>
     <string name="hint_forgot">Введите номер телефона, мы отправим код подтверждения и вы сможете создать новый пароль</string>
     <string name="hint_approved">Ваш номер подтвержден. Придумайте и запомните новый пароль</string>
