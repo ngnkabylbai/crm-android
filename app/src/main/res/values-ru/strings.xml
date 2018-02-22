@@ -63,6 +63,7 @@
 
     <string name="dialog_ok">ОК</string>
     <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_later">Не сейчас</string>
     <string name="warn_new_app_version">Появилась новая версия приложения. Пожалуйста, обновите</string>
 
 </resources>
