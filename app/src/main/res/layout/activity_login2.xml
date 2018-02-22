@@ -55,7 +55,7 @@
                 android:inputType="phone"
                 android:textColorHint="@color/placeholder"
                 android:maxLength="16"
-                android:text="+7 707 777-77-77"
+                android:text="+7 "
                 android:textIsSelectable="false"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -81,7 +81,7 @@
                     android:background="@drawable/login_edit_background"
                     android:inputType="textPassword"
                     android:paddingRight="100dp"
-                    android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    android:text=""
                     android:textIsSelectable="false" />
             </android.support.design.widget.TextInputLayout>
 
