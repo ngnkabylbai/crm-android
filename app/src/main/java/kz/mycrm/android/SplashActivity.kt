@@ -48,11 +48,10 @@ class SplashActivity : BaseActivity() {
 
     private fun invalidate() {
         pushAction = mIntent?.extras != null
-
-        if(!pushAction && (BuildConfig.DEBUG || !viewModel.wasIntroShown(this, sharedPref))) {
-            startActivityForResult(Intent(this, IntroActivity::class.java), Constants.introRequestCode)
-        } else {
+        if(pushAction || viewModel.wasIntroShown(this, sharedPref) || !BuildConfig.MOCK) {
             startNextActivity()
+        } else {
+            startActivityForResult(Intent(this, IntroActivity::class.java), Constants.introRequestCode)
         }
     }
 
