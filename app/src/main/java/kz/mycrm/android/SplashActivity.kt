@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import com.afollestad.materialdialogs.MaterialDialog
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kz.mycrm.android.ui.BaseActivity
@@ -43,6 +44,9 @@ class SplashActivity : BaseActivity() {
             }
         })
 
+        dialogManager = MaterialDialog.Builder(this)
+                .positiveText(R.string.dialog_ok)
+
         viewModel.checkAuthentication()
     }
 
@@ -57,14 +61,11 @@ class SplashActivity : BaseActivity() {
 
     private fun startNextActivity() {
         if (isAuthenticated) {
-
-            val isInterNetAvailable = isInternetAvailable()
-            if (isInterNetAvailable) {
-                if(pushAction) { startPushActivity() } else { startDivisionsActivity() }
+            if(pushAction) {
+                startPushActivity()
             } else {
-                showMessage("Нет подключения к сети")
+                startDivisionsActivity()
             }
-
         } else {
             Logger.debug("Starting loginActivity")
             startActivityForResult(loginIntent(), Constants.loginRequestCode)

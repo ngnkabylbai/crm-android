@@ -6,12 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.fragment_notification.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Division
+import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.login.loginIntent
 import kz.mycrm.android.ui.main.MainActivity
 import kz.mycrm.android.ui.main.info.InfoActivity
@@ -24,7 +26,7 @@ fun Context.divisionsIntent(): Intent {
     return Intent(this, DivisionsActivity::class.java)
 }
 
-class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class DivisionsActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var viewModel: DivisionViewModel
 
@@ -47,9 +49,12 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             when(resourceList?.status) {
                 Status.LOADING -> swipeRefreshContainer.isRefreshing = true
                 Status.SUCCESS -> onSuccess(resourceList)
-                Status.ERROR -> startLogin()
+                Status.ERROR -> onError(resourceList)
             }
         })
+
+        dialogManager = MaterialDialog.Builder(this)
+                .positiveText(R.string.try_again)
 
         swipeRefreshContainer.setOnRefreshListener(this)
         swipeRefreshContainer.setColorSchemeResources(R.color.colorPrimary,
@@ -93,6 +98,17 @@ class DivisionsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
             swipeRefreshContainer.isRefreshing = false
         } else {
             startLogin()
+        }
+    }
+
+    private fun onError(divisionList: Resource<List<Division>>) {
+        val isInternetAvailable = isInternetAvailable()
+        if(isInternetAvailable) {
+            Toast.makeText(this, divisionList.message, Toast.LENGTH_SHORT).show()
+        } else {
+            showMessage(getString(R.string.error_no_internet_connection)) {
+                viewModel.startRefresh()
+            }
         }
     }
 

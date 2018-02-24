@@ -28,6 +28,7 @@
     <string name="hint_layout_login_enter_new_password">Введите новый пароль</string>
     <string name="hint_layout_password_reenter_new_password">Повторите пароль</string>
     <string name="action_save_and_login">Сохранить и войти</string>
+    <string name="error_no_internet_connection">Нет подключения к сети</string>
 
     <!--Main activity-->
     <!--Bottom navigation bar-->
@@ -37,6 +38,7 @@
     <string name="navigation_bar_menu">Меню</string>
     <!--Division fragment-->
     <string name="division_title">Выбор филиала</string>
+    <string name="try_again">Повторить</string>
     <!--Notification fragment-->
     <string name="notification_title">Уведомления</string>
     <string name="current_notification">ТЕКУЩИЕ</string>

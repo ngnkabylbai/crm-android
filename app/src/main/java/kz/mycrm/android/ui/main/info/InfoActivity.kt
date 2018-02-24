@@ -6,17 +6,18 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_info.*
 import kz.mycrm.android.R
 import kz.mycrm.android.db.entity.Order
 import kz.mycrm.android.db.entity.Service
 import kz.mycrm.android.db.entity.UpdateOrder
 import kz.mycrm.android.db.entity.UpdateService
+import kz.mycrm.android.ui.BaseActivity
 import kz.mycrm.android.ui.main.info.service.addServiceIntent
 import kz.mycrm.android.util.Logger
 import kz.mycrm.android.util.Resource
@@ -30,7 +31,7 @@ fun Context.infoIntent(): Intent {
     return Intent(this, InfoActivity::class.java)
 }
 
-class InfoActivity : AppCompatActivity() {
+class InfoActivity : BaseActivity() {
 
     private lateinit var rv:RecyclerView
     private lateinit var lm:LinearLayoutManager
@@ -66,6 +67,9 @@ class InfoActivity : AppCompatActivity() {
                 Status.ERROR -> onError(order)
             }
         })
+
+        dialogManager = MaterialDialog.Builder(this)
+                .positiveText(R.string.try_again)
 
         val mIntent: Intent = intent
         if(mIntent.extras != null) {
@@ -159,8 +163,15 @@ class InfoActivity : AppCompatActivity() {
     }
 
     private fun onError(order: Resource<Order>) {
-        progress.visibility = View.INVISIBLE
-        Toast.makeText(this, order.message, Toast.LENGTH_SHORT).show()
+        val isInternetAvailable = isInternetAvailable()
+        if(isInternetAvailable) {
+            progress.visibility = View.INVISIBLE
+            Toast.makeText(this, order.message, Toast.LENGTH_SHORT).show()
+        } else {
+            showMessage(getString(R.string.error_no_internet_connection)) {
+                viewModel.getOrderById(orderId)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
