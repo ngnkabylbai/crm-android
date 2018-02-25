@@ -67,7 +67,7 @@ class DivisionsActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         val mIntent = intent
-        if(mIntent.extras != null) {
+        if(mIntent.extras != null && mIntent.extras.getString("order_id") != null) {
             val startInfoIntent = Intent(this, InfoActivity::class.java)
             val bundle = mIntent.extras
             startInfoIntent.putExtras(bundle)

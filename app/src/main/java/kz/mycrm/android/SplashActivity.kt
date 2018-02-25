@@ -51,7 +51,8 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun invalidate() {
-        pushAction = mIntent?.extras != null
+        pushAction = mIntent?.extras != null && mIntent!!.extras.getString("order_id") != null
+
         if(pushAction || viewModel.wasIntroShown(this, sharedPref) || !BuildConfig.MOCK) {
             startNextActivity()
         } else {
