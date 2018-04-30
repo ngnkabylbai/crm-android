@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="6dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="20dp" >
+
+        <TextView
+            android:id="@+id/notification_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textStyle="bold"
+            android:background="@drawable/notif_visit_background"
+            android:text="НАПОМИНАНИЕ"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/notification_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 января, 9:00"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@color/bottom_nav_active"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/notification_type"
+            app:layout_constraintBottom_toBottomOf="@id/notification_type"/>
+
+        <TextView
+            android:id="@+id/notification_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Джубаева Р +7 708 864 94 22 Анестезия:Инъекционная, Лечение пульпита и периодонтита:Пломбирование зуба при лечении осложнённого кариеса с неполной реставрацией коронки;- с пломбированием одного канала, Временная пломба дентин, Установка штифта из стекловолокна"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_type" />
+
+        <TextView
+            android:id="@+id/notification_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/go_to_map"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_name" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

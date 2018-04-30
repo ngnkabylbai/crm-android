@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HorizontalCalendarView">
+        <!-- Text color for all dates except selected Date.-->
+        <attr name="textColorNormal" format="color" />
+        <!-- Text color for selected Date. -->
+        <attr name="textColorSelected" format="color" />
+        <!-- Background color for selector bar. -->
+        <attr name="selectorColor" format="color" />
+        <!-- Background drawable for selected date item. -->
+        <attr name="selectedDateBackground" format="reference" />
+        <!-- Text size for month name. -->
+        <attr name="textSizeMonthName" format="dimension" />
+        <!-- Text size for day number. -->
+        <attr name="textSizeDayNumber" format="dimension" />
+        <!-- Text size for day name. -->
+        <attr name="textSizeDayName" format="dimension" />
+        <!-- Text color of weekDay -->
+        <attr name="textWeekdayColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="JournalView">
+        <attr name="backgroundColor" format="color" />
+        <attr name="separatorColor" format="color" />
+        <attr name="timeTextColor" format="color" />
+        <attr name="normalTimeSize" format="dimension" />
+        <attr name="accentTimeSize" format="dimension" />
+        <attr name="orderTimeTextSize" format="dimension"/>
+        <attr name="orderPatientNameSize"  format="dimension" />
+        <attr name="orderPatientNumberSize" format="dimension" />
+        <attr name="orderServiceListSize" format="dimension" />
+        <attr name="orderBackgroundColor" format="color" />
+        <attr name="orderLeftAccentColor" format="color" />
+        <attr name="orderTextColor" format="color" />
+    </declare-styleable>
+</resources>

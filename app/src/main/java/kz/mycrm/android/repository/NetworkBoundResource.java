@@ -25,6 +25,7 @@ import android.support.annotation.WorkerThread;
 
 import kz.mycrm.android.api.ApiResponse;
 import kz.mycrm.android.util.AppExecutors;
+import kz.mycrm.android.util.Logger;
 import kz.mycrm.android.util.Objects;
 import kz.mycrm.android.util.Resource;
 
@@ -85,7 +86,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             } else {
                 onFetchFailed();
                 result.addSource(dbSource,
-                        newData -> setValue(Resource.Companion.error(response.errorMessage, newData)));
+                        newData -> setValue(Resource.Companion.error(response.errorMessage != null ? response.errorMessage : "No response", newData)));
             }
         });
     }

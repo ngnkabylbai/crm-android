@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/primaryBackgroundColor"
+    android:gravity="center"
+    android:animateLayoutChanges="true"
+    android:paddingLeft="44dp"
+    android:paddingRight="44dp"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:animateLayoutChanges="true"
+        android:fitsSystemWindows="true">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            android:layout_marginStart="8dp"
+            android:background="@mipmap/ic_logo2"/>
+
+        <TextView
+            android:id="@+id/hintTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_forgot"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/loginLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:theme="@style/TextLabel"
+            app:errorEnabled="true"
+            android:visibility="visible"
+            android:hint="@string/hint_login">
+            <kz.mycrm.android.ui.view.LoginEditTextView
+                android:id="@+id/loginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/login_edit_background"
+                android:inputType="phone"
+                android:enabled="false"
+                android:textColorHint="@color/placeholder"
+                android:maxLength="16"
+                android:text="+7 707 777-77-77"
+                android:textIsSelectable="false"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/codeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_layout_password_code"
+            android:theme="@style/TextLabel"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/codeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@drawable/login_edit_background"
+                android:inputType="text"
+                android:textIsSelectable="false" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/resendTextLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/resendTextHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_resend_code"
+                android:textColor="@color/login_textColor" />
+
+            <TextView
+                android:id="@+id/resendTextSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="89"
+                android:textColor="@color/login_textColor" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/login_button_background"
+                android:textAllCaps="false"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white" />
+
+            <TextSwitcher
+                android:id="@+id/loginButtonTextSwitcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                android:layout_centerInParent="true" />
+
+            <ProgressBar
+                android:id="@+id/loginProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:translationZ="2dp"
+                android:layout_centerInParent="true"
+                android:indeterminateDrawable="@drawable/progress"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
